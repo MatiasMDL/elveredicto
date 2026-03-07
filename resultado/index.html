@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     :root{
@@ -243,11 +245,7 @@
       overflow:hidden;
     }
 
-    .bar-fill{
-      height:100%;
-      border-radius:999px;
-    }
-
+    .bar-fill{height:100%;border-radius:999px}
     .bar-fill.yes{background:#DFF4E9}
     .bar-fill.no{background:#FFE3D8}
 
@@ -297,6 +295,152 @@
     .empty{text-align:center}
     .empty-icon{font-size:44px;margin-bottom:10px}
 
+    .story-list{
+      display:grid;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .story-wrap{
+      background:#fff;
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:28px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .story-card{
+      width:100%;
+      aspect-ratio:9 / 16;
+      border-radius:28px;
+      overflow:hidden;
+      position:relative;
+      padding:24px 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.55), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.35), transparent 25%),
+        linear-gradient(135deg, #fff6f2 0%, #ffffff 45%, #ffe8f8 100%);
+      border:2px solid rgba(0,0,0,.06);
+    }
+
+    .story-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .story-mini-brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .story-mini-logo{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      font-weight:800;
+    }
+
+    .story-mini-title{
+      font-family:"Baloo 2", cursive;
+      font-size:22px;
+      line-height:1;
+      font-weight:800;
+    }
+
+    .story-mini-sub{
+      font-size:11px;
+      color:rgba(0,0,0,.55);
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .story-badge{
+      background:var(--pink);
+      color:var(--burgundy);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      border:2px solid rgba(78,8,12,.10);
+    }
+
+    .story-center{
+      text-align:left;
+    }
+
+    .story-kicker{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--yellow);
+      color:var(--burgundy);
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .story-name{
+      font-family:"Baloo 2", cursive;
+      font-size:42px;
+      line-height:.92;
+      margin:0 0 12px;
+    }
+
+    .story-role{
+      font-size:30px;
+      line-height:1.04;
+      font-weight:800;
+      margin:0;
+    }
+
+    .story-foot{
+      display:grid;
+      gap:10px;
+    }
+
+    .story-stat{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:max-content;
+      padding:10px 14px;
+      border-radius:999px;
+      background:#DFF4E9;
+      color:var(--green);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .story-footer-text{
+      font-size:14px;
+      line-height:1.45;
+      color:rgba(0,0,0,.62);
+      font-weight:700;
+      max-width:260px;
+    }
+
+    .story-actions{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .story-actions .btn{
+      margin:0;
+    }
+
     @media (max-width:640px){
       h1{font-size:34px}
       h2{font-size:28px}
@@ -304,6 +448,8 @@
       .copy-row .btn-outline{width:100%}
       .result-top{flex-direction:column}
       .winner{flex-direction:column;align-items:flex-start}
+      .story-name{font-size:38px}
+      .story-role{font-size:26px}
     }
   </style>
 </head>
@@ -348,6 +494,12 @@
       <div id="groupResults" class="card hidden">
         <h2>Quién ganó cada pregunta</h2>
         <div id="groupResultsList" class="result-list"></div>
+      </div>
+
+      <div id="storySection" class="card hidden">
+        <h2>Story cards para compartir</h2>
+        <p>Estas son las tarjetas más virales para subir a historias o mandar por WhatsApp.</p>
+        <div id="storyList" class="story-list"></div>
       </div>
 
       <div id="selfResults" class="card hidden">
@@ -409,6 +561,9 @@
     const selfResults = document.getElementById("selfResults");
     const groupResultsList = document.getElementById("groupResultsList");
     const selfResultsList = document.getElementById("selfResultsList");
+
+    const storySection = document.getElementById("storySection");
+    const storyList = document.getElementById("storyList");
 
     function show(el){ el.classList.remove("hidden"); }
     function hide(el){ el.classList.add("hidden"); }
@@ -519,6 +674,181 @@
       });
     }
 
+    function buildStoryData(preguntas, participantes, votos){
+      const participantMap = {};
+      participantes.forEach(p => {
+        participantMap[p.id] = p.nombre;
+      });
+
+      const byParticipant = {};
+
+      preguntas.forEach((pregunta) => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === pregunta.pregunta_id && v.participante_id);
+
+        const countMap = {};
+        votesForQuestion.forEach(v => {
+          const pid = v.participante_id;
+          countMap[pid] = (countMap[pid] || 0) + 1;
+        });
+
+        let winnerId = null;
+        let winnerVotes = 0;
+
+        Object.keys(countMap).forEach(pid => {
+          if(countMap[pid] > winnerVotes){
+            winnerVotes = countMap[pid];
+            winnerId = Number(pid);
+          }
+        });
+
+        if(!winnerId) return;
+
+        if(!byParticipant[winnerId]){
+          byParticipant[winnerId] = {
+            participante_id: winnerId,
+            nombre: participantMap[winnerId],
+            wins: [],
+            best: null
+          };
+        }
+
+        const winData = {
+          texto: pregunta.texto,
+          votos: winnerVotes
+        };
+
+        byParticipant[winnerId].wins.push(winData);
+
+        if(!byParticipant[winnerId].best || winnerVotes > byParticipant[winnerId].best.votos){
+          byParticipant[winnerId].best = winData;
+        }
+      });
+
+      return Object.values(byParticipant)
+        .sort((a, b) => b.wins.length - a.wins.length || (b.best?.votos || 0) - (a.best?.votos || 0));
+    }
+
+    async function downloadStoryCard(cardElement, filename){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    async function shareStoryCard(cardElement, title){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob(async function(blob){
+          try{
+            if(blob && navigator.canShare && navigator.canShare({ files: [new File([blob], "story-card.png", { type: "image/png" })] })){
+              const file = new File([blob], "story-card.png", { type: "image/png" });
+              await navigator.share({
+                title: title,
+                text: "Mirá mi resultado en ElVeredicto 🔥",
+                files: [file]
+              });
+            } else {
+              await navigator.clipboard.writeText(window.location.href);
+            }
+          } catch(err){
+            console.error(err);
+          }
+          resolve();
+        }, "image/png");
+      });
+    }
+
+    function renderStoryCards(veredicto, preguntas, participantes, votos){
+      const stories = buildStoryData(preguntas, participantes, votos);
+      storyList.innerHTML = "";
+
+      if(!stories.length){
+        hide(storySection);
+        return;
+      }
+
+      stories.forEach((story, index) => {
+        const wrap = document.createElement("div");
+        wrap.className = "story-wrap";
+
+        const cardId = "storyCard_" + index;
+        const roleText = story.best ? story.best.texto : "Ganador del grupo";
+        const totalWins = story.wins.length;
+
+        wrap.innerHTML = `
+          <div class="story-card" id="${cardId}">
+            <div class="story-top">
+              <div class="story-mini-brand">
+                <div class="story-mini-logo">⚖</div>
+                <div>
+                  <div class="story-mini-title">ElVeredicto</div>
+                  <div class="story-mini-sub">${veredicto.group_name || "veredicto grupal"}</div>
+                </div>
+              </div>
+              <div class="story-badge">Grupo</div>
+            </div>
+
+            <div class="story-center">
+              <div class="story-kicker">resultado compartible</div>
+              <div class="story-name">${story.nombre}</div>
+              <div class="story-role">${roleText}</div>
+            </div>
+
+            <div class="story-foot">
+              <div class="story-stat">🏆 Ganó ${totalWins} categoría${totalWins === 1 ? "" : "s"}</div>
+              <div class="story-footer-text">Compartí esta historia y armá el veredicto con tu grupo.</div>
+            </div>
+          </div>
+
+          <div class="story-actions">
+            <button class="btn btn-primary share-story-btn" data-card="${cardId}" data-title="${story.nombre} - ${roleText}" type="button">Compartir story card</button>
+            <button class="btn btn-outline download-story-btn" data-card="${cardId}" data-file="${story.nombre.toLowerCase().replace(/\s+/g, "-")}-elveredicto.png" type="button">Guardar imagen</button>
+          </div>
+        `;
+
+        storyList.appendChild(wrap);
+      });
+
+      show(storySection);
+
+      storyList.querySelectorAll(".share-story-btn").forEach(btn => {
+        btn.addEventListener("click", async function(){
+          const card = document.getElementById(btn.dataset.card);
+          const title = btn.dataset.title;
+          const old = btn.textContent;
+          btn.textContent = "Preparando...";
+          btn.disabled = true;
+          await shareStoryCard(card, title);
+          btn.textContent = old;
+          btn.disabled = false;
+        });
+      });
+
+      storyList.querySelectorAll(".download-story-btn").forEach(btn => {
+        btn.addEventListener("click", async function(){
+          const card = document.getElementById(btn.dataset.card);
+          const filename = btn.dataset.file;
+          const old = btn.textContent;
+          btn.textContent = "Generando...";
+          btn.disabled = true;
+          await downloadStoryCard(card, filename);
+          btn.textContent = old;
+          btn.disabled = false;
+        });
+      });
+    }
+
     async function loadResults(){
       const code = getCodeFromUrl();
 
@@ -607,6 +937,8 @@
         }
 
         renderGroupResults(veredicto, preguntas, participantes, votos);
+        renderStoryCards(veredicto, preguntas, participantes, votos);
+
         show(groupResults);
         hide(selfResults);
 
@@ -628,6 +960,7 @@
         renderSelfResults(preguntas, votos);
         show(selfResults);
         hide(groupResults);
+        hide(storySection);
 
         const whatsappText = `⚖️ Ya están mis resultados en ElVeredicto\n\nEntrá a ver qué respondió la gente 👇\n${window.location.href}`;
         waBtn.href = "https://wa.me/?text=" + encodeURIComponent(whatsappText);
