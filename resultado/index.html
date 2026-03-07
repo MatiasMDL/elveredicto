@@ -28,7 +28,6 @@
     }
 
     *{box-sizing:border-box}
-
     body{
       margin:0;
       color:var(--ink);
@@ -148,11 +147,50 @@
     }
 
     .btn:hover{transform:translateY(-1px)}
-
     .btn-orange{background:var(--orange);color:#fff}
     .btn-green{background:#25D366;color:#fff}
     .btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
     .btn-dark{background:var(--burgundy);color:#fff}
+
+    .picker{
+      margin-top:16px;
+    }
+
+    .picker-label{
+      font-size:13px;
+      font-weight:800;
+      color:#5f5956;
+      margin-bottom:10px;
+    }
+
+    .picker-scroll{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom:4px;
+      scrollbar-width:none;
+    }
+
+    .picker-scroll::-webkit-scrollbar{display:none}
+
+    .person-chip{
+      border:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:14px;
+      cursor:pointer;
+      white-space:nowrap;
+      background:#f5efea;
+      color:#4c4743;
+      transition:.18s ease;
+      box-shadow:0 4px 14px rgba(0,0,0,.04);
+    }
+
+    .person-chip.active{
+      background:var(--burgundy);
+      color:#fff;
+    }
 
     .story-shell{
       background:#fff;
@@ -165,7 +203,7 @@
     .story-card{
       width:100%;
       aspect-ratio:9/16;
-      border-radius:34px;
+      border-radius:36px;
       overflow:hidden;
       position:relative;
       padding:22px;
@@ -183,9 +221,10 @@
     .story-card::before{
       content:"";
       position:absolute;
-      inset:auto -10% -10% auto;
-      width:220px;
-      height:220px;
+      right:-40px;
+      bottom:-30px;
+      width:240px;
+      height:240px;
       border-radius:50%;
       background:rgba(255,255,255,.18);
       filter:blur(8px);
@@ -195,41 +234,42 @@
     .story-card::after{
       content:"";
       position:absolute;
-      inset:8% auto auto -16%;
+      left:-60px;
+      top:140px;
       width:180px;
       height:180px;
       border-radius:50%;
-      background:rgba(255,255,255,.14);
+      background:rgba(255,255,255,.16);
       filter:blur(10px);
       pointer-events:none;
     }
 
     .theme-hot{
       background:
-        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(255,212,163,.16), transparent 22%),
-        linear-gradient(145deg,#fffbf7 0%, #ffd3bf 35%, #ff9a75 100%);
+        radial-gradient(circle at top right, rgba(255,255,255,.22), transparent 18%),
+        radial-gradient(circle at bottom left, rgba(255,210,170,.18), transparent 22%),
+        linear-gradient(145deg,#fff9f5 0%, #ffd8c6 30%, #ff9a72 100%);
     }
 
     .theme-love{
       background:
-        radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(255,209,46,.12), transparent 18%),
-        linear-gradient(145deg,#fff8fd 0%, #ffdff4 42%, #ffb9e6 100%);
+        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 20%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,.14), transparent 22%),
+        linear-gradient(145deg,#fff8fd 0%, #ffe0f4 40%, #ffbbe8 100%);
     }
 
     .theme-chaos{
       background:
-        radial-gradient(circle at top right, rgba(255,255,255,.24), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(255,182,239,.14), transparent 20%),
-        linear-gradient(145deg,#fffdf0 0%, #ffe676 40%, #ffd12e 100%);
+        radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 20%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,.10), transparent 20%),
+        linear-gradient(145deg,#fffef4 0%, #ffe978 42%, #ffd12e 100%);
     }
 
     .theme-soft{
       background:
-        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(255,209,46,.12), transparent 20%),
-        linear-gradient(145deg,#f5fff8 0%, #dff4e9 46%, #bfe7d1 100%);
+        radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,.14), transparent 22%),
+        linear-gradient(145deg,#f6fff9 0%, #dcf5e7 44%, #bde7d1 100%);
     }
 
     .story-top{
@@ -287,7 +327,7 @@
 
     .story-middle{
       display:grid;
-      gap:12px;
+      gap:10px;
       position:relative;
       z-index:1;
     }
@@ -297,7 +337,7 @@
       width:max-content;
       padding:8px 12px;
       border-radius:999px;
-      background:rgba(255,255,255,.72);
+      background:rgba(255,255,255,.76);
       font-size:12px;
       font-weight:800;
       color:#43231b;
@@ -305,27 +345,29 @@
     }
 
     .story-emoji{
-      font-size:56px;
+      font-size:64px;
       line-height:1;
       filter:drop-shadow(0 4px 8px rgba(0,0,0,.08));
+      margin-top:4px;
     }
 
     .story-name{
       font-family:"Baloo 2", cursive;
-      font-size:58px;
-      line-height:.86;
-      letter-spacing:-1px;
-      text-transform:none;
-      max-width:95%;
+      font-size:72px;
+      line-height:.82;
+      letter-spacing:-1.5px;
+      margin-top:2px;
+      max-width:96%;
       word-break:break-word;
     }
 
     .story-role{
-      font-size:32px;
+      font-size:34px;
       line-height:1.02;
       font-weight:800;
       max-width:96%;
       text-wrap:balance;
+      margin-top:4px;
     }
 
     .story-bottom{
@@ -336,86 +378,38 @@
     }
 
     .story-vote-badge{
-      background:rgba(223,244,233,.92);
+      background:rgba(223,244,233,.94);
       color:var(--green);
-      padding:11px 15px;
+      padding:12px 16px;
       border-radius:999px;
       font-weight:800;
       width:max-content;
-      font-size:14px;
+      font-size:16px;
       box-shadow:0 8px 24px rgba(0,0,0,.04);
-    }
-
-    .story-copy{
-      font-size:20px;
-      line-height:1.18;
-      font-weight:800;
-      color:#463f3b;
-      max-width:92%;
     }
 
     .story-link-pill{
       display:inline-flex;
       width:max-content;
-      background:rgba(255,255,255,.82);
+      background:rgba(255,255,255,.86);
       border:2px solid rgba(0,0,0,.04);
       border-radius:999px;
-      padding:11px 14px;
+      padding:11px 15px;
       font-weight:700;
-      font-size:13px;
+      font-size:14px;
       color:#4b4744;
       box-shadow:0 8px 24px rgba(0,0,0,.04);
     }
 
     .story-sign{
-      font-size:11px;
+      font-size:12px;
       font-weight:800;
       letter-spacing:.4px;
       color:#6b6663;
       text-transform:uppercase;
     }
 
-    .picker{
-      margin-top:16px;
-    }
-
-    .picker-label{
-      font-size:13px;
-      font-weight:800;
-      color:#5f5956;
-      margin-bottom:10px;
-    }
-
-    .picker-scroll{
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding-bottom:4px;
-      scrollbar-width:none;
-    }
-
-    .picker-scroll::-webkit-scrollbar{display:none}
-
-    .person-chip{
-      border:none;
-      border-radius:999px;
-      padding:12px 16px;
-      font-weight:800;
-      font-size:14px;
-      cursor:pointer;
-      white-space:nowrap;
-      background:#f5efea;
-      color:#4c4743;
-      transition:.18s ease;
-      box-shadow:0 4px 14px rgba(0,0,0,.04);
-    }
-
-    .person-chip.active{
-      background:var(--burgundy);
-      color:#fff;
-    }
-
-    .micro-copy{
+    .action-note{
       margin-top:10px;
       font-size:13px;
       color:#6c6662;
@@ -454,9 +448,9 @@
     @media (max-width:640px){
       h1{font-size:36px}
       h2{font-size:28px}
-      .story-name{font-size:50px}
-      .story-role{font-size:28px}
-      .story-copy{font-size:18px}
+      .story-name{font-size:58px}
+      .story-role{font-size:30px}
+      .story-emoji{font-size:56px}
     }
   </style>
 </head>
@@ -508,7 +502,7 @@
                 <div class="story-logo">⚖</div>
                 <div>
                   <div class="story-brand-title">ElVeredicto</div>
-                  <div class="story-brand-sub" id="storyGroupName">Los de siempre</div>
+                  <div class="story-brand-sub" id="storyGroupName">Tu grupo</div>
                 </div>
               </div>
               <div class="story-mode">Grupo</div>
@@ -522,8 +516,7 @@
             </div>
 
             <div class="story-bottom">
-              <div class="story-vote-badge" id="storyVotes">💬 3 personas la eligieron</div>
-              <div class="story-copy">Subí esta story, pegá el link y armá el veredicto con tu grupo.</div>
+              <div class="story-vote-badge" id="storyVotes">💬 3 personas eligieron a Shai</div>
               <div class="story-link-pill" id="storyLinkPill">🔗 elveredicto.app</div>
               <div class="story-sign">Hecho con ElVeredicto</div>
             </div>
@@ -534,8 +527,8 @@
         <button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
         <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
 
-        <div class="micro-copy">
-          Consejo: compartí primero la tarjeta más picante o la más graciosa. Esa suele ser la que mejor prende.
+        <div class="action-note">
+          Elegí primero la más picante o la más graciosa. Suelen ser las que mejor se comparten.
         </div>
       </div>
 
@@ -605,6 +598,7 @@
 
       if(
         t.includes("ex") ||
+        t.includes("volver con un ex") ||
         t.includes("chaparse") ||
         t.includes("mensaje a las 3") ||
         t.includes("3 am") ||
@@ -706,12 +700,11 @@
           participante_id: person.participante_id,
           nombre: person.nombre,
           texto: best.texto,
-          votos: best.votos,
-          totalWins: person.results.length
+          votos: best.votos
         });
       });
 
-      return candidates.sort((a,b) => b.votos - a.votos || b.totalWins - a.totalWins || a.nombre.localeCompare(b.nombre));
+      return candidates.sort((a,b) => b.votos - a.votos || a.nombre.localeCompare(b.nombre));
     }
 
     function renderPicker(){
@@ -779,7 +772,7 @@
                 });
               } else {
                 await navigator.clipboard.writeText(location.origin + "/votar?code=" + currentCode);
-                alert("No pude abrir el compartir de imagen en este celu. Ya te copié el link.");
+                alert("No pude compartir la imagen directo. Ya te copié el link.");
               }
             }
           } catch(err){
@@ -860,9 +853,8 @@
       results.innerHTML = "";
 
       if(veredicto.mode !== "group"){
-        const theme = { cls:"theme-soft", emoji:"💭" };
-        storyCard.className = "story-card " + theme.cls;
-        storyEmoji.textContent = theme.emoji;
+        storyCard.className = "story-card theme-soft";
+        storyEmoji.textContent = "💭";
         storyName.textContent = veredicto.nickname || "Tu resultado";
         storyRole.textContent = "Mirá qué respondió la gente sobre vos";
         storyVotes.textContent = `💬 ${votos.length} respuesta${votos.length === 1 ? "" : "s"}`;
