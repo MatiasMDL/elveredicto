@@ -152,10 +152,7 @@
     .btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
     .btn-dark{background:var(--burgundy);color:#fff}
 
-    .picker{
-      margin-top:16px;
-    }
-
+    .picker{margin-top:16px}
     .picker-label{
       font-size:13px;
       font-weight:800;
@@ -207,69 +204,17 @@
       overflow:hidden;
       position:relative;
       padding:22px;
+      border:2px solid rgba(0,0,0,.05);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    .story-inner{
+      position:relative;
+      z-index:2;
+      height:100%;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      border:2px solid rgba(0,0,0,.05);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,.35), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(255,255,255,.18), transparent 24%),
-        linear-gradient(135deg,#fff6f1,#fff,#ffedf8);
-    }
-
-    .story-card::before{
-      content:"";
-      position:absolute;
-      right:-40px;
-      bottom:-30px;
-      width:240px;
-      height:240px;
-      border-radius:50%;
-      background:rgba(255,255,255,.18);
-      filter:blur(8px);
-      pointer-events:none;
-    }
-
-    .story-card::after{
-      content:"";
-      position:absolute;
-      left:-60px;
-      top:140px;
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      background:rgba(255,255,255,.16);
-      filter:blur(10px);
-      pointer-events:none;
-    }
-
-    .theme-hot{
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,.22), transparent 18%),
-        radial-gradient(circle at bottom left, rgba(255,210,170,.18), transparent 22%),
-        linear-gradient(145deg,#fff9f5 0%, #ffd8c6 30%, #ff9a72 100%);
-    }
-
-    .theme-love{
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 20%),
-        radial-gradient(circle at bottom left, rgba(255,255,255,.14), transparent 22%),
-        linear-gradient(145deg,#fff8fd 0%, #ffe0f4 40%, #ffbbe8 100%);
-    }
-
-    .theme-chaos{
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 20%),
-        radial-gradient(circle at bottom left, rgba(255,255,255,.10), transparent 20%),
-        linear-gradient(145deg,#fffef4 0%, #ffe978 42%, #ffd12e 100%);
-    }
-
-    .theme-soft{
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,.18), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(255,255,255,.14), transparent 22%),
-        linear-gradient(145deg,#f6fff9 0%, #dcf5e7 44%, #bde7d1 100%);
     }
 
     .story-top{
@@ -277,8 +222,6 @@
       justify-content:space-between;
       align-items:flex-start;
       gap:12px;
-      position:relative;
-      z-index:1;
     }
 
     .story-brand{
@@ -328,8 +271,6 @@
     .story-middle{
       display:grid;
       gap:10px;
-      position:relative;
-      z-index:1;
     }
 
     .story-kicker{
@@ -337,7 +278,7 @@
       width:max-content;
       padding:8px 12px;
       border-radius:999px;
-      background:rgba(255,255,255,.76);
+      background:rgba(255,255,255,.82);
       font-size:12px;
       font-weight:800;
       color:#43231b;
@@ -348,7 +289,7 @@
       font-size:64px;
       line-height:1;
       filter:drop-shadow(0 4px 8px rgba(0,0,0,.08));
-      margin-top:4px;
+      margin-top:2px;
     }
 
     .story-name{
@@ -373,8 +314,6 @@
     .story-bottom{
       display:grid;
       gap:12px;
-      position:relative;
-      z-index:1;
     }
 
     .story-vote-badge{
@@ -391,7 +330,7 @@
     .story-link-pill{
       display:inline-flex;
       width:max-content;
-      background:rgba(255,255,255,.86);
+      background:rgba(255,255,255,.88);
       border:2px solid rgba(0,0,0,.04);
       border-radius:999px;
       padding:11px 15px;
@@ -409,6 +348,177 @@
       text-transform:uppercase;
     }
 
+    .story-card.theme-hot{
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,.18), transparent 15%),
+        radial-gradient(circle at 15% 78%, rgba(255,240,220,.18), transparent 20%),
+        linear-gradient(160deg,#fff9f5 0%, #ffd2bd 36%, #ff875a 100%);
+    }
+
+    .story-card.theme-hot::before{
+      content:"";
+      position:absolute;
+      right:-30px;
+      top:110px;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      background:rgba(255,110,60,.22);
+      filter:blur(8px);
+    }
+
+    .story-card.theme-hot::after{
+      content:"";
+      position:absolute;
+      left:-40px;
+      bottom:-20px;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      background:rgba(255,220,170,.22);
+      filter:blur(12px);
+    }
+
+    .story-card.theme-hot .story-name{
+      text-transform:uppercase;
+      font-size:68px;
+      line-height:.8;
+    }
+
+    .story-card.theme-hot .story-role{
+      font-size:36px;
+    }
+
+    .story-card.theme-hot .story-kicker{
+      background:rgba(78,8,12,.92);
+      color:#fff;
+    }
+
+    .story-card.theme-hot .story-link-pill{
+      background:rgba(255,250,247,.92);
+    }
+
+    .story-card.theme-love{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.26), transparent 18%),
+        radial-gradient(circle at 20% 78%, rgba(255,255,255,.12), transparent 20%),
+        linear-gradient(155deg,#fff8fd 0%, #ffe0f4 42%, #ffb6e8 100%);
+    }
+
+    .story-card.theme-love::before{
+      content:"";
+      position:absolute;
+      right:-20px;
+      bottom:-10px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(255,255,255,.16);
+      filter:blur(8px);
+    }
+
+    .story-card.theme-love::after{
+      content:"";
+      position:absolute;
+      left:-30px;
+      top:200px;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background:rgba(255,210,235,.26);
+      filter:blur(10px);
+    }
+
+    .story-card.theme-love .story-name{
+      font-size:70px;
+    }
+
+    .story-card.theme-love .story-role{
+      max-width:88%;
+      font-size:32px;
+    }
+
+    .story-card.theme-love .story-kicker{
+      background:rgba(255,255,255,.86);
+      color:#6a204c;
+    }
+
+    .story-card.theme-chaos{
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,.16), transparent 14%),
+        radial-gradient(circle at 10% 82%, rgba(255,255,255,.10), transparent 20%),
+        linear-gradient(155deg,#fffef5 0%, #ffe978 44%, #ffd12e 100%);
+    }
+
+    .story-card.theme-chaos::before{
+      content:"";
+      position:absolute;
+      right:-30px;
+      top:90px;
+      width:240px;
+      height:240px;
+      border-radius:48px;
+      transform:rotate(16deg);
+      background:rgba(255,255,255,.14);
+      filter:blur(6px);
+    }
+
+    .story-card.theme-chaos::after{
+      content:"";
+      position:absolute;
+      left:-40px;
+      bottom:60px;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(255,255,255,.18);
+      filter:blur(8px);
+    }
+
+    .story-card.theme-chaos .story-name{
+      text-transform:uppercase;
+      font-size:66px;
+      line-height:.8;
+    }
+
+    .story-card.theme-chaos .story-role{
+      font-size:34px;
+      max-width:90%;
+    }
+
+    .story-card.theme-chaos .story-kicker{
+      transform:rotate(-2deg);
+      background:#fff8d8;
+    }
+
+    .story-card.theme-soft{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.20), transparent 18%),
+        radial-gradient(circle at 20% 82%, rgba(255,255,255,.14), transparent 18%),
+        linear-gradient(155deg,#f7fff9 0%, #def5e8 44%, #bce6d1 100%);
+    }
+
+    .story-card.theme-soft::before{
+      content:"";
+      position:absolute;
+      right:-40px;
+      bottom:-40px;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background:rgba(255,255,255,.16);
+      filter:blur(10px);
+    }
+
+    .story-card.theme-soft .story-name{
+      font-size:70px;
+    }
+
+    .story-card.theme-soft .story-role{
+      font-size:31px;
+      max-width:90%;
+    }
+
     .action-note{
       margin-top:10px;
       font-size:13px;
@@ -416,10 +526,7 @@
       font-weight:700;
     }
 
-    .result-list{
-      margin-top:14px;
-    }
-
+    .result-list{margin-top:14px}
     .result-item{
       background:#fff;
       padding:14px;
@@ -441,9 +548,7 @@
       font-size:14px;
     }
 
-    .loading,.error{
-      text-align:center;
-    }
+    .loading,.error{text-align:center}
 
     @media (max-width:640px){
       h1{font-size:36px}
@@ -451,6 +556,18 @@
       .story-name{font-size:58px}
       .story-role{font-size:30px}
       .story-emoji{font-size:56px}
+      .story-card.theme-hot .story-name,
+      .story-card.theme-love .story-name,
+      .story-card.theme-chaos .story-name,
+      .story-card.theme-soft .story-name{
+        font-size:56px;
+      }
+      .story-card.theme-hot .story-role,
+      .story-card.theme-love .story-role,
+      .story-card.theme-chaos .story-role,
+      .story-card.theme-soft .story-role{
+        font-size:28px;
+      }
     }
   </style>
 </head>
@@ -497,28 +614,30 @@
 
         <div class="story-shell">
           <div class="story-card theme-love" id="storyCard">
-            <div class="story-top">
-              <div class="story-brand">
-                <div class="story-logo">⚖</div>
-                <div>
-                  <div class="story-brand-title">ElVeredicto</div>
-                  <div class="story-brand-sub" id="storyGroupName">Tu grupo</div>
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-brand">
+                  <div class="story-logo">⚖</div>
+                  <div>
+                    <div class="story-brand-title">ElVeredicto</div>
+                    <div class="story-brand-sub" id="storyGroupName">Tu grupo</div>
+                  </div>
                 </div>
+                <div class="story-mode">Grupo</div>
               </div>
-              <div class="story-mode">Grupo</div>
-            </div>
 
-            <div class="story-middle">
-              <div class="story-kicker">resultado compartible</div>
-              <div class="story-emoji" id="storyEmoji">💘</div>
-              <div class="story-name" id="storyName">Shai</div>
-              <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
-            </div>
+              <div class="story-middle">
+                <div class="story-kicker">resultado compartible</div>
+                <div class="story-emoji" id="storyEmoji">💘</div>
+                <div class="story-name" id="storyName">Shai</div>
+                <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
+              </div>
 
-            <div class="story-bottom">
-              <div class="story-vote-badge" id="storyVotes">💬 3 personas eligieron a Shai</div>
-              <div class="story-link-pill" id="storyLinkPill">🔗 elveredicto.app</div>
-              <div class="story-sign">Hecho con ElVeredicto</div>
+              <div class="story-bottom">
+                <div class="story-vote-badge" id="storyVotes">💬 3 personas eligieron a Shai</div>
+                <div class="story-link-pill" id="storyLinkPill">🔗 elveredicto.app</div>
+                <div class="story-sign">Hecho con ElVeredicto</div>
+              </div>
             </div>
           </div>
         </div>
@@ -528,7 +647,7 @@
         <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
 
         <div class="action-note">
-          Elegí primero la más picante o la más graciosa. Suelen ser las que mejor se comparten.
+          Las más picantes y las más graciosas suelen ser las que mejor se comparten.
         </div>
       </div>
 
