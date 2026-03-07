@@ -1,116 +1,129 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ElVeredicto</title>
 
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
-
 body{
 margin:0;
-font-family:Inter;
 background:#FCF3EC;
-color:#000;
+font-family:Inter;
 display:flex;
 align-items:center;
 justify-content:center;
-height:100vh;
-}
-
-
-.container{
-text-align:center;
-max-width:420px;
+min-height:100vh;
 padding:20px;
 }
 
-
-.logo{
-font-size:42px;
-margin-bottom:10px;
+.card{
+max-width:520px;
+width:100%;
+background:white;
+border-radius:30px;
+padding:40px;
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+text-align:center;
 }
 
+.logo{
+width:70px;
+height:70px;
+background:#FF5E29;
+border-radius:22px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:30px;
+margin:auto;
+margin-bottom:16px;
+}
 
 h1{
 font-family:"Baloo 2";
-font-size:48px;
+font-size:46px;
 margin:0;
 }
 
-
-p{
+.subtitle{
 opacity:.7;
-font-size:18px;
-margin:20px 0;
+margin-top:8px;
+margin-bottom:30px;
 }
 
-
-.button{
+.mode{
 display:block;
 width:100%;
-padding:18px;
-border-radius:40px;
-background:#FF5E29;
-color:white;
-font-weight:700;
-text-decoration:none;
+border:none;
+border-radius:24px;
+padding:22px;
+margin-bottom:14px;
 font-size:18px;
+font-weight:700;
+cursor:pointer;
 }
 
+.mode.group{
+background:#FFE1D7;
+}
 
-.demo{
-margin-top:14px;
+.mode.self{
+background:#DFF4E9;
+}
+
+.mode span{
 display:block;
 font-size:14px;
 opacity:.7;
+font-weight:600;
+margin-top:4px;
 }
 
-
 </style>
-
-
 </head>
-
 
 <body>
 
+<div class="card">
 
-<div class="container">
-
-
-<div class="logo">⚖️</div>
-
+<div class="logo">⚖</div>
 
 <h1>ElVeredicto</h1>
 
+<div class="subtitle">
+Descubrí qué rol te da tu grupo.
+</div>
 
-<p>
-Descubrí qué opinan tus amigos sobre vos.
-</p>
+<button class="mode group" onclick="startGroup()">
+🔥 Veredicto del grupo
+<span>Voten quién es quién</span>
+</button>
 
-
-<a href="/crear" class="button">
-Crear veredicto
-</a>
-
-
-<span class="demo">
-100% anónimo
-</span>
-
+<button class="mode self" onclick="startSelf()">
+🧠 Qué opinan sobre mí
+<span>Preguntas anónimas</span>
+</button>
 
 </div>
 
+<script>
+
+function startGroup(){
+window.location.href="/crear?mode=group"
+}
+
+function startSelf(){
+window.location.href="/crear?mode=self"
+}
+
+</script>
 
 </body>
+</html>
+
 </html>
