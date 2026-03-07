@@ -1,597 +1,708 @@
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado — ElVeredicto</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<div class="vote-app">
-  <div class="vote-shell">
+  <style>
+    :root{
+      --bg:#FCF3EC;
+      --orange:#FF5E29;
+      --yellow:#FFD12E;
+      --green:#00804A;
+      --pink:#FFB6EF;
+      --burgundy:#4E080C;
+      --white:#FFFFFF;
+      --text:#000000;
+      --muted:rgba(0,0,0,.62);
+      --line:rgba(0,0,0,.10);
+      --shadow:0 18px 50px rgba(0,0,0,.08);
+    }
 
+    *{box-sizing:border-box}
 
-    <div class="vote-top">
-      <div class="vote-brand">
-        <div class="vote-logo">⚖</div>
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.45), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.30), transparent 24%),
+        var(--bg);
+      padding:24px 14px 40px;
+      font-family:Inter,sans-serif;
+      color:var(--text);
+    }
+
+    .hidden{display:none!important}
+
+    .shell{
+      max-width:560px;
+      margin:0 auto;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo{
+      width:54px;
+      height:54px;
+      border-radius:20px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:800;
+      box-shadow:var(--shadow);
+    }
+
+    .brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:28px;
+      line-height:1;
+      font-weight:800;
+    }
+
+    .brand-sub{
+      color:rgba(0,0,0,.58);
+      font-size:13px;
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .badge{
+      background:var(--pink);
+      color:var(--burgundy);
+      border:2px solid rgba(78,8,12,.15);
+      border-radius:999px;
+      padding:9px 14px;
+      font-weight:800;
+      font-size:13px;
+      text-align:center;
+    }
+
+    .card{
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.52), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 24%),
+        var(--white);
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      padding:22px;
+      margin-bottom:16px;
+    }
+
+    .state-card{
+      background:#fff;
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      padding:24px;
+    }
+
+    h1,h2{
+      font-family:"Baloo 2", cursive;
+      margin:0 0 8px;
+      line-height:1;
+    }
+
+    h1{font-size:40px}
+    h2{font-size:30px}
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.5;
+      font-weight:600;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--yellow);
+      color:var(--burgundy);
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:12px;
+    }
+
+    .hero-sub{
+      margin-top:8px;
+    }
+
+    .result-list{
+      display:grid;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .result-item{
+      background:#fff;
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:24px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .result-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .result-question{
+      font-weight:800;
+      font-size:16px;
+      line-height:1.35;
+    }
+
+    .result-chip{
+      flex-shrink:0;
+      background:#FFDDF4;
+      color:var(--burgundy);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .winner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:#FFF7F3;
+      border-radius:18px;
+      padding:12px 14px;
+      border:1px solid rgba(0,0,0,.05);
+    }
+
+    .winner-name{
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .winner-meta{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      margin-top:4px;
+    }
+
+    .winner-badge{
+      background:#DFF4E9;
+      color:var(--green);
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+      flex-shrink:0;
+    }
+
+    .self-stats{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .stat-row{
+      background:#fff;
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:18px;
+      padding:12px 14px;
+    }
+
+    .stat-label{
+      font-weight:800;
+      margin-bottom:10px;
+      font-size:15px;
+      line-height:1.35;
+    }
+
+    .bars{
+      display:grid;
+      gap:8px;
+    }
+
+    .bar-line{
+      display:grid;
+      grid-template-columns:56px 1fr 44px;
+      gap:10px;
+      align-items:center;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .bar-track{
+      height:12px;
+      border-radius:999px;
+      background:#f1ece7;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .bar-fill{
+      height:100%;
+      border-radius:999px;
+    }
+
+    .bar-fill.yes{background:#DFF4E9}
+    .bar-fill.no{background:#FFE3D8}
+
+    .actions{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:22px;
+      padding:16px 18px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Inter,sans-serif;
+    }
+
+    .btn-primary{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .btn-dark{
+      background:var(--burgundy);
+      color:#fff;
+    }
+
+    .btn-whatsapp{
+      background:#25D366;
+      color:#fff;
+    }
+
+    .btn-outline{
+      background:#fff;
+      color:var(--green);
+      border:2px solid var(--green);
+    }
+
+    textarea, input{
+      width:100%;
+      border:2px solid rgba(0,0,0,.10);
+      background:#fff;
+      border-radius:20px;
+      padding:16px;
+      font-size:15px;
+      color:var(--text);
+      outline:none;
+      font-family:Inter,sans-serif;
+    }
+
+    .share-box{
+      margin-top:14px;
+    }
+
+    .share-title{
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .copy-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .copy-row input{flex:1}
+
+    .empty{
+      text-align:center;
+    }
+
+    .empty-icon{
+      font-size:44px;
+      margin-bottom:10px;
+    }
+
+    @media (max-width:640px){
+      h1{font-size:34px}
+      h2{font-size:28px}
+      .copy-row{flex-direction:column}
+      .copy-row .btn-outline{width:100%}
+      .result-top{flex-direction:column}
+      .winner{flex-direction:column; align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <div class="top">
+      <div class="brand">
+        <div class="logo">⚖</div>
         <div>
-          <div class="vote-kicker">ElVeredicto</div>
-          <div class="vote-mini">Votá anónimo</div>
+          <div class="brand-title">ElVeredicto</div>
+          <div class="brand-sub" id="brandSub">Resultados</div>
         </div>
       </div>
-      <div class="vote-badge" id="progressBadge">1 / 5</div>
+      <div class="badge" id="modeBadge">Resultado</div>
     </div>
 
-
-    <div id="loadingState" class="vote-card vote-loading">
-      <h1>Cargando veredicto...</h1>
+    <div id="loadingState" class="state-card">
+      <h1>Cargando resultados...</h1>
       <p>Esperá un segundo.</p>
     </div>
 
-
-    <div id="errorState" class="vote-card vote-error" style="display:none;">
+    <div id="errorState" class="state-card hidden">
       <h1>Ups</h1>
-      <p id="errorText">No se pudo cargar este veredicto.</p>
-      <a class="vote-btn vote-btn-dark" href="/crear">Crear el mío</a>
+      <p id="errorText">No se pudieron cargar los resultados.</p>
+      <a class="btn btn-dark" href="/crear?mode=group" style="margin-top:18px;">Crear otro</a>
     </div>
 
-
-    <div id="expiredState" class="vote-card vote-error" style="display:none;">
-      <h1>Este veredicto venció</h1>
-      <p>El link ya no está disponible. Creá uno nuevo y compartilo otra vez.</p>
-      <a class="vote-btn vote-btn-dark" href="/crear">Crear nuevo veredicto</a>
+    <div id="emptyState" class="state-card hidden empty">
+      <div class="empty-icon">🫥</div>
+      <h1>Sin votos todavía</h1>
+      <p>Compartí el link para que empiecen a votar.</p>
     </div>
 
+    <div id="resultState" class="hidden">
+      <div class="card">
+        <div class="kicker" id="topKicker">Resultado</div>
+        <h1 id="pageTitle">Resultado del veredicto</h1>
+        <p class="hero-sub" id="pageSubtitle">Acá vas a ver qué decidió el grupo.</p>
 
-    <div id="voteState" style="display:none;">
-      <div class="vote-header-text">
-        <div class="vote-chip">Sobre <span id="nicknameText">Matías</span></div>
-        <h1 id="questionTitle">¿Matías es el más chamuyero?</h1>
-        <p>Respondé rápido. Es anónimo.</p>
-      </div>
+        <div class="actions">
+          <a id="voteLinkBtn" class="btn btn-primary" href="#">Seguir compartiendo</a>
+          <a id="waBtn" class="btn btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer">Compartir por WhatsApp</a>
+        </div>
 
-
-      <div class="vote-stack">
-        <div class="vote-card-card vote-card-back"></div>
-        <div class="vote-card-card vote-card-middle"></div>
-        <div class="vote-card-card vote-card-front" id="questionCard">
-          <div class="vote-question-number" id="questionNumber">Pregunta 1</div>
-          <div class="vote-question-text" id="questionText">¿Quién tiene más chamuyo?</div>
-          <div class="vote-hint">Deslizá mentalmente 😏 o tocá una opción</div>
+        <div class="share-box">
+          <div class="share-title">Link del veredicto</div>
+          <div class="copy-row">
+            <input id="shareLinkInput" readonly>
+            <button id="copyLinkBtn" class="btn btn-outline" type="button">Copiar</button>
+          </div>
         </div>
       </div>
 
+      <div id="groupResults" class="card hidden">
+        <h2>Quién ganó cada pregunta</h2>
+        <div id="groupResultsList" class="result-list"></div>
+      </div>
 
-      <div class="vote-actions">
-        <button class="vote-action vote-no" id="btnNo" type="button">
-          <span>👎</span>
-          <span>Ni ahí</span>
-        </button>
-        <button class="vote-action vote-yes" id="btnYes" type="button">
-          <span>❤️</span>
-          <span>Sí, re va</span>
-        </button>
+      <div id="selfResults" class="card hidden">
+        <h2>Qué respondió la gente</h2>
+        <div id="selfResultsList" class="result-list"></div>
+      </div>
+
+      <div class="card">
+        <h2>¿Qué sigue?</h2>
+        <div class="actions">
+          <a class="btn btn-dark" href="/crear?mode=group">Crear veredicto del grupo</a>
+          <a class="btn btn-outline" href="/crear?mode=self">Hacer uno sobre mí</a>
+        </div>
       </div>
     </div>
 
-
-    <div id="doneState" class="vote-card vote-done" style="display:none;">
-      <div class="vote-done-icon">🎉</div>
-      <h1>Listo, ya votaste</h1>
-      <p>Tu voto fue enviado. Ahora le toca al resto del grupo.</p>
-      <a class="vote-btn vote-btn-orange" href="/crear">Crear mi veredicto</a>
-    </div>
-
-
   </div>
-</div>
 
-
-<style>
-  :root{
-    --bg:#FCF3EC;
-    --orange:#FF5E29;
-    --yellow:#FFD12E;
-    --green:#00804A;
-    --pink:#FFB6EF;
-    --burgundy:#4E080C;
-    --white:#FFFFFF;
-    --text:#000000;
-    --line:rgba(0,0,0,.10);
-    --shadow:0 18px 50px rgba(0,0,0,.08);
-  }
-
-
-  .vote-app *{box-sizing:border-box}
-
-
-  .vote-app{
-    min-height:100vh;
-    background:
-      radial-gradient(circle at top right, rgba(255,182,239,.45), transparent 28%),
-      radial-gradient(circle at bottom left, rgba(255,209,46,.30), transparent 24%),
-      var(--bg);
-    padding:24px 14px 40px;
-    font-family:Inter,sans-serif;
-    color:var(--text);
-  }
-
-
-  .vote-shell{
-    max-width:560px;
-    margin:0 auto;
-  }
-
-
-  .vote-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:14px;
-    margin-bottom:18px;
-  }
-
-
-  .vote-brand{
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
-
-
-  .vote-logo{
-    width:54px;
-    height:54px;
-    border-radius:20px;
-    background:var(--orange);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    font-weight:800;
-    box-shadow:var(--shadow);
-  }
-
-
-  .vote-kicker{
-    font-family:"Baloo 2", cursive;
-    font-size:28px;
-    line-height:1;
-    font-weight:800;
-  }
-
-
-  .vote-mini{
-    color:rgba(0,0,0,.58);
-    font-size:13px;
-    font-weight:700;
-    margin-top:2px;
-  }
-
-
-  .vote-badge{
-    background:var(--pink);
-    color:var(--burgundy);
-    border:2px solid rgba(78,8,12,.12);
-    border-radius:999px;
-    padding:9px 14px;
-    font-weight:800;
-    font-size:13px;
-    min-width:70px;
-    text-align:center;
-  }
-
-
-  .vote-card{
-    background:var(--white);
-    border-radius:30px;
-    padding:24px;
-    box-shadow:var(--shadow);
-    border:2px solid rgba(0,0,0,.06);
-  }
-
-
-  .vote-card h1{
-    font-family:"Baloo 2", cursive;
-    font-size:38px;
-    line-height:1;
-    margin:0 0 10px;
-  }
-
-
-  .vote-card p{
-    font-size:15px;
-    line-height:1.55;
-    color:rgba(0,0,0,.68);
-    margin:0;
-    font-weight:600;
-  }
-
-
-  .vote-header-text{
-    margin-bottom:18px;
-  }
-
-
-  .vote-chip{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:999px;
-    padding:8px 14px;
-    font-weight:800;
-    font-size:13px;
-    background:var(--yellow);
-    color:var(--burgundy);
-    margin-bottom:12px;
-  }
-
-
-  .vote-header-text h1{
-    font-family:"Baloo 2", cursive;
-    font-size:36px;
-    line-height:1.02;
-    margin:0 0 8px;
-  }
-
-
-  .vote-header-text p{
-    color:rgba(0,0,0,.68);
-    font-size:15px;
-    line-height:1.5;
-    margin:0;
-    font-weight:600;
-  }
-
-
-  .vote-stack{
-    position:relative;
-    height:360px;
-    margin-bottom:18px;
-  }
-
-
-  .vote-card-card{
-    position:absolute;
-    inset:0;
-    border-radius:32px;
-    border:2px solid rgba(0,0,0,.06);
-    box-shadow:var(--shadow);
-  }
-
-
-  .vote-card-back{
-    background:#FFE3D8;
-    transform:translateY(16px) scale(.96);
-    opacity:.7;
-  }
-
-
-  .vote-card-middle{
-    background:#FFF1B7;
-    transform:translateY(8px) scale(.98);
-    opacity:.9;
-  }
-
-
-  .vote-card-front{
-    background:var(--white);
-    padding:26px 22px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    transition:transform .25s ease, opacity .25s ease;
-  }
-
-
-  .vote-card-front.vote-like{
-    transform:translateX(40px) rotate(5deg);
-    opacity:.1;
-  }
-
-
-  .vote-card-front.vote-nope{
-    transform:translateX(-40px) rotate(-5deg);
-    opacity:.1;
-  }
-
-
-  .vote-question-number{
-    display:inline-flex;
-    align-self:flex-start;
-    background:#DFF4E9;
-    color:var(--green);
-    border-radius:999px;
-    padding:8px 12px;
-    font-size:13px;
-    font-weight:800;
-  }
-
-
-  .vote-question-text{
-    font-family:"Baloo 2", cursive;
-    font-size:34px;
-    line-height:1.06;
-    font-weight:800;
-    margin:18px 0;
-  }
-
-
-  .vote-hint{
-    color:rgba(0,0,0,.48);
-    font-size:13px;
-    font-weight:700;
-  }
-
-
-  .vote-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-  }
-
-
-  .vote-action{
-    min-height:72px;
-    border:none;
-    border-radius:24px;
-    font-size:18px;
-    font-weight:800;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    transition:.18s ease;
-    box-shadow:var(--shadow);
-  }
-
-
-  .vote-action:hover{
-    transform:translateY(-1px);
-  }
-
-
-  .vote-no{
-    background:#FFE3D8;
-    color:#9A381D;
-  }
-
-
-  .vote-yes{
-    background:#DFF4E9;
-    color:var(--green);
-  }
-
-
-  .vote-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:100%;
-    padding:16px 18px;
-    border-radius:24px;
-    text-decoration:none;
-    font-weight:800;
-    font-size:15px;
-    margin-top:18px;
-  }
-
-
-  .vote-btn-dark{
-    background:var(--burgundy);
-    color:#fff;
-  }
-
-
-  .vote-btn-orange{
-    background:var(--orange);
-    color:#fff;
-  }
-
-
-  .vote-error{
-    background:#fff7f4;
-  }
-
-
-  .vote-done{
-    text-align:center;
-  }
-
-
-  .vote-done-icon{
-    font-size:44px;
-    margin-bottom:10px;
-  }
-
-
-  @media (max-width:640px){
-    .vote-header-text h1{font-size:31px}
-    .vote-question-text{font-size:30px}
-    .vote-actions{grid-template-columns:1fr}
-    .vote-stack{height:330px}
-  }
-</style>
-
-
-<script>
-  const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-
-  const loadingState = document.getElementById("loadingState");
-  const errorState = document.getElementById("errorState");
-  const expiredState = document.getElementById("expiredState");
-  const voteState = document.getElementById("voteState");
-  const doneState = document.getElementById("doneState");
-  const errorText = document.getElementById("errorText");
-
-
-  const nicknameText = document.getElementById("nicknameText");
-  const questionTitle = document.getElementById("questionTitle");
-  const questionText = document.getElementById("questionText");
-  const questionNumber = document.getElementById("questionNumber");
-  const progressBadge = document.getElementById("progressBadge");
-  const questionCard = document.getElementById("questionCard");
-
-
-  const btnYes = document.getElementById("btnYes");
-  const btnNo = document.getElementById("btnNo");
-
-
-  let veredicto = null;
-  let preguntas = [];
-  let currentIndex = 0;
-
-
-  function getCodeFromUrl() {
-    const parts = window.location.pathname.split("/").filter(Boolean);
-    return parts[parts.length - 1] || null;
-  }
-
-
-  function showOnly(state) {
-    loadingState.style.display = "none";
-    errorState.style.display = "none";
-    expiredState.style.display = "none";
-    voteState.style.display = "none";
-    doneState.style.display = "none";
-    state.style.display = "block";
-  }
-
-
-  function isExpired(dateString) {
-    if (!dateString) return false;
-    return new Date(dateString).getTime() < Date.now();
-  }
-
-
-  async function loadVerdict() {
-    const code = getCodeFromUrl();
-
-
-    if (!code) {
-      errorText.textContent = "No encontré el código del veredicto.";
-      showOnly(errorState);
-      return;
+  <script>
+    const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const loadingState = document.getElementById("loadingState");
+    const errorState = document.getElementById("errorState");
+    const emptyState = document.getElementById("emptyState");
+    const resultState = document.getElementById("resultState");
+
+    const errorText = document.getElementById("errorText");
+    const brandSub = document.getElementById("brandSub");
+    const modeBadge = document.getElementById("modeBadge");
+    const topKicker = document.getElementById("topKicker");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+
+    const shareLinkInput = document.getElementById("shareLinkInput");
+    const voteLinkBtn = document.getElementById("voteLinkBtn");
+    const waBtn = document.getElementById("waBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+
+    const groupResults = document.getElementById("groupResults");
+    const selfResults = document.getElementById("selfResults");
+    const groupResultsList = document.getElementById("groupResultsList");
+    const selfResultsList = document.getElementById("selfResultsList");
+
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function showOnly(el){
+      hide(loadingState);
+      hide(errorState);
+      hide(emptyState);
+      hide(resultState);
+      show(el);
     }
 
-
-    const { data: veredictoData, error: veredictoError } = await supabaseClient
-      .from("veredictos")
-      .select("id, nickname, code, expires_at")
-      .eq("code", code)
-      .single();
-
-
-    if (veredictoError || !veredictoData) {
-      console.error(veredictoError);
-      errorText.textContent = "Este veredicto no existe o ya no está disponible.";
-      showOnly(errorState);
-      return;
+    function getCodeFromUrl(){
+      const params = new URLSearchParams(window.location.search);
+      return params.get("code");
     }
 
+    function renderGroupResults(veredicto, preguntas, participantes, votos){
+      groupResultsList.innerHTML = "";
 
-    if (isExpired(veredictoData.expires_at)) {
-      showOnly(expiredState);
-      return;
+      const participantMap = {};
+      participantes.forEach(p => {
+        participantMap[p.id] = p.nombre;
+      });
+
+      preguntas.forEach((pregunta, index) => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === pregunta.pregunta_id && v.participante_id);
+
+        const countMap = {};
+        votesForQuestion.forEach(v => {
+          const pid = v.participante_id;
+          countMap[pid] = (countMap[pid] || 0) + 1;
+        });
+
+        let winnerId = null;
+        let winnerVotes = 0;
+
+        Object.keys(countMap).forEach(pid => {
+          if(countMap[pid] > winnerVotes){
+            winnerVotes = countMap[pid];
+            winnerId = Number(pid);
+          }
+        });
+
+        const winnerName = winnerId ? participantMap[winnerId] : "Todavía sin ganador";
+
+        const item = document.createElement("div");
+        item.className = "result-item";
+
+        item.innerHTML = `
+          <div class="result-top">
+            <div class="result-question">${index + 1}. ${pregunta.texto}</div>
+            <div class="result-chip">${winnerVotes} voto${winnerVotes === 1 ? "" : "s"}</div>
+          </div>
+
+          <div class="winner">
+            <div>
+              <div class="winner-name">${winnerName}</div>
+              <div class="winner-meta">${winnerVotes > 0 ? "El grupo lo eligió para esta categoría" : "Todavía nadie votó esta pregunta"}</div>
+            </div>
+            <div class="winner-badge">${winnerVotes > 0 ? "🏆 ganador" : "⌛ esperando"}</div>
+          </div>
+        `;
+
+        groupResultsList.appendChild(item);
+      });
     }
 
+    function renderSelfResults(preguntas, votos){
+      selfResultsList.innerHTML = "";
 
-    veredicto = veredictoData;
+      preguntas.forEach((pregunta) => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === pregunta.pregunta_id);
 
+        const yesCount = votesForQuestion.filter(v => v.respuesta === "si").length;
+        const noCount = votesForQuestion.filter(v => v.respuesta === "no").length;
+        const total = yesCount + noCount;
 
-    const { data: relationData, error: relationError } = await supabaseClient
-      .from("veredicto_preguntas")
-      .select("orden, pregunta_id, preguntas(id, texto)")
-      .eq("veredicto_id", veredicto.id)
-      .order("orden", { ascending: true });
+        const yesPercent = total > 0 ? Math.round((yesCount / total) * 100) : 0;
+        const noPercent = total > 0 ? Math.round((noCount / total) * 100) : 0;
 
+        const item = document.createElement("div");
+        item.className = "stat-row";
 
-    if (relationError || !relationData || !relationData.length) {
-      console.error(relationError);
-      errorText.textContent = "No encontré las preguntas de este veredicto.";
-      showOnly(errorState);
-      return;
+        item.innerHTML = `
+          <div class="stat-label">${pregunta.texto}</div>
+
+          <div class="bars">
+            <div class="bar-line">
+              <div>Sí</div>
+              <div class="bar-track">
+                <div class="bar-fill yes" style="width:${yesPercent}%"></div>
+              </div>
+              <div>${yesCount}</div>
+            </div>
+
+            <div class="bar-line">
+              <div>No</div>
+              <div class="bar-track">
+                <div class="bar-fill no" style="width:${noPercent}%"></div>
+              </div>
+              <div>${noCount}</div>
+            </div>
+          </div>
+        `;
+
+        selfResultsList.appendChild(item);
+      });
     }
 
+    async function loadResults(){
+      const code = getCodeFromUrl();
 
-    preguntas = relationData.map(item => ({
-      pregunta_id: item.pregunta_id,
-      texto: item.preguntas?.texto || "Pregunta"
-    }));
-
-
-    renderCurrentQuestion();
-    showOnly(voteState);
-  }
-
-
-  function renderCurrentQuestion() {
-    const actual = preguntas[currentIndex];
-    if (!actual) {
-      showOnly(doneState);
-      return;
-    }
-
-
-    nicknameText.textContent = veredicto.nickname;
-    questionTitle.textContent = `Sobre ${veredicto.nickname}...`;
-    questionText.textContent = actual.texto;
-    questionNumber.textContent = `Pregunta ${currentIndex + 1}`;
-    progressBadge.textContent = `${currentIndex + 1} / ${preguntas.length}`;
-
-
-    questionCard.classList.remove("vote-like", "vote-nope");
-  }
-
-
-  async function vote(answer) {
-    const actual = preguntas[currentIndex];
-    if (!actual) return;
-
-
-    btnYes.disabled = true;
-    btnNo.disabled = true;
-
-
-    questionCard.classList.add(answer === "si" ? "vote-like" : "vote-nope");
-
-
-    const { error } = await supabaseClient
-      .from("votos")
-      .insert([{
-        veredicto_id: veredicto.id,
-        pregunta_id: actual.pregunta_id,
-        pregunta: actual.texto,
-        respuesta: answer
-      }]);
-
-
-    if (error) {
-      console.error(error);
-      errorText.textContent = "No se pudo guardar tu voto. Probá de nuevo.";
-      showOnly(errorState);
-      return;
-    }
-
-
-    setTimeout(() => {
-      currentIndex += 1;
-      btnYes.disabled = false;
-      btnNo.disabled = false;
-
-
-      if (currentIndex >= preguntas.length) {
-        showOnly(doneState);
-      } else {
-        renderCurrentQuestion();
+      if(!code){
+        errorText.textContent = "No encontré el código del veredicto.";
+        showOnly(errorState);
+        return;
       }
-    }, 220);
-  }
 
+      const verdictResult = await db
+        .from("veredictos")
+        .select("id,nickname,code,mode,group_name")
+        .eq("code", code)
+        .single();
 
-  btnYes.addEventListener("click", () => vote("si"));
-  btnNo.addEventListener("click", () => vote("no"));
+      if(verdictResult.error || !verdictResult.data){
+        console.error(verdictResult.error);
+        errorText.textContent = "Este veredicto no existe o ya no está disponible.";
+        showOnly(errorState);
+        return;
+      }
 
+      const veredicto = verdictResult.data;
 
-  loadVerdict();
-</script>
+      const questionsResult = await db
+        .from("veredicto_preguntas")
+        .select("orden,pregunta_id,preguntas(id,texto)")
+        .eq("veredicto_id", veredicto.id)
+        .order("orden", { ascending: true });
+
+      if(questionsResult.error || !questionsResult.data || !questionsResult.data.length){
+        console.error(questionsResult.error);
+        errorText.textContent = "No encontré las preguntas de este veredicto.";
+        showOnly(errorState);
+        return;
+      }
+
+      const preguntas = questionsResult.data.map(item => ({
+        pregunta_id: item.pregunta_id,
+        texto: item.preguntas?.texto || "Pregunta"
+      }));
+
+      const votesResult = await db
+        .from("votos")
+        .select("pregunta_id,respuesta,participante_id")
+        .eq("veredicto_id", veredicto.id);
+
+      if(votesResult.error){
+        console.error(votesResult.error);
+        errorText.textContent = "No pude cargar los votos.";
+        showOnly(errorState);
+        return;
+      }
+
+      const votos = votesResult.data || [];
+
+      const voteLink = window.location.origin + "/votar?code=" + code;
+      shareLinkInput.value = voteLink;
+      voteLinkBtn.href = voteLink;
+
+      if(veredicto.mode === "group"){
+        brandSub.textContent = "Resultado del grupo";
+        modeBadge.textContent = "Grupo";
+        topKicker.textContent = "veredicto grupal";
+        pageTitle.textContent = veredicto.group_name ? ("Resultados de " + veredicto.group_name) : "Resultado del grupo";
+        pageSubtitle.textContent = "Estas son las personas que fueron elegidas en cada pregunta.";
+
+        const participantsResult = await db
+          .from("participantes")
+          .select("id,nombre,orden")
+          .eq("veredicto_id", veredicto.id)
+          .order("orden", { ascending: true });
+
+        if(participantsResult.error || !participantsResult.data || !participantsResult.data.length){
+          console.error(participantsResult.error);
+          errorText.textContent = "No encontré los participantes de este veredicto.";
+          showOnly(errorState);
+          return;
+        }
+
+        const participantes = participantsResult.data;
+
+        if(votos.length === 0){
+          showOnly(emptyState);
+          return;
+        }
+
+        renderGroupResults(veredicto, preguntas, participantes, votos);
+        show(groupResults);
+        hide(selfResults);
+
+        const whatsappText = `🔥 Ya están los resultados del veredicto${veredicto.group_name ? " de " + veredicto.group_name : ""}\n\nEntrá a ver quién quedó en cada categoría 👇\n${window.location.href}`;
+        waBtn.href = "https://wa.me/?text=" + encodeURIComponent(whatsappText);
+
+      } else {
+        brandSub.textContent = "Resultado anónimo";
+        modeBadge.textContent = "Sobre mí";
+        topKicker.textContent = "qué opinan sobre vos";
+        pageTitle.textContent = "Resultados sobre " + veredicto.nickname;
+        pageSubtitle.textContent = "Así respondió la gente en cada pregunta.";
+
+        if(votos.length === 0){
+          showOnly(emptyState);
+          return;
+        }
+
+        renderSelfResults(preguntas, votos);
+        show(selfResults);
+        hide(groupResults);
+
+        const whatsappText = `⚖️ Ya están mis resultados en ElVeredicto\n\nEntrá a ver qué respondió la gente 👇\n${window.location.href}`;
+        waBtn.href = "https://wa.me/?text=" + encodeURIComponent(whatsappText);
+      }
+
+      showOnly(resultState);
+    }
+
+    copyLinkBtn.addEventListener("click", async function(){
+      try{
+        await navigator.clipboard.writeText(shareLinkInput.value);
+        copyLinkBtn.textContent = "Copiado ✅";
+        setTimeout(function(){
+          copyLinkBtn.textContent = "Copiar";
+        }, 1400);
+      } catch(err){
+        console.error(err);
+      }
+    });
+
+    loadResults();
+  </script>
+</body>
+</html>
