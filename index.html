@@ -17,7 +17,7 @@
       --burgundy:#4E080C;
       --white:#FFFFFF;
       --text:#000000;
-      --muted:rgba(0,0,0,.62);
+      --muted:rgba(0,0,0,.64);
       --line:rgba(0,0,0,.08);
       --shadow:0 24px 60px rgba(0,0,0,.09);
     }
@@ -132,7 +132,64 @@
       font-size:17px;
       line-height:1.45;
       font-weight:700;
-      max-width:420px;
+      max-width:440px;
+    }
+
+    .hero-cta{
+      display:grid;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .cta-main,
+    .cta-secondary{
+      width:100%;
+      border:none;
+      border-radius:24px;
+      padding:17px 18px;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      font-family:Inter,sans-serif;
+      transition:.18s ease;
+    }
+
+    .cta-main:hover,
+    .cta-secondary:hover,
+    .mode-card:hover{
+      transform:translateY(-2px);
+    }
+
+    .cta-main{
+      background:var(--orange);
+      color:#fff;
+      box-shadow:var(--shadow);
+    }
+
+    .cta-secondary{
+      background:#fff;
+      color:var(--burgundy);
+      border:2px solid rgba(78,8,12,.10);
+    }
+
+    .micro-proof{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .micro-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.06);
+      font-size:12px;
+      font-weight:800;
+      color:rgba(0,0,0,.72);
     }
 
     .modes{
@@ -153,10 +210,6 @@
       border:2px solid rgba(0,0,0,.06);
       transition:.18s ease;
       font-family:Inter,sans-serif;
-    }
-
-    .mode-card:hover{
-      transform:translateY(-2px);
     }
 
     .mode-card.group{
@@ -203,7 +256,7 @@
     .mode-desc{
       font-size:15px;
       line-height:1.45;
-      color:rgba(0,0,0,.68);
+      color:rgba(0,0,0,.72);
       font-weight:700;
       margin:0;
     }
@@ -223,13 +276,19 @@
       padding:8px 12px;
       font-size:12px;
       font-weight:800;
-      background:rgba(255,255,255,.68);
+      background:rgba(255,255,255,.7);
       color:rgba(0,0,0,.72);
       border:1px solid rgba(0,0,0,.06);
     }
 
+    .section-title{
+      font-family:"Baloo 2", cursive;
+      font-size:30px;
+      line-height:1;
+      margin:22px 0 12px;
+    }
+
     .social-proof{
-      margin-top:16px;
       background:#fff;
       border-radius:26px;
       border:2px solid rgba(0,0,0,.05);
@@ -292,6 +351,69 @@
       color:var(--burgundy);
     }
 
+    .viral-card{
+      margin-top:16px;
+      background:
+        linear-gradient(135deg, #fff 0%, #fff5f2 100%);
+      border-radius:28px;
+      border:2px solid rgba(0,0,0,.05);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .viral-kicker{
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      margin-bottom:10px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .result-demo{
+      display:grid;
+      gap:10px;
+    }
+
+    .result-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.06);
+      border-radius:18px;
+      padding:12px 14px;
+    }
+
+    .result-name{
+      font-weight:800;
+      font-size:15px;
+    }
+
+    .result-role{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .result-badge{
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      background:#FFDDF4;
+      color:var(--burgundy);
+      white-space:nowrap;
+    }
+
+    .bottom-cta{
+      margin-top:18px;
+      display:grid;
+      gap:10px;
+    }
+
     .footer-note{
       text-align:center;
       margin-top:16px;
@@ -304,6 +426,7 @@
       h1{font-size:42px}
       .mode-title{font-size:28px}
       .hero p{font-size:16px}
+      .section-title{font-size:26px}
     }
   </style>
 </head>
@@ -323,11 +446,22 @@
 
     <section class="hero">
       <div class="hero-kicker">viral • anónimo • compartible</div>
-      <h1>Descubrí qué rol te da tu grupo</h1>
+      <h1>El grupo vota y cada uno recibe su veredicto</h1>
       <p>
-        Armá un veredicto, compartilo por WhatsApp y vean quién es el más personaje,
-        quién nunca paga o qué piensa el grupo sobre vos.
+        Armá el juego, compartilo por WhatsApp y descubrí quién es el más personaje,
+        quién nunca paga, quién tiene más levante y mucho más.
       </p>
+
+      <div class="hero-cta">
+        <button class="cta-main" onclick="startGroup()">🔥 Crear veredicto del grupo</button>
+        <button class="cta-secondary" onclick="startSelf()">🧠 Hacer uno sobre mí</button>
+      </div>
+
+      <div class="micro-proof">
+        <span class="micro-pill">ideal para grupos</span>
+        <span class="micro-pill">5 preguntas</span>
+        <span class="micro-pill">resultado compartible</span>
+      </div>
 
       <div class="modes">
         <button class="mode-card group" onclick="startGroup()">
@@ -337,12 +471,12 @@
           </div>
           <div class="mode-title">Veredicto del grupo</div>
           <p class="mode-desc">
-            Agregás nombres, el grupo vota y salen títulos divertidos para cada uno.
+            Agregás nombres, el grupo vota y salen títulos para cada uno.
           </p>
           <div class="mode-tags">
             <span class="tag">más viral</span>
             <span class="tag">ideal para WhatsApp</span>
-            <span class="tag">resultado compartible</span>
+            <span class="tag">cada uno comparte su resultado</span>
           </div>
         </button>
 
@@ -353,7 +487,7 @@
           </div>
           <div class="mode-title">Qué opinan sobre mí</div>
           <p class="mode-desc">
-            Mandá tu link y descubrí qué piensa la gente sobre vos de forma anónima.
+            Mandás tu link y descubrís qué piensa la gente sobre vos de forma anónima.
           </p>
           <div class="mode-tags">
             <span class="tag">tipo NGL</span>
@@ -363,6 +497,44 @@
         </button>
       </div>
     </section>
+
+    <div class="section-title">Así se ve el resultado</div>
+
+    <section class="viral-card">
+      <div class="viral-kicker">ejemplo de veredicto compartible</div>
+
+      <div class="result-demo">
+        <div class="result-item">
+          <div>
+            <div class="result-name">Matías</div>
+            <div class="result-role">El más personaje del grupo</div>
+          </div>
+          <div class="result-badge">🎭 ganador</div>
+        </div>
+
+        <div class="result-item">
+          <div>
+            <div class="result-name">Martina</div>
+            <div class="result-role">La que nunca paga</div>
+          </div>
+          <div class="result-badge">💸 veredicto</div>
+        </div>
+
+        <div class="result-item">
+          <div>
+            <div class="result-name">Juan</div>
+            <div class="result-role">El más fachero</div>
+          </div>
+          <div class="result-badge">🔥 shareable</div>
+        </div>
+      </div>
+
+      <div class="bottom-cta">
+        <button class="cta-main" onclick="startGroup()">👇 Probar ahora</button>
+      </div>
+    </section>
+
+    <div class="section-title">Por qué engancha</div>
 
     <section class="social-proof">
       <div class="proof-row">
