@@ -1,808 +1,968 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resultado — ElVeredicto</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado — ElVeredicto</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<style>
-:root{
-  --bg:#FCF3EC;
-  --orange:#FF5E29;
-  --green:#00804A;
-  --pink:#FFB6EF;
-  --yellow:#FFD12E;
-  --burgundy:#4E080C;
-  --white:#fff;
-  --shadow:0 18px 50px rgba(0,0,0,.08);
-}
+  <style>
+    :root{
+      --bg:#FCF3EC;
+      --orange:#FF5E29;
+      --green:#00804A;
+      --pink:#FFB6EF;
+      --yellow:#FFD12E;
+      --burgundy:#4E080C;
+      --white:#fff;
+      --ink:#000;
+      --muted:#65605c;
+      --shadow:0 18px 50px rgba(0,0,0,.08);
+      --shadow-soft:0 10px 30px rgba(0,0,0,.06);
+    }
 
-*{box-sizing:border-box}
+    *{box-sizing:border-box}
 
-body{
-  margin:0;
-  background:
-    radial-gradient(circle at top right, rgba(255,182,239,.4), transparent 30%),
-    radial-gradient(circle at bottom left, rgba(255,209,46,.3), transparent 30%),
-    var(--bg);
-  font-family:Inter,sans-serif;
-  padding:22px 14px 40px;
-  color:#000;
-}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+      padding:22px 14px 40px;
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.42), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 28%),
+        var(--bg);
+    }
 
-.shell{max-width:520px;margin:auto}
-.hidden{display:none!important}
+    .shell{max-width:540px;margin:auto}
+    .hidden{display:none!important}
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-}
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
 
-.top-left{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
+    .top-left{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
 
-.logo{
-  width:50px;
-  height:50px;
-  border-radius:16px;
-  background:var(--orange);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-size:24px;
-  font-weight:800;
-}
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      background:var(--orange);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:24px;
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+    }
 
-.brand-title{
-  font-family:"Baloo 2";
-  font-size:28px;
-  font-weight:800;
-  line-height:1;
-}
+    .brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:30px;
+      font-weight:800;
+      line-height:1;
+    }
 
-.brand-sub{
-  color:#6a6663;
-  font-size:13px;
-  font-weight:700;
-  margin-top:4px;
-}
+    .brand-sub{
+      color:#6a6663;
+      font-size:13px;
+      font-weight:700;
+      margin-top:4px;
+    }
 
-.badge{
-  background:var(--pink);
-  color:var(--burgundy);
-  padding:9px 14px;
-  border-radius:999px;
-  font-weight:800;
-  border:2px solid rgba(78,8,12,.10);
-}
+    .badge{
+      background:var(--pink);
+      color:var(--burgundy);
+      padding:9px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:13px;
+      border:2px solid rgba(78,8,12,.10);
+      white-space:nowrap;
+    }
 
-.card{
-  background:#fff;
-  border-radius:28px;
-  padding:20px;
-  box-shadow:var(--shadow);
-  margin-bottom:18px;
-}
+    .card{
+      background:#fff;
+      border-radius:30px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
 
-h1,h2{
-  font-family:"Baloo 2";
-  margin:0 0 8px;
-  line-height:1;
-}
+    h1,h2{
+      font-family:"Baloo 2", cursive;
+      margin:0 0 8px;
+      line-height:.98;
+    }
 
-h1{font-size:42px}
-h2{font-size:32px}
+    h1{font-size:42px}
+    h2{font-size:32px}
 
-p{
-  margin:0;
-  color:#64605d;
-  font-weight:600;
-  line-height:1.5;
-  font-size:15px;
-}
+    p{
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      line-height:1.5;
+      font-size:15px;
+    }
 
-.btn{
-  width:100%;
-  padding:16px;
-  border-radius:22px;
-  border:none;
-  font-weight:800;
-  font-size:16px;
-  margin-top:10px;
-  cursor:pointer;
-  font-family:Inter,sans-serif;
-}
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--yellow);
+      color:var(--burgundy);
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:12px;
+    }
 
-.btn-orange{background:var(--orange);color:#fff}
-.btn-green{background:#25D366;color:#fff}
-.btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
-.btn-dark{background:var(--burgundy);color:#fff}
+    .btn{
+      width:100%;
+      padding:16px;
+      border-radius:22px;
+      border:none;
+      font-weight:800;
+      font-size:16px;
+      margin-top:10px;
+      cursor:pointer;
+      font-family:Inter,sans-serif;
+      transition:.18s ease;
+    }
 
-.story-shell{
-  background:#fff;
-  border-radius:28px;
-  padding:16px;
-  box-shadow:var(--shadow);
-  margin-top:14px;
-}
+    .btn:hover{transform:translateY(-1px)}
 
-.story-card{
-  width:100%;
-  aspect-ratio:9/16;
-  border-radius:30px;
-  overflow:hidden;
-  position:relative;
-  padding:22px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  border:2px solid rgba(0,0,0,.06);
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.45), transparent 22%),
-    radial-gradient(circle at bottom left, rgba(255,255,255,.22), transparent 24%),
-    linear-gradient(135deg,#fff7f1,#fff,#ffeef9);
-}
+    .btn-orange{background:var(--orange);color:#fff}
+    .btn-green{background:#25D366;color:#fff}
+    .btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
+    .btn-dark{background:var(--burgundy);color:#fff}
 
-.story-card.theme-hot{
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(255,209,46,.22), transparent 22%),
-    linear-gradient(135deg,#fff3eb 0%, #ffd7c7 45%, #ffb497 100%);
-}
+    .story-shell{
+      background:#fff;
+      border-radius:30px;
+      padding:16px;
+      box-shadow:var(--shadow-soft);
+      margin-top:14px;
+    }
 
-.story-card.theme-love{
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(255,209,46,.18), transparent 22%),
-    linear-gradient(135deg,#fff6fb 0%, #ffe2f4 42%, #ffc7ea 100%);
-}
+    .story-card{
+      width:100%;
+      aspect-ratio:9/16;
+      border-radius:34px;
+      overflow:hidden;
+      position:relative;
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      border:2px solid rgba(0,0,0,.05);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.35), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(255,255,255,.18), transparent 24%),
+        linear-gradient(135deg,#fff6f1,#fff,#ffedf8);
+    }
 
-.story-card.theme-chaos{
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(255,182,239,.20), transparent 22%),
-    linear-gradient(135deg,#fff9dc 0%, #ffe67d 40%, #ffd12e 100%);
-}
+    .story-card::before{
+      content:"";
+      position:absolute;
+      inset:auto -10% -10% auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:rgba(255,255,255,.18);
+      filter:blur(8px);
+      pointer-events:none;
+    }
 
-.story-card.theme-soft{
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(255,209,46,.18), transparent 22%),
-    linear-gradient(135deg,#f4fff8 0%, #dff4e9 44%, #c7ecd9 100%);
-}
+    .story-card::after{
+      content:"";
+      position:absolute;
+      inset:8% auto auto -16%;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(255,255,255,.14);
+      filter:blur(10px);
+      pointer-events:none;
+    }
 
-.story-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
+    .theme-hot{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(255,212,163,.16), transparent 22%),
+        linear-gradient(145deg,#fffbf7 0%, #ffd3bf 35%, #ff9a75 100%);
+    }
 
-.story-brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+    .theme-love{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.12), transparent 18%),
+        linear-gradient(145deg,#fff8fd 0%, #ffdff4 42%, #ffb9e6 100%);
+    }
 
-.story-logo{
-  width:44px;
-  height:44px;
-  border-radius:14px;
-  background:var(--orange);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:21px;
-  font-weight:800;
-}
+    .theme-chaos{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.24), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(255,182,239,.14), transparent 20%),
+        linear-gradient(145deg,#fffdf0 0%, #ffe676 40%, #ffd12e 100%);
+    }
 
-.story-brand-title{
-  font-family:"Baloo 2";
-  font-size:24px;
-  line-height:1;
-}
+    .theme-soft{
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.28), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.12), transparent 20%),
+        linear-gradient(145deg,#f5fff8 0%, #dff4e9 46%, #bfe7d1 100%);
+    }
 
-.story-brand-sub{
-  font-size:12px;
-  color:#6d6663;
-  font-weight:700;
-  margin-top:2px;
-}
+    .story-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
 
-.story-mode{
-  background:rgba(255,182,239,.95);
-  color:var(--burgundy);
-  padding:8px 12px;
-  border-radius:999px;
-  font-weight:800;
-  border:2px solid rgba(78,8,12,.08);
-}
+    .story-brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
 
-.story-middle{
-  display:grid;
-  gap:12px;
-}
+    .story-logo{
+      width:46px;
+      height:46px;
+      border-radius:15px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:21px;
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+      flex-shrink:0;
+    }
 
-.story-kicker{
-  display:inline-flex;
-  width:max-content;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,.75);
-  font-size:12px;
-  font-weight:800;
-  color:#43231b;
-}
+    .story-brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:24px;
+      line-height:1;
+    }
 
-.story-emoji{
-  font-size:54px;
-  line-height:1;
-}
+    .story-brand-sub{
+      font-size:12px;
+      color:#6d6663;
+      font-weight:700;
+      margin-top:2px;
+    }
 
-.story-name{
-  font-family:"Baloo 2";
-  font-size:44px;
-  line-height:.92;
-  margin-top:2px;
-}
+    .story-mode{
+      background:rgba(255,182,239,.95);
+      color:var(--burgundy);
+      padding:9px 13px;
+      border-radius:999px;
+      font-weight:800;
+      border:2px solid rgba(78,8,12,.08);
+      flex-shrink:0;
+    }
 
-.story-role{
-  font-size:30px;
-  line-height:1.03;
-  font-weight:800;
-  max-width:95%;
-}
+    .story-middle{
+      display:grid;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
 
-.story-bottom{
-  display:grid;
-  gap:12px;
-}
+    .story-kicker{
+      display:inline-flex;
+      width:max-content;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      font-size:12px;
+      font-weight:800;
+      color:#43231b;
+      box-shadow:0 6px 20px rgba(0,0,0,.04);
+    }
 
-.story-badge{
-  background:#DFF4E9;
-  color:var(--green);
-  padding:11px 15px;
-  border-radius:999px;
-  font-weight:800;
-  width:max-content;
-  font-size:14px;
-}
+    .story-emoji{
+      font-size:56px;
+      line-height:1;
+      filter:drop-shadow(0 4px 8px rgba(0,0,0,.08));
+    }
 
-.story-copy{
-  font-size:17px;
-  line-height:1.32;
-  font-weight:700;
-  color:#4f4a47;
-  max-width:90%;
-}
+    .story-name{
+      font-family:"Baloo 2", cursive;
+      font-size:58px;
+      line-height:.86;
+      letter-spacing:-1px;
+      text-transform:none;
+      max-width:95%;
+      word-break:break-word;
+    }
 
-.story-link-pill{
-  display:inline-flex;
-  width:max-content;
-  background:rgba(255,255,255,.8);
-  border:2px solid rgba(0,0,0,.04);
-  border-radius:999px;
-  padding:10px 14px;
-  font-weight:700;
-  font-size:13px;
-  color:#4b4744;
-}
+    .story-role{
+      font-size:32px;
+      line-height:1.02;
+      font-weight:800;
+      max-width:96%;
+      text-wrap:balance;
+    }
 
-.tutorial{
-  margin-top:16px;
-  background:#fff;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
+    .story-bottom{
+      display:grid;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
 
-.steps{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-}
+    .story-vote-badge{
+      background:rgba(223,244,233,.92);
+      color:var(--green);
+      padding:11px 15px;
+      border-radius:999px;
+      font-weight:800;
+      width:max-content;
+      font-size:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+    }
 
-.step{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  background:#e8e8e8;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-}
+    .story-copy{
+      font-size:20px;
+      line-height:1.18;
+      font-weight:800;
+      color:#463f3b;
+      max-width:92%;
+    }
 
-.step.active{
-  background:#000;
-  color:#fff;
-}
+    .story-link-pill{
+      display:inline-flex;
+      width:max-content;
+      background:rgba(255,255,255,.82);
+      border:2px solid rgba(0,0,0,.04);
+      border-radius:999px;
+      padding:11px 14px;
+      font-weight:700;
+      font-size:13px;
+      color:#4b4744;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+    }
 
-.small-note{
-  margin-top:10px;
-  font-size:13px;
-  color:#6a6663;
-  font-weight:700;
-}
+    .story-sign{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.4px;
+      color:#6b6663;
+      text-transform:uppercase;
+    }
 
-.toggle{
-  margin-top:12px;
-}
+    .picker{
+      margin-top:16px;
+    }
 
-.result-list{
-  margin-top:14px;
-}
+    .picker-label{
+      font-size:13px;
+      font-weight:800;
+      color:#5f5956;
+      margin-bottom:10px;
+    }
 
-.result-item{
-  background:#fff;
-  padding:14px;
-  border-radius:18px;
-  margin-bottom:10px;
-  box-shadow:var(--shadow);
-}
+    .picker-scroll{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom:4px;
+      scrollbar-width:none;
+    }
 
-.result-q{
-  font-weight:800;
-  font-size:18px;
-  line-height:1.25;
-  margin-bottom:10px;
-}
+    .picker-scroll::-webkit-scrollbar{display:none}
 
-.result-w{
-  color:#55504d;
-  font-weight:700;
-}
+    .person-chip{
+      border:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:14px;
+      cursor:pointer;
+      white-space:nowrap;
+      background:#f5efea;
+      color:#4c4743;
+      transition:.18s ease;
+      box-shadow:0 4px 14px rgba(0,0,0,.04);
+    }
 
-.loading,.error{
-  text-align:center;
-}
+    .person-chip.active{
+      background:var(--burgundy);
+      color:#fff;
+    }
 
-@media (max-width:640px){
-  h1{font-size:36px}
-  h2{font-size:28px}
-  .story-name{font-size:40px}
-  .story-role{font-size:28px}
-}
+    .micro-copy{
+      margin-top:10px;
+      font-size:13px;
+      color:#6c6662;
+      font-weight:700;
+    }
 
-</style>
+    .result-list{
+      margin-top:14px;
+    }
+
+    .result-item{
+      background:#fff;
+      padding:14px;
+      border-radius:18px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .result-q{
+      font-weight:800;
+      font-size:18px;
+      line-height:1.25;
+      margin-bottom:10px;
+    }
+
+    .result-w{
+      color:#55504d;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .loading,.error{
+      text-align:center;
+    }
+
+    @media (max-width:640px){
+      h1{font-size:36px}
+      h2{font-size:28px}
+      .story-name{font-size:50px}
+      .story-role{font-size:28px}
+      .story-copy{font-size:18px}
+    }
+  </style>
 </head>
 <body>
+  <div class="shell">
 
-<div class="shell">
-
-  <div class="top">
-    <div class="top-left">
-      <div class="logo">⚖</div>
-      <div>
-        <div class="brand-title">ElVeredicto</div>
-        <div class="brand-sub" id="brandSub">Resultado del grupo</div>
+    <div class="top">
+      <div class="top-left">
+        <div class="logo">⚖</div>
+        <div>
+          <div class="brand-title">ElVeredicto</div>
+          <div class="brand-sub" id="brandSub">Resultado del grupo</div>
+        </div>
       </div>
-    </div>
-    <div class="badge" id="modeBadge">Grupo</div>
-  </div>
-
-  <div id="loadingState" class="card loading">
-    <h2>Cargando resultados...</h2>
-    <p>Un segundo.</p>
-  </div>
-
-  <div id="errorState" class="card error hidden">
-    <h2>Ups</h2>
-    <p id="errorText">No se pudieron cargar los resultados.</p>
-  </div>
-
-  <div id="content" class="hidden">
-
-    <div class="card">
-      <h1 id="title">Resultados</h1>
-      <p id="subtitle">Elegimos la mejor tarjeta para que la compartas al toque.</p>
+      <div class="badge" id="modeBadge">Grupo</div>
     </div>
 
-    <div class="card">
-      <h2>Tu story ya está lista</h2>
-      <p>Esta es la tarjeta más compartible del grupo.</p>
+    <div id="loadingState" class="card loading">
+      <h2>Cargando resultados...</h2>
+      <p>Un segundo.</p>
+    </div>
 
-      <div class="story-shell">
-        <div class="story-card theme-love" id="storyCard">
-          <div class="story-top">
-            <div class="story-brand">
-              <div class="story-logo">⚖</div>
-              <div>
-                <div class="story-brand-title">ElVeredicto</div>
-                <div class="story-brand-sub" id="storyGroupName">Los de siempre</div>
+    <div id="errorState" class="card error hidden">
+      <h2>Ups</h2>
+      <p id="errorText">No se pudieron cargar los resultados.</p>
+    </div>
+
+    <div id="content" class="hidden">
+
+      <div class="card">
+        <div class="kicker">resultado compartible</div>
+        <h1 id="title">Resultados</h1>
+        <p id="subtitle">Elegí la tarjeta más fuerte del grupo y compartila.</p>
+      </div>
+
+      <div class="card">
+        <h2>La story que sí da ganas de subir</h2>
+        <p>Probá entre personas y elegí cuál compartir.</p>
+
+        <div class="picker">
+          <div class="picker-label">Elegí una tarjeta</div>
+          <div class="picker-scroll" id="personPicker"></div>
+        </div>
+
+        <div class="story-shell">
+          <div class="story-card theme-love" id="storyCard">
+            <div class="story-top">
+              <div class="story-brand">
+                <div class="story-logo">⚖</div>
+                <div>
+                  <div class="story-brand-title">ElVeredicto</div>
+                  <div class="story-brand-sub" id="storyGroupName">Los de siempre</div>
+                </div>
               </div>
+              <div class="story-mode">Grupo</div>
             </div>
-            <div class="story-mode">Grupo</div>
-          </div>
 
-          <div class="story-middle">
-            <div class="story-kicker">resultado compartible</div>
-            <div class="story-emoji" id="storyEmoji">🔥</div>
-            <div class="story-name" id="storyName">Shai</div>
-            <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
-          </div>
+            <div class="story-middle">
+              <div class="story-kicker">resultado compartible</div>
+              <div class="story-emoji" id="storyEmoji">💘</div>
+              <div class="story-name" id="storyName">Shai</div>
+              <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
+            </div>
 
-          <div class="story-bottom">
-            <div class="story-badge" id="storyWins">🏆 Ganó 3 categorías</div>
-            <div class="story-copy">Subí esta historia, pegá el link y armá el veredicto con tu grupo.</div>
-            <div class="story-link-pill" id="storyLinkPill">elveredicto.app</div>
+            <div class="story-bottom">
+              <div class="story-vote-badge" id="storyVotes">💬 3 personas la eligieron</div>
+              <div class="story-copy">Subí esta story, pegá el link y armá el veredicto con tu grupo.</div>
+              <div class="story-link-pill" id="storyLinkPill">🔗 elveredicto.app</div>
+              <div class="story-sign">Hecho con ElVeredicto</div>
+            </div>
           </div>
+        </div>
+
+        <button class="btn btn-orange" id="shareBtn">📲 Subir esta</button>
+        <button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
+        <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
+
+        <div class="micro-copy">
+          Consejo: compartí primero la tarjeta más picante o la más graciosa. Esa suele ser la que mejor prende.
         </div>
       </div>
 
-      <button class="btn btn-orange" id="shareBtn">📲 Subir a historia</button>
-      <button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
-      <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
-    </div>
-
-    <div class="tutorial">
-      <h2>Cómo compartirlo</h2>
-      <div class="steps">
-        <div class="step active">1</div>
-        <div class="step">2</div>
-        <div class="step">3</div>
+      <div class="card">
+        <h2>Ver todos los resultados</h2>
+        <button class="btn btn-dark" id="toggleResultsBtn">Mostrar resultados completos</button>
+        <div id="results" class="result-list hidden"></div>
       </div>
-      <p>Guardá o compartí la story, subila a Instagram y agregá el sticker <b>Link</b> con el enlace del juego.</p>
-      <div class="small-note">Tip: si querés, primero copiá el link y después abrí Instagram.</div>
-    </div>
 
-    <div class="card">
-      <h2>Ver todos los resultados</h2>
-      <button class="btn btn-dark toggle" id="toggleResultsBtn">Mostrar resultados completos</button>
-      <div id="results" class="result-list hidden"></div>
-    </div>
+      <div class="card">
+        <h2>¿Qué sigue?</h2>
+        <button class="btn btn-dark" onclick="location.href='/crear?mode=group'">Crear veredicto del grupo</button>
+        <button class="btn btn-outline" onclick="location.href='/crear?mode=self'">Hacer uno sobre mí</button>
+      </div>
 
-    <div class="card">
-      <h2>¿Qué sigue?</h2>
-      <button class="btn btn-dark" onclick="location.href='/crear?mode=group'">Crear veredicto del grupo</button>
-      <button class="btn btn-outline" onclick="location.href='/crear?mode=self'">Hacer uno sobre mí</button>
     </div>
-
   </div>
 
-</div>
+  <script>
+    const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<script>
-const SUPABASE_URL="https://ytupmzjhhulcwfuidkzc.supabase.co";
-const SUPABASE_KEY="sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    const loadingState = document.getElementById("loadingState");
+    const errorState = document.getElementById("errorState");
+    const errorText = document.getElementById("errorText");
+    const content = document.getElementById("content");
 
-const loadingState=document.getElementById("loadingState");
-const errorState=document.getElementById("errorState");
-const errorText=document.getElementById("errorText");
-const content=document.getElementById("content");
+    const title = document.getElementById("title");
+    const subtitle = document.getElementById("subtitle");
+    const brandSub = document.getElementById("brandSub");
+    const modeBadge = document.getElementById("modeBadge");
 
-const title=document.getElementById("title");
-const subtitle=document.getElementById("subtitle");
-const brandSub=document.getElementById("brandSub");
-const modeBadge=document.getElementById("modeBadge");
+    const storyCard = document.getElementById("storyCard");
+    const storyGroupName = document.getElementById("storyGroupName");
+    const storyName = document.getElementById("storyName");
+    const storyRole = document.getElementById("storyRole");
+    const storyVotes = document.getElementById("storyVotes");
+    const storyEmoji = document.getElementById("storyEmoji");
+    const storyLinkPill = document.getElementById("storyLinkPill");
 
-const storyCard=document.getElementById("storyCard");
-const storyGroupName=document.getElementById("storyGroupName");
-const storyName=document.getElementById("storyName");
-const storyRole=document.getElementById("storyRole");
-const storyWins=document.getElementById("storyWins");
-const storyEmoji=document.getElementById("storyEmoji");
-const storyLinkPill=document.getElementById("storyLinkPill");
+    const results = document.getElementById("results");
+    const toggleResultsBtn = document.getElementById("toggleResultsBtn");
+    const personPicker = document.getElementById("personPicker");
 
-const results=document.getElementById("results");
-const toggleResultsBtn=document.getElementById("toggleResultsBtn");
+    let currentCode = null;
+    let storyCandidates = [];
+    let currentStoryIndex = 0;
 
-function getCode(){
-  return new URLSearchParams(location.search).get("code");
-}
-
-function show(el){el.classList.remove("hidden")}
-function hide(el){el.classList.add("hidden")}
-
-function slugify(text){
-  return (text || "")
-    .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^\w\s-]/g,"")
-    .trim();
-}
-
-function getThemeForQuestion(text){
-  const t = slugify(text);
-
-  if(
-    t.includes("ex") ||
-    t.includes("chaparse") ||
-    t.includes("mensaje a las 3") ||
-    t.includes("stalkear") ||
-    t.includes("chamuyo") ||
-    t.includes("picante") ||
-    t.includes("fiesta")
-  ){
-    return { cls:"theme-hot", emoji:"🔥" };
-  }
-
-  if(
-    t.includes("enamor") ||
-    t.includes("amor") ||
-    t.includes("pareja") ||
-    t.includes("engancharse") ||
-    t.includes("novio") ||
-    t.includes("novia")
-  ){
-    return { cls:"theme-love", emoji:"💘" };
-  }
-
-  if(
-    t.includes("personaje") ||
-    t.includes("anecdota") ||
-    t.includes("grupo") ||
-    t.includes("nunca paga") ||
-    t.includes("quilombo") ||
-    t.includes("caos")
-  ){
-    return { cls:"theme-chaos", emoji:"😂" };
-  }
-
-  return { cls:"theme-soft", emoji:"✨" };
-}
-
-function toggleResults(){
-  results.classList.toggle("hidden");
-  toggleResultsBtn.textContent = results.classList.contains("hidden")
-    ? "Mostrar resultados completos"
-    : "Ocultar resultados completos";
-}
-
-toggleResultsBtn.addEventListener("click", toggleResults);
-
-async function downloadStoryCard(cardElement, filename){
-  const canvas = await html2canvas(cardElement, {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true
-  });
-
-  const link = document.createElement("a");
-  link.download = filename;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-}
-
-async function shareStoryCard(cardElement){
-  const canvas = await html2canvas(cardElement, {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true
-  });
-
-  return new Promise((resolve) => {
-    canvas.toBlob(async function(blob){
-      try{
-        if(blob && navigator.canShare){
-          const file = new File([blob], "story-elveredicto.png", { type: "image/png" });
-          if(navigator.canShare({ files:[file] })){
-            await navigator.share({
-              files:[file],
-              title:"Mi resultado en ElVeredicto",
-              text:"Mirá lo que me tocó 🔥"
-            });
-          }else{
-            await navigator.clipboard.writeText(location.origin + "/votar?code=" + getCode());
-            alert("Tu celu no permite compartir la imagen directo. Ya te copié el link.");
-          }
-        }
-      }catch(err){
-        console.error(err);
-      }
-      resolve();
-    }, "image/png");
-  });
-}
-
-async function load(){
-
-  const code=getCode();
-
-  if(!code){
-    hide(loadingState);
-    show(errorState);
-    errorText.textContent="No encontré el código.";
-    return;
-  }
-
-  const {data:veredicto,error:veredictoError}=await db
-    .from("veredictos")
-    .select("*")
-    .eq("code",code)
-    .single();
-
-  if(veredictoError || !veredicto){
-    hide(loadingState);
-    show(errorState);
-    errorText.textContent="No se pudo cargar este veredicto.";
-    return;
-  }
-
-  brandSub.textContent = veredicto.mode === "group" ? "Resultado del grupo" : "Resultado anónimo";
-  modeBadge.textContent = veredicto.mode === "group" ? "Grupo" : "Sobre mí";
-
-  title.textContent = veredicto.group_name
-    ? "Resultados de " + veredicto.group_name
-    : "Resultados";
-
-  subtitle.textContent = veredicto.mode === "group"
-    ? "Elegimos la tarjeta más potente para que la compartas al toque."
-    : "Mirá cómo respondió la gente.";
-
-  const {data:preguntasRel,error:preguntasError}=await db
-    .from("veredicto_preguntas")
-    .select("pregunta_id,preguntas(texto)")
-    .eq("veredicto_id",veredicto.id)
-    .order("orden",{ascending:true});
-
-  if(preguntasError || !preguntasRel){
-    hide(loadingState);
-    show(errorState);
-    errorText.textContent="No se pudieron cargar las preguntas.";
-    return;
-  }
-
-  const preguntas=preguntasRel.map(p=>({
-    id:p.pregunta_id,
-    texto:p.preguntas?.texto || "Pregunta"
-  }));
-
-  const {data:votos,error:votosError}=await db
-    .from("votos")
-    .select("*")
-    .eq("veredicto_id",veredicto.id);
-
-  if(votosError){
-    hide(loadingState);
-    show(errorState);
-    errorText.textContent="No se pudieron cargar los votos.";
-    return;
-  }
-
-  if(veredicto.mode !== "group"){
-    hide(loadingState);
-    show(content);
-    storyName.textContent = veredicto.nickname || "Tu resultado";
-    storyRole.textContent = "Mirá qué respondió la gente sobre vos";
-    storyWins.textContent = "⚖️ Resultado anónimo";
-    storyEmoji.textContent = "💭";
-    storyGroupName.textContent = "Sobre mí";
-    storyCard.className = "story-card theme-soft";
-    storyLinkPill.textContent = location.host;
-
-    results.innerHTML = "";
-    preguntas.forEach(q=>{
-      const yesCount = votos.filter(v=>v.pregunta_id===q.id && v.respuesta==="si").length;
-      const noCount = votos.filter(v=>v.pregunta_id===q.id && v.respuesta==="no").length;
-
-      const div=document.createElement("div");
-      div.className="result-item";
-      div.innerHTML = `
-        <div class="result-q">${q.texto}</div>
-        <div class="result-w">Sí: ${yesCount} · No: ${noCount}</div>
-      `;
-      results.appendChild(div);
-    });
-    return;
-  }
-
-  const {data:participantes,error:participantesError}=await db
-    .from("participantes")
-    .select("*")
-    .eq("veredicto_id",veredicto.id)
-    .order("orden",{ascending:true});
-
-  if(participantesError || !participantes){
-    hide(loadingState);
-    show(errorState);
-    errorText.textContent="No se pudieron cargar los participantes.";
-    return;
-  }
-
-  const map={};
-
-  participantes.forEach(p=>{
-    map[p.id]={
-      nombre:p.nombre,
-      wins:0,
-      best:null
-    };
-  });
-
-  results.innerHTML="";
-
-  preguntas.forEach(q=>{
-    const votes=votos.filter(v=>v.pregunta_id===q.id && v.participante_id);
-
-    const count={};
-
-    votes.forEach(v=>{
-      count[v.participante_id]=(count[v.participante_id]||0)+1;
-    });
-
-    let winner=null;
-    let max=0;
-
-    Object.keys(count).forEach(id=>{
-      if(count[id]>max){
-        max=count[id];
-        winner=id;
-      }
-    });
-
-    if(!winner) return;
-
-    map[winner].wins++;
-
-    if(!map[winner].best || max > map[winner].best.v){
-      map[winner].best = {
-        t:q.texto,
-        v:max
-      };
+    function getCode(){
+      return new URLSearchParams(location.search).get("code");
     }
 
-    const div=document.createElement("div");
-    div.className="result-item";
-    div.innerHTML=`
-      <div class="result-q">${q.texto}</div>
-      <div class="result-w">${map[winner].nombre} · ${max} voto${max===1?"":"s"}</div>
-    `;
-    results.appendChild(div);
-  });
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
 
-  const sorted=Object.values(map)
-    .filter(x=>x.best)
-    .sort((a,b)=>b.wins-a.wins || b.best.v-a.best.v);
+    function slugify(text){
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s-]/g,"")
+        .trim();
+    }
 
-  if(sorted.length){
-    const best=sorted[0];
-    const theme=getThemeForQuestion(best.best.t);
+    function getThemeForQuestion(text){
+      const t = slugify(text);
 
-    storyCard.className = "story-card " + theme.cls;
-    storyEmoji.textContent = theme.emoji;
-    storyName.textContent = best.nombre;
-    storyRole.textContent = best.best.t;
-    storyWins.textContent = `🏆 Ganó ${best.wins} categoría${best.wins===1?"":"s"}`;
-    storyGroupName.textContent = veredicto.group_name || veredicto.nickname || "Tu grupo";
-    storyLinkPill.textContent = location.host;
-  }
+      if(
+        t.includes("ex") ||
+        t.includes("chaparse") ||
+        t.includes("mensaje a las 3") ||
+        t.includes("3 am") ||
+        t.includes("stalkear") ||
+        t.includes("chamuyo") ||
+        t.includes("picante") ||
+        t.includes("fiesta")
+      ){
+        return { cls:"theme-hot", emoji:"🔥" };
+      }
 
-  hide(loadingState);
-  show(content);
-}
+      if(
+        t.includes("enamor") ||
+        t.includes("amor") ||
+        t.includes("pareja") ||
+        t.includes("engancharse") ||
+        t.includes("novio") ||
+        t.includes("novia")
+      ){
+        return { cls:"theme-love", emoji:"💘" };
+      }
 
-document.getElementById("downloadBtn").addEventListener("click", async ()=>{
-  await downloadStoryCard(storyCard, "story-elveredicto.png");
-});
+      if(
+        t.includes("personaje") ||
+        t.includes("anecdota") ||
+        t.includes("grupo") ||
+        t.includes("nunca paga") ||
+        t.includes("quilombo") ||
+        t.includes("caos") ||
+        t.includes("primero en") ||
+        t.includes("siempre")
+      ){
+        return { cls:"theme-chaos", emoji:"😂" };
+      }
 
-document.getElementById("shareBtn").addEventListener("click", async ()=>{
-  await shareStoryCard(storyCard);
-});
+      return { cls:"theme-soft", emoji:"✨" };
+    }
 
-document.getElementById("copyBtn").addEventListener("click", async ()=>{
-  const link = location.origin + "/votar?code=" + getCode();
-  await navigator.clipboard.writeText(link);
-  alert("Link copiado");
-});
+    function toggleResults(){
+      results.classList.toggle("hidden");
+      toggleResultsBtn.textContent = results.classList.contains("hidden")
+        ? "Mostrar resultados completos"
+        : "Ocultar resultados completos";
+    }
 
-load();
-</script>
+    toggleResultsBtn.addEventListener("click", toggleResults);
 
+    function voteCopyText(votes, name){
+      if(votes <= 1) return `💬 1 persona eligió a ${name}`;
+      return `💬 ${votes} personas eligieron a ${name}`;
+    }
+
+    function buildCandidates(preguntas, participantes, votos){
+      const map = {};
+      participantes.forEach(p => {
+        map[p.id] = {
+          participante_id: p.id,
+          nombre: p.nombre,
+          results: []
+        };
+      });
+
+      preguntas.forEach(q => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+
+        const count = {};
+        votesForQuestion.forEach(v => {
+          count[v.participante_id] = (count[v.participante_id] || 0) + 1;
+        });
+
+        let winner = null;
+        let max = 0;
+
+        Object.keys(count).forEach(id => {
+          if(count[id] > max){
+            max = count[id];
+            winner = Number(id);
+          }
+        });
+
+        if(!winner) return;
+        if(!map[winner]) return;
+
+        map[winner].results.push({
+          texto: q.texto,
+          votos: max
+        });
+      });
+
+      const candidates = [];
+
+      Object.values(map).forEach(person => {
+        if(!person.results.length) return;
+
+        person.results.sort((a,b) => b.votos - a.votos || b.texto.length - a.texto.length);
+        const best = person.results[0];
+
+        candidates.push({
+          participante_id: person.participante_id,
+          nombre: person.nombre,
+          texto: best.texto,
+          votos: best.votos,
+          totalWins: person.results.length
+        });
+      });
+
+      return candidates.sort((a,b) => b.votos - a.votos || b.totalWins - a.totalWins || a.nombre.localeCompare(b.nombre));
+    }
+
+    function renderPicker(){
+      personPicker.innerHTML = "";
+
+      storyCandidates.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.className = "person-chip" + (index === currentStoryIndex ? " active" : "");
+        btn.type = "button";
+        btn.textContent = item.nombre;
+
+        btn.addEventListener("click", function(){
+          currentStoryIndex = index;
+          renderCurrentStory();
+          renderPicker();
+        });
+
+        personPicker.appendChild(btn);
+      });
+    }
+
+    function renderCurrentStory(){
+      const current = storyCandidates[currentStoryIndex];
+      if(!current) return;
+
+      const theme = getThemeForQuestion(current.texto);
+
+      storyCard.className = "story-card " + theme.cls;
+      storyEmoji.textContent = theme.emoji;
+      storyName.textContent = current.nombre;
+      storyRole.textContent = current.texto;
+      storyVotes.textContent = voteCopyText(current.votos, current.nombre);
+    }
+
+    async function downloadStoryCard(cardElement, filename){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    async function shareStoryCard(cardElement){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob(async function(blob){
+          try{
+            if(blob && navigator.canShare){
+              const file = new File([blob], "story-elveredicto.png", { type: "image/png" });
+              if(navigator.canShare({ files:[file] })){
+                await navigator.share({
+                  files:[file],
+                  title:"Mi resultado en ElVeredicto",
+                  text:"Mirá lo que salió en nuestro grupo 🔥"
+                });
+              } else {
+                await navigator.clipboard.writeText(location.origin + "/votar?code=" + currentCode);
+                alert("No pude abrir el compartir de imagen en este celu. Ya te copié el link.");
+              }
+            }
+          } catch(err){
+            console.error(err);
+          }
+          resolve();
+        }, "image/png");
+      });
+    }
+
+    async function load(){
+      currentCode = getCode();
+
+      if(!currentCode){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No encontré el código.";
+        return;
+      }
+
+      const { data: veredicto, error: veredictoError } = await db
+        .from("veredictos")
+        .select("*")
+        .eq("code", currentCode)
+        .single();
+
+      if(veredictoError || !veredicto){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudo cargar este veredicto.";
+        return;
+      }
+
+      brandSub.textContent = veredicto.mode === "group" ? "Resultado del grupo" : "Resultado anónimo";
+      modeBadge.textContent = veredicto.mode === "group" ? "Grupo" : "Sobre mí";
+
+      title.textContent = veredicto.group_name
+        ? "Resultados de " + veredicto.group_name
+        : "Resultados";
+
+      subtitle.textContent = veredicto.mode === "group"
+        ? "Elegí la tarjeta más fuerte del grupo y compartila."
+        : "Mirá cómo respondió la gente.";
+
+      storyGroupName.textContent = veredicto.group_name || veredicto.nickname || "Tu grupo";
+      storyLinkPill.textContent = "🔗 " + location.host;
+
+      const { data: preguntasRel, error: preguntasError } = await db
+        .from("veredicto_preguntas")
+        .select("pregunta_id,preguntas(texto)")
+        .eq("veredicto_id", veredicto.id)
+        .order("orden", { ascending:true });
+
+      if(preguntasError || !preguntasRel){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudieron cargar las preguntas.";
+        return;
+      }
+
+      const preguntas = preguntasRel.map(p => ({
+        id: p.pregunta_id,
+        texto: p.preguntas?.texto || "Pregunta"
+      }));
+
+      const { data: votos, error: votosError } = await db
+        .from("votos")
+        .select("*")
+        .eq("veredicto_id", veredicto.id);
+
+      if(votosError){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudieron cargar los votos.";
+        return;
+      }
+
+      results.innerHTML = "";
+
+      if(veredicto.mode !== "group"){
+        const theme = { cls:"theme-soft", emoji:"💭" };
+        storyCard.className = "story-card " + theme.cls;
+        storyEmoji.textContent = theme.emoji;
+        storyName.textContent = veredicto.nickname || "Tu resultado";
+        storyRole.textContent = "Mirá qué respondió la gente sobre vos";
+        storyVotes.textContent = `💬 ${votos.length} respuesta${votos.length === 1 ? "" : "s"}`;
+        personPicker.innerHTML = "";
+
+        preguntas.forEach(q => {
+          const yesCount = votos.filter(v => v.pregunta_id === q.id && v.respuesta === "si").length;
+          const noCount = votos.filter(v => v.pregunta_id === q.id && v.respuesta === "no").length;
+
+          const div = document.createElement("div");
+          div.className = "result-item";
+          div.innerHTML = `
+            <div class="result-q">${q.texto}</div>
+            <div class="result-w">Sí: ${yesCount} · No: ${noCount}</div>
+          `;
+          results.appendChild(div);
+        });
+
+        hide(loadingState);
+        show(content);
+        return;
+      }
+
+      const { data: participantes, error: participantesError } = await db
+        .from("participantes")
+        .select("*")
+        .eq("veredicto_id", veredicto.id)
+        .order("orden", { ascending:true });
+
+      if(participantesError || !participantes){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudieron cargar los participantes.";
+        return;
+      }
+
+      preguntas.forEach(q => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+
+        const count = {};
+        votesForQuestion.forEach(v => {
+          count[v.participante_id] = (count[v.participante_id] || 0) + 1;
+        });
+
+        let winner = null;
+        let max = 0;
+
+        Object.keys(count).forEach(id => {
+          if(count[id] > max){
+            max = count[id];
+            winner = Number(id);
+          }
+        });
+
+        if(!winner) return;
+
+        const participant = participantes.find(p => p.id === winner);
+        if(!participant) return;
+
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.innerHTML = `
+          <div class="result-q">${q.texto}</div>
+          <div class="result-w">${participant.nombre} · ${max} voto${max === 1 ? "" : "s"}</div>
+        `;
+        results.appendChild(div);
+      });
+
+      storyCandidates = buildCandidates(preguntas, participantes, votos);
+
+      if(storyCandidates.length){
+        currentStoryIndex = 0;
+        renderCurrentStory();
+        renderPicker();
+      }
+
+      hide(loadingState);
+      show(content);
+    }
+
+    document.getElementById("downloadBtn").addEventListener("click", async () => {
+      const current = storyCandidates[currentStoryIndex];
+      const filename = current
+        ? `${current.nombre.toLowerCase().replace(/\s+/g,"-")}-elveredicto.png`
+        : "story-elveredicto.png";
+
+      await downloadStoryCard(storyCard, filename);
+    });
+
+    document.getElementById("shareBtn").addEventListener("click", async () => {
+      await shareStoryCard(storyCard);
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      const link = location.origin + "/votar?code=" + currentCode;
+      await navigator.clipboard.writeText(link);
+      alert("Link copiado");
+    });
+
+    load();
+  </script>
 </body>
 </html>
