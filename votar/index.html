@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Votar — ElVeredicto</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -36,12 +39,14 @@
       color:var(--text);
     }
 
-    .vote-shell{
+    .hidden{display:none!important}
+
+    .shell{
       max-width:560px;
       margin:0 auto;
     }
 
-    .vote-top{
+    .top{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -49,13 +54,13 @@
       margin-bottom:18px;
     }
 
-    .vote-brand{
+    .brand{
       display:flex;
       align-items:center;
       gap:12px;
     }
 
-    .vote-logo{
+    .logo{
       width:54px;
       height:54px;
       border-radius:20px;
@@ -69,60 +74,33 @@
       box-shadow:var(--shadow);
     }
 
-    .vote-kicker{
+    .brand-title{
       font-family:"Baloo 2", cursive;
       font-size:28px;
       line-height:1;
       font-weight:800;
     }
 
-    .vote-mini{
+    .brand-sub{
       color:rgba(0,0,0,.58);
       font-size:13px;
       font-weight:700;
       margin-top:2px;
     }
 
-    .vote-badge{
+    .badge{
       background:var(--pink);
       color:var(--burgundy);
-      border:2px solid rgba(78,8,12,.12);
+      border:2px solid rgba(78,8,12,.15);
       border-radius:999px;
       padding:9px 14px;
       font-weight:800;
       font-size:13px;
-      min-width:70px;
+      min-width:72px;
       text-align:center;
     }
 
-    .vote-card{
-      background:var(--white);
-      border-radius:30px;
-      padding:24px;
-      box-shadow:var(--shadow);
-      border:2px solid rgba(0,0,0,.06);
-    }
-
-    .vote-card h1{
-      font-family:"Baloo 2", cursive;
-      font-size:38px;
-      line-height:1;
-      margin:0 0 10px;
-    }
-
-    .vote-card p{
-      font-size:15px;
-      line-height:1.55;
-      color:rgba(0,0,0,.68);
-      margin:0;
-      font-weight:600;
-    }
-
-    .vote-header-text{
-      margin-bottom:18px;
-    }
-
-    .vote-chip{
+    .chip{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -135,14 +113,18 @@
       margin-bottom:12px;
     }
 
-    .vote-header-text h1{
-      font-family:"Baloo 2", cursive;
-      font-size:36px;
-      line-height:1.02;
-      margin:0 0 8px;
+    .head-text{
+      margin-bottom:18px;
     }
 
-    .vote-header-text p{
+    .head-text h1{
+      font-family:"Baloo 2", cursive;
+      font-size:38px;
+      line-height:1.02;
+      margin:0 0 10px;
+    }
+
+    .head-text p{
       color:rgba(0,0,0,.68);
       font-size:15px;
       line-height:1.5;
@@ -150,13 +132,13 @@
       font-weight:600;
     }
 
-    .vote-stack{
+    .card-wrap{
       position:relative;
       height:360px;
       margin-bottom:18px;
     }
 
-    .vote-card-card{
+    .stack{
       position:absolute;
       inset:0;
       border-radius:32px;
@@ -164,38 +146,43 @@
       box-shadow:var(--shadow);
     }
 
-    .vote-card-back{
+    .stack.back{
       background:#FFE3D8;
       transform:translateY(16px) scale(.96);
       opacity:.7;
     }
 
-    .vote-card-middle{
+    .stack.mid{
       background:#FFF1B7;
       transform:translateY(8px) scale(.98);
       opacity:.9;
     }
 
-    .vote-card-front{
-      background:var(--white);
+    .card{
+      position:absolute;
+      inset:0;
+      background:#fff;
+      border-radius:32px;
+      border:2px solid rgba(0,0,0,.06);
+      box-shadow:var(--shadow);
       padding:26px 22px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      transition:transform .25s ease, opacity .25s ease;
+      transition:transform .22s ease, opacity .22s ease;
     }
 
-    .vote-card-front.vote-like{
-      transform:translateX(40px) rotate(5deg);
+    .card.like{
+      transform:translateX(40px) rotate(4deg);
       opacity:.1;
     }
 
-    .vote-card-front.vote-nope{
-      transform:translateX(-40px) rotate(-5deg);
+    .card.nope{
+      transform:translateX(-40px) rotate(-4deg);
       opacity:.1;
     }
 
-    .vote-question-number{
+    .question-number{
       display:inline-flex;
       align-self:flex-start;
       background:#DFF4E9;
@@ -206,27 +193,27 @@
       font-weight:800;
     }
 
-    .vote-question-text{
+    .question-text{
       font-family:"Baloo 2", cursive;
       font-size:34px;
-      line-height:1.06;
+      line-height:1.05;
       font-weight:800;
       margin:18px 0;
     }
 
-    .vote-hint{
+    .hint{
       color:rgba(0,0,0,.48);
       font-size:13px;
       font-weight:700;
     }
 
-    .vote-actions{
+    .actions{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:12px;
     }
 
-    .vote-action{
+    .action{
       min-height:72px;
       border:none;
       border-radius:24px;
@@ -239,23 +226,73 @@
       gap:10px;
       transition:.18s ease;
       box-shadow:var(--shadow);
+      font-family:Inter,sans-serif;
     }
 
-    .vote-action:hover{
+    .action:hover{
       transform:translateY(-1px);
     }
 
-    .vote-no{
+    .no{
       background:#FFE3D8;
       color:#9A381D;
     }
 
-    .vote-yes{
+    .yes{
       background:#DFF4E9;
       color:var(--green);
     }
 
-    .vote-btn{
+    .participants-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .participant-btn{
+      min-height:72px;
+      border:none;
+      border-radius:24px;
+      background:#fff;
+      color:#000;
+      font-size:17px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:var(--shadow);
+      border:2px solid rgba(0,0,0,.06);
+      transition:.18s ease;
+      font-family:Inter,sans-serif;
+      padding:14px;
+    }
+
+    .participant-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .state-card{
+      background:#fff;
+      border-radius:30px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      border:2px solid rgba(0,0,0,.06);
+    }
+
+    .state-card h1{
+      font-family:"Baloo 2", cursive;
+      font-size:38px;
+      line-height:1;
+      margin:0 0 10px;
+    }
+
+    .state-card p{
+      font-size:15px;
+      line-height:1.55;
+      color:rgba(0,0,0,.68);
+      margin:0;
+      font-weight:600;
+    }
+
+    .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -267,104 +304,105 @@
       font-size:15px;
       margin-top:18px;
       border:none;
+      font-family:Inter,sans-serif;
+      cursor:pointer;
     }
 
-    .vote-btn-dark{
+    .btn-dark{
       background:var(--burgundy);
       color:#fff;
     }
 
-    .vote-btn-orange{
+    .btn-orange{
       background:var(--orange);
       color:#fff;
     }
 
-    .vote-error{
-      background:#fff7f4;
-    }
-
-    .vote-done{
+    .done{
       text-align:center;
     }
 
-    .vote-done-icon{
+    .done-icon{
       font-size:44px;
       margin-bottom:10px;
     }
 
     @media (max-width:640px){
-      .vote-header-text h1{font-size:31px}
-      .vote-question-text{font-size:30px}
-      .vote-actions{grid-template-columns:1fr}
-      .vote-stack{height:330px}
+      .head-text h1{font-size:31px}
+      .question-text{font-size:30px}
+      .actions{grid-template-columns:1fr}
+      .participants-grid{grid-template-columns:1fr}
+      .card-wrap{height:330px}
     }
   </style>
 </head>
 <body>
-  <div class="vote-shell">
+  <div class="shell">
 
-    <div class="vote-top">
-      <div class="vote-brand">
-        <div class="vote-logo">⚖</div>
+    <div class="top">
+      <div class="brand">
+        <div class="logo">⚖</div>
         <div>
-          <div class="vote-kicker">ElVeredicto</div>
-          <div class="vote-mini">Votá anónimo</div>
+          <div class="brand-title">ElVeredicto</div>
+          <div class="brand-sub" id="brandSub">Votá anónimo</div>
         </div>
       </div>
-      <div class="vote-badge" id="progressBadge">1 / 5</div>
+      <div class="badge" id="progressBadge">1 / 5</div>
     </div>
 
-    <div id="loadingState" class="vote-card">
+    <div id="loadingState" class="state-card">
       <h1>Cargando veredicto...</h1>
       <p>Esperá un segundo.</p>
     </div>
 
-    <div id="errorState" class="vote-card vote-error" style="display:none;">
+    <div id="errorState" class="state-card hidden">
       <h1>Ups</h1>
       <p id="errorText">No se pudo cargar este veredicto.</p>
-      <a class="vote-btn vote-btn-dark" href="/crear.html">Crear el mío</a>
+      <a class="btn btn-dark" href="/crear?mode=group">Crear el mío</a>
     </div>
 
-    <div id="expiredState" class="vote-card vote-error" style="display:none;">
+    <div id="expiredState" class="state-card hidden">
       <h1>Este veredicto venció</h1>
       <p>El link ya no está disponible. Creá uno nuevo y compartilo otra vez.</p>
-      <a class="vote-btn vote-btn-dark" href="/crear.html">Crear nuevo veredicto</a>
+      <a class="btn btn-dark" href="/crear?mode=group">Crear nuevo veredicto</a>
     </div>
 
-    <div id="voteState" style="display:none;">
-      <div class="vote-header-text">
-        <div class="vote-chip">Sobre <span id="nicknameText">Matías</span></div>
+    <div id="voteState" class="hidden">
+      <div class="head-text">
+        <div class="chip" id="topChip">Sobre Matías</div>
         <h1 id="questionTitle">Sobre Matías...</h1>
-        <p>Respondé rápido. Es anónimo.</p>
+        <p id="questionSubtitle">Respondé rápido. Es anónimo.</p>
       </div>
 
-      <div class="vote-stack">
-        <div class="vote-card-card vote-card-back"></div>
-        <div class="vote-card-card vote-card-middle"></div>
-        <div class="vote-card-card vote-card-front" id="questionCard">
-          <div class="vote-question-number" id="questionNumber">Pregunta 1</div>
-          <div class="vote-question-text" id="questionText">¿Quién tiene más chamuyo?</div>
-          <div class="vote-hint">Deslizá mentalmente 😏 o tocá una opción</div>
+      <div class="card-wrap">
+        <div class="stack back"></div>
+        <div class="stack mid"></div>
+        <div class="card" id="questionCard">
+          <div class="question-number" id="questionNumber">Pregunta 1</div>
+          <div class="question-text" id="questionText">¿Quién tiene más chamuyo?</div>
+          <div class="hint" id="hintText">Deslizá mentalmente 😏 o tocá una opción</div>
         </div>
       </div>
 
-      <div class="vote-actions">
-        <button class="vote-action vote-no" id="btnNo" type="button">
+      <div id="selfActions" class="actions">
+        <button class="action no" id="btnNo" type="button">
           <span>👎</span>
           <span>Ni ahí</span>
         </button>
-        <button class="vote-action vote-yes" id="btnYes" type="button">
+        <button class="action yes" id="btnYes" type="button">
           <span>❤️</span>
           <span>Sí, re va</span>
         </button>
       </div>
+
+      <div id="groupActions" class="participants-grid hidden"></div>
     </div>
 
-    <div id="doneState" class="vote-card vote-done" style="display:none;">
-      <div class="vote-done-icon">🎉</div>
+    <div id="doneState" class="state-card done hidden">
+      <div class="done-icon">🎉</div>
       <h1>Listo, ya votaste</h1>
-      <p>Tu voto fue enviado. Ahora le toca al resto del grupo.</p>
-      <a class="vote-btn vote-btn-orange" href="/crear.html">Crear mi veredicto</a>
+      <p id="doneText">Tu voto fue enviado. Ahora le toca al resto del grupo.</p>
+      <a class="btn btn-orange" href="/crear?mode=group">Crear mi veredicto</a>
     </div>
 
   </div>
@@ -372,46 +410,189 @@
   <script>
     const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
     const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const loadingState = document.getElementById("loadingState");
     const errorState = document.getElementById("errorState");
     const expiredState = document.getElementById("expiredState");
     const voteState = document.getElementById("voteState");
     const doneState = document.getElementById("doneState");
-    const errorText = document.getElementById("errorText");
 
-    const nicknameText = document.getElementById("nicknameText");
+    const errorText = document.getElementById("errorText");
+    const doneText = document.getElementById("doneText");
+    const brandSub = document.getElementById("brandSub");
+    const topChip = document.getElementById("topChip");
     const questionTitle = document.getElementById("questionTitle");
+    const questionSubtitle = document.getElementById("questionSubtitle");
     const questionText = document.getElementById("questionText");
     const questionNumber = document.getElementById("questionNumber");
     const progressBadge = document.getElementById("progressBadge");
     const questionCard = document.getElementById("questionCard");
+    const hintText = document.getElementById("hintText");
+
+    const selfActions = document.getElementById("selfActions");
+    const groupActions = document.getElementById("groupActions");
 
     const btnYes = document.getElementById("btnYes");
     const btnNo = document.getElementById("btnNo");
 
     let veredicto = null;
     let preguntas = [];
+    let participantes = [];
     let currentIndex = 0;
+
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function showOnly(el){
+      hide(loadingState);
+      hide(errorState);
+      hide(expiredState);
+      hide(voteState);
+      hide(doneState);
+      show(el);
+    }
 
     function getCodeFromUrl(){
       const params = new URLSearchParams(window.location.search);
       return params.get("code");
     }
 
-    function showOnly(state){
-      loadingState.style.display = "none";
-      errorState.style.display = "none";
-      expiredState.style.display = "none";
-      voteState.style.display = "none";
-      doneState.style.display = "none";
-      state.style.display = "block";
-    }
-
     function isExpired(dateString){
       if(!dateString) return false;
       return new Date(dateString).getTime() < Date.now();
+    }
+
+    function animateCard(type){
+      questionCard.classList.remove("like", "nope");
+      if(type === "like") questionCard.classList.add("like");
+      if(type === "nope") questionCard.classList.add("nope");
+    }
+
+    function resetCard(){
+      questionCard.classList.remove("like", "nope");
+    }
+
+    function renderGroupButtons(){
+      groupActions.innerHTML = "";
+
+      participantes.forEach((p) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "participant-btn";
+        btn.textContent = p.nombre;
+
+        btn.addEventListener("click", function(){
+          voteGroup(p.id);
+        });
+
+        groupActions.appendChild(btn);
+      });
+    }
+
+    function renderCurrentQuestion(){
+      const actual = preguntas[currentIndex];
+      if(!actual){
+        showOnly(doneState);
+        return;
+      }
+
+      progressBadge.textContent = (currentIndex + 1) + " / " + preguntas.length;
+      questionNumber.textContent = "Pregunta " + (currentIndex + 1);
+      questionText.textContent = actual.texto;
+      resetCard();
+
+      if(veredicto.mode === "group"){
+        brandSub.textContent = "Votá al grupo";
+        topChip.textContent = veredicto.group_name || veredicto.nickname || "Veredicto del grupo";
+        questionTitle.textContent = "Veredicto del grupo";
+        questionSubtitle.textContent = "Elegí a quién representa mejor esta pregunta.";
+        hintText.textContent = "Tocá un nombre para votar.";
+        hide(selfActions);
+        show(groupActions);
+        renderGroupButtons();
+        doneText.textContent = "Tus votos fueron enviados. Ahora veamos qué rol le toca a cada uno.";
+      } else {
+        brandSub.textContent = "Votá anónimo";
+        topChip.textContent = "Sobre " + veredicto.nickname;
+        questionTitle.textContent = "Sobre " + veredicto.nickname + "...";
+        questionSubtitle.textContent = "Respondé rápido. Es anónimo.";
+        hintText.textContent = "Deslizá mentalmente 😏 o tocá una opción";
+        show(selfActions);
+        hide(groupActions);
+        doneText.textContent = "Tu voto fue enviado. Ahora le toca al resto del grupo.";
+      }
+    }
+
+    async function voteSelf(answer){
+      const actual = preguntas[currentIndex];
+      if(!actual) return;
+
+      btnYes.disabled = true;
+      btnNo.disabled = true;
+
+      animateCard(answer === "si" ? "like" : "nope");
+
+      const result = await db
+        .from("votos")
+        .insert([{
+          veredicto_id: veredicto.id,
+          pregunta_id: actual.pregunta_id,
+          pregunta: actual.texto,
+          respuesta: answer
+        }]);
+
+      if(result.error){
+        console.error(result.error);
+        errorText.textContent = "No se pudo guardar tu voto. Probá de nuevo.";
+        showOnly(errorState);
+        return;
+      }
+
+      setTimeout(function(){
+        currentIndex += 1;
+        btnYes.disabled = false;
+        btnNo.disabled = false;
+
+        if(currentIndex >= preguntas.length){
+          showOnly(doneState);
+        } else {
+          renderCurrentQuestion();
+        }
+      }, 220);
+    }
+
+    async function voteGroup(participanteId){
+      const actual = preguntas[currentIndex];
+      if(!actual) return;
+
+      animateCard("like");
+
+      const result = await db
+        .from("votos")
+        .insert([{
+          veredicto_id: veredicto.id,
+          pregunta_id: actual.pregunta_id,
+          pregunta: actual.texto,
+          participante_id: participanteId
+        }]);
+
+      if(result.error){
+        console.error(result.error);
+        errorText.textContent = "No se pudo guardar tu voto. Probá de nuevo.";
+        showOnly(errorState);
+        return;
+      }
+
+      setTimeout(function(){
+        currentIndex += 1;
+
+        if(currentIndex >= preguntas.length){
+          showOnly(doneState);
+        } else {
+          renderCurrentQuestion();
+        }
+      }, 220);
     }
 
     async function loadVerdict(){
@@ -423,104 +604,69 @@
         return;
       }
 
-      const { data: veredictoData, error: veredictoError } = await supabaseClient
+      const verdictResult = await db
         .from("veredictos")
-        .select("id, nickname, code, expires_at")
+        .select("id,nickname,code,expires_at,mode,group_name")
         .eq("code", code)
         .single();
 
-      if(veredictoError || !veredictoData){
-        console.error(veredictoError);
+      if(verdictResult.error || !verdictResult.data){
+        console.error(verdictResult.error);
         errorText.textContent = "Este veredicto no existe o ya no está disponible.";
         showOnly(errorState);
         return;
       }
 
-      if(isExpired(veredictoData.expires_at)){
+      veredicto = verdictResult.data;
+
+      if(isExpired(veredicto.expires_at)){
         showOnly(expiredState);
         return;
       }
 
-      veredicto = veredictoData;
-
-      const { data: relationData, error: relationError } = await supabaseClient
+      const relationResult = await db
         .from("veredicto_preguntas")
-        .select("orden, pregunta_id, preguntas(id, texto)")
+        .select("orden,pregunta_id,preguntas(id,texto)")
         .eq("veredicto_id", veredicto.id)
         .order("orden", { ascending: true });
 
-      if(relationError || !relationData || !relationData.length){
-        console.error(relationError);
+      if(relationResult.error || !relationResult.data || !relationResult.data.length){
+        console.error(relationResult.error);
         errorText.textContent = "No encontré las preguntas de este veredicto.";
         showOnly(errorState);
         return;
       }
 
-      preguntas = relationData.map(item => ({
-        pregunta_id: item.pregunta_id,
-        texto: item.preguntas?.texto || "Pregunta"
-      }));
+      preguntas = relationResult.data.map(function(item){
+        return {
+          pregunta_id: item.pregunta_id,
+          texto: item.preguntas && item.preguntas.texto ? item.preguntas.texto : "Pregunta"
+        };
+      });
+
+      if(veredicto.mode === "group"){
+        const participantsResult = await db
+          .from("participantes")
+          .select("id,nombre,orden")
+          .eq("veredicto_id", veredicto.id)
+          .order("orden", { ascending: true });
+
+        if(participantsResult.error || !participantsResult.data || !participantsResult.data.length){
+          console.error(participantsResult.error);
+          errorText.textContent = "No encontré los participantes de este veredicto.";
+          showOnly(errorState);
+          return;
+        }
+
+        participantes = participantsResult.data;
+      }
 
       renderCurrentQuestion();
       showOnly(voteState);
     }
 
-    function renderCurrentQuestion(){
-      const actual = preguntas[currentIndex];
-      if(!actual){
-        showOnly(doneState);
-        return;
-      }
-
-      nicknameText.textContent = veredicto.nickname;
-      questionTitle.textContent = `Sobre ${veredicto.nickname}...`;
-      questionText.textContent = actual.texto;
-      questionNumber.textContent = `Pregunta ${currentIndex + 1}`;
-      progressBadge.textContent = `${currentIndex + 1} / ${preguntas.length}`;
-
-      questionCard.classList.remove("vote-like", "vote-nope");
-    }
-
-    async function vote(answer){
-      const actual = preguntas[currentIndex];
-      if(!actual) return;
-
-      btnYes.disabled = true;
-      btnNo.disabled = true;
-
-      questionCard.classList.add(answer === "si" ? "vote-like" : "vote-nope");
-
-      const { error } = await supabaseClient
-        .from("votos")
-        .insert([{
-          veredicto_id: veredicto.id,
-          pregunta_id: actual.pregunta_id,
-          pregunta: actual.texto,
-          respuesta: answer
-        }]);
-
-      if(error){
-        console.error(error);
-        errorText.textContent = "No se pudo guardar tu voto. Probá de nuevo.";
-        showOnly(errorState);
-        return;
-      }
-
-      setTimeout(() => {
-        currentIndex += 1;
-        btnYes.disabled = false;
-        btnNo.disabled = false;
-
-        if(currentIndex >= preguntas.length){
-          showOnly(doneState);
-        }else{
-          renderCurrentQuestion();
-        }
-      }, 220);
-    }
-
-    btnYes.addEventListener("click", () => vote("si"));
-    btnNo.addEventListener("click", () => vote("no"));
+    btnYes.addEventListener("click", function(){ voteSelf("si"); });
+    btnNo.addEventListener("click", function(){ voteSelf("no"); });
 
     loadVerdict();
   </script>
