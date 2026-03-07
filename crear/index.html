@@ -45,232 +45,816 @@ font-size:15px;
 margin-bottom:20px;
 }
 
-label{
-font-weight:700;
-font-size:13px;
-display:block;
-margin-bottom:6px;
-}
+label…
+[3:25 a. m., 7/3/2026] Matias De La Llera: -
+[3:25 a. m., 7/3/2026] Matias De La Llera: <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear veredicto — ElVeredicto</title>
 
-input{
-width:100%;
-padding:16px;
-border-radius:18px;
-border:2px solid rgba(0,0,0,.1);
-margin-bottom:16px;
-font-size:15px;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-button{
-width:100%;
-padding:16px;
-border:none;
-border-radius:22px;
-font-weight:700;
-font-size:16px;
-cursor:pointer;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-.primary{
-background:#FF5E29;
-color:white;
-}
+  <style>
+    :root{
+      --bg:#FCF3EC;
+      --text:#000000;
+      --orange:#FF5E29;
+      --yellow:#FFD12E;
+      --green:#00804A;
+      --pink:#FFB6EF;
+      --burgundy:#4E080C;
+      --white:#FFFFFF;
+      --line:rgba(0,0,0,.12);
+      --shadow:0 18px 50px rgba(0,0,0,.08);
+      --radius-xl:32px;
+    }
 
-.participants{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-}
+    *{box-sizing:border-box}
 
-.participants input{
-flex:1;
-margin:0;
-}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.45), transparent 26%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 24%),
+        var(--bg);
+      min-height:100vh;
+      padding:24px 14px 40px;
+      font-family:Inter, sans-serif;
+      color:var(--text);
+    }
 
-.participants button{
-width:auto;
-padding:12px 16px;
-background:#00804A;
-color:white;
-}
+    .hidden{display:none !important;}
 
-.list{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-bottom:16px;
-}
+    .shell{
+      max-width:560px;
+      margin:0 auto;
+    }
 
-.chip{
-background:#fff;
-border:2px solid rgba(0,0,0,.1);
-padding:8px 12px;
-border-radius:100px;
-font-weight:700;
-font-size:14px;
-}
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
 
-.hidden{
-display:none;
-}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
-</style>
+    .logo{
+      width:54px;
+      height:54px;
+      border-radius:20px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      font-weight:800;
+      box-shadow:var(--shadow);
+    }
 
+    .brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:28px;
+      line-height:1;
+      font-weight:800;
+    }
+
+    .brand-sub{
+      color:rgba(0,0,0,.58);
+      font-size:13px;
+      font-weight:700;
+      margin-top:2px;
+    }
+
+    .beta{
+      background:var(--pink);
+      color:var(--burgundy);
+      border:2px solid rgba(78,8,12,.15);
+      border-radius:999px;
+      padding:9px 14px;
+      font-weight:800;
+      font-size:13px;
+    }
+
+    .card{
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.55), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.30), transparent 28%),
+        var(--white);
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      padding:22px;
+      margin-bottom:16px;
+    }
+
+    h1,h2{
+      font-family:"Baloo 2", cursive;
+      margin:0 0 8px;
+      line-height:1;
+    }
+
+    h1{font-size:42px;}
+    h2{font-size:34px;}
+
+    p,.help{
+      color:rgba(0,0,0,.68);
+      font-size:15px;
+      line-height:1.55;
+      margin:0 0 18px;
+      font-weight:600;
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    .field label{
+      display:block;
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    input, textarea{
+      width:100%;
+      border:2px solid var(--line);
+      background:#fff;
+      border-radius:20px;
+      padding:16px;
+      font-size:15px;
+      color:var(--text);
+      outline:none;
+      font-family:Inter,sans-serif;
+    }
+
+    input:focus, textarea:focus{
+      border-color:var(--orange);
+      box-shadow:0 0 0 4px rgba(255,94,41,.12);
+    }
+
+    .categories{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    .category-btn{
+      padding:16px;
+      border-radius:24px;
+      font-weight:800;
+      text-align:center;
+      cursor:pointer;
+      border:2px solid transparent;
+      background:#fff;
+      min-height:64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-size:15px;
+      font-family:Inter,sans-serif;
+    }
+
+    .category-btn.active{
+      border-color:var(--orange);
+      box-shadow:0 10px 22px rgba(255,94,41,.22);
+    }
+
+    .category-btn.amigos{background:#DFF4E9;color:#0B6B43}
+    .category-btn.familia{background:#FFF3B8;color:#7B4B00}
+    .category-btn.pareja{background:#FFDDF4;color:#7C1E4D}
+    .category-btn.picante{background:#FFE1D7;color:#8B2E16}
+
+    .participants-input{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .participants-input input{
+      flex:1;
+    }
+
+    .participants-input button{
+      min-width:110px;
+      width:auto;
+      padding:14px 16px;
+      border:none;
+      border-radius:18px;
+      background:var(--green);
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+      font-family:Inter,sans-serif;
+    }
+
+    .participants-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .participant-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:#fff;
+      border:2px solid rgba(0,0,0,.08);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .participant-chip button{
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:800;
+      color:#7a7a7a;
+      padding:0;
+    }
+
+    .btn{
+      width:100%;
+      border:none;
+      border-radius:22px;
+      padding:16px 18px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:.18s ease;
+      font-family:Inter,sans-serif;
+    }
+
+    .btn:hover{transform:translateY(-1px);}
+
+    .btn-primary{background:var(--orange);color:#fff;}
+    .btn-dark{background:var(--burgundy);color:#fff;margin-top:10px;}
+    .btn-outline{
+      width:auto;
+      background:#fff;
+      color:var(--green);
+      border:2px solid var(--green);
+      padding:12px 18px;
+    }
+
+    .btn-whatsapp{
+      background:#25D366;
+      color:#fff;
+      margin-top:12px;
+    }
+
+    .row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:10px;
+    }
+
+    .questions{
+      display:grid;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .question{
+      border-radius:24px;
+      padding:16px;
+      font-weight:800;
+      font-size:15px;
+      line-height:1.4;
+      border:2px solid rgba(0,0,0,.06);
+    }
+
+    .question:nth-child(1){background:#FFF1D0}
+    .question:nth-child(2){background:#FFD8F5}
+    .question:nth-child(3){background:#D8F3E6}
+    .question:nth-child(4){background:#FFE1D7}
+    .question:nth-child(5){background:#FFF4B8}
+
+    .link-box{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .link-box input{
+      flex:1;
+    }
+
+    .copy-card{
+      margin-top:14px;
+      background:#fff8f4;
+      border:2px solid rgba(0,0,0,.06);
+      border-radius:24px;
+      padding:14px;
+    }
+
+    .copy-title{
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    textarea{
+      min-height:110px;
+      resize:none;
+      margin-bottom:10px;
+      line-height:1.5;
+    }
+
+    .error{
+      margin-top:14px;
+      background:#ffe5e0;
+      color:#912f18;
+      border:2px solid rgba(145,47,24,.12);
+      border-radius:20px;
+      padding:14px;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    @media (max-width:640px){
+      h1{font-size:36px}
+      h2{font-size:30px}
+      .link-box{flex-direction:column}
+      .link-box .btn-outline{width:100%}
+      .row{flex-direction:column}
+      .row .btn-outline{width:100%}
+      .categories{grid-template-columns:1fr}
+      .participants-input{flex-direction:column}
+      .participants-input button{width:100%}
+    }
+  </style>
 </head>
 <body>
-
-<div class="shell">
-
-<div class="card">
-
-<h1 id="title"></h1>
-
-<p id="subtitle"></p>
-
-
-<div id="selfBlock">
-
-<label>Tu nombre o apodo</label>
-
-<input id="nickname" placeholder="Ej: Matias">
-
-</div>
-
-
-<div id="groupBlock">
-
-<label>Nombre del grupo</label>
-
-<input id="groupName" placeholder="Ej: Los del club">
-
-<label>Participantes</label>
-
-<div class="participants">
-
-<input id="participantInput" placeholder="Nombre">
-
-<button id="addBtn">Agregar</button>
-
-</div>
-
-<div id="list" class="list"></div>
-
-</div>
-
-
-<label>Categoría</label>
-
-<div id="categories"></div>
-
-
-<button id="verPreguntas" class="primary">
-Ver preguntas
-</button>
-
-</div>
-
-
-<div id="questionsCard" class="card hidden">
-
-<h1>Tus preguntas</h1>
-
-<div id="questions"></div>
-
-<button id="confirmar">
-Usar estas preguntas
-</button>
-
-</div>
-
-
-<div id="shareCard" class="card hidden">
-
-<h1>Listo para compartir</h1>
-
-<input id="link" readonly>
-
-<button id="copy">
-Copiar link
-</button>
-
-</div>
-
-</div>
-
-<script>
-
-const SUPABASE_URL="https://ytupmzjhhulcwfuidkzc.supabase.co";
-const SUPABASE_KEY="sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-const params=new URLSearchParams(location.search);
-
-const mode=params.get("mode")||"self";
-
-const title=document.getElementById("title");
-const subtitle=document.getElementById("subtitle");
-
-const selfBlock=document.getElementById("selfBlock");
-const groupBlock=document.getElementById("groupBlock");
-
-if(mode==="group"){
-
-title.innerText="Armá el veredicto del grupo";
-
-subtitle.innerText="Agregá nombres y descubrí quién es quién.";
-
-selfBlock.style.display="none";
-
-}else{
-
-title.innerText="Creá tu veredicto";
-
-subtitle.innerText="Mandá el link y descubrí qué piensa la gente.";
-
-groupBlock.style.display="none";
-
-}
-
-let participants=[];
-
-const input=document.getElementById("participantInput");
-
-document.getElementById("addBtn").onclick=()=>{
-
-const name=input.value.trim();
-
-if(!name)return;
-
-participants.push(name);
-
-render();
-
-input.value="";
-
-};
-
-function render(){
-
-const list=document.getElementById("list");
-
-list.innerHTML="";
-
-participants.forEach(n=>{
-
-const chip=document.createElement("div");
-
-chip.className="chip";
-
-chip.innerText=n;
-
-list.appendChild(chip);
-
-});
-
-}
-
-</script>
-
+  <div class="shell">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">⚖</div>
+        <div>
+          <div class="brand-title">ElVeredicto</div>
+          <div class="brand-sub" id="brandSub">Creá tu juego social</div>
+        </div>
+      </div>
+      <div class="beta">Beta</div>
+    </div>
+
+    <div class="card">
+      <h1 id="pageTitle">Creá tu veredicto</h1>
+      <p id="pageSubtitle">Elegí categoría, prepará el juego y compartilo.</p>
+
+      <div id="selfBlock">
+        <div class="field">
+          <label for="nickname">Tu nombre o apodo</label>
+          <input id="nickname" placeholder="Ej: Matias" />
+        </div>
+      </div>
+
+      <div id="groupBlock" class="hidden">
+        <div class="field">
+          <label for="groupName">Nombre del grupo</label>
+          <input id="groupName" placeholder="Ej: Los del club" />
+        </div>
+
+        <div class="field">
+          <label for="participantInput">Participantes</label>
+          <div class="participants-input">
+            <input id="participantInput" placeholder="Nombre de participante" />
+            <button id="addParticipantBtn" type="button">Agregar</button>
+          </div>
+          <div id="participantsList" class="participants-list"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Elegí categoría</label>
+        <div id="categoriesContainer" class="categories"></div>
+      </div>
+
+      <button id="loadQuestionsBtn" class="btn btn-primary" type="button">Ver preguntas</button>
+      <div id="errorBox" class="error hidden"></div>
+    </div>
+
+    <div id="questionsCard" class="card hidden">
+      <div class="row">
+        <h2>Tus preguntas</h2>
+        <button id="refreshQuestionsBtn" class="btn btn-outline" type="button">Actualizar</button>
+      </div>
+
+      <p class="help" id="questionsHelp">
+        Estas son las 5 preguntas que verán todos los que entren a tu link.
+      </p>
+
+      <div id="questionsList" class="questions"></div>
+      <button id="confirmVerdictBtn" class="btn btn-dark" type="button">Usar estas preguntas</button>
+    </div>
+
+    <div id="shareCard" class="card hidden">
+      <h2>Listo para compartir</h2>
+
+      <div class="link-box">
+        <input id="linkInput" readonly />
+        <button id="copyLinkBtn" class="btn btn-outline" type="button">Copiar</button>
+      </div>
+
+      <a id="waBtn" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+        Compartir por WhatsApp
+      </a>
+
+      <div class="copy-card">
+        <div class="copy-title">Mensaje sugerido</div>
+        <textarea id="shareText" readonly></textarea>
+        <button id="copyTextBtn" class="btn btn-outline" type="button">Copiar mensaje</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode") === "group" ? "group" : "self";
+
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+    const brandSub = document.getElementById("brandSub");
+
+    const selfBlock = document.getElementById("selfBlock");
+    const groupBlock = document.getElementById("groupBlock");
+
+    const nicknameInput = document.getElementById("nickname");
+    const groupNameInput = document.getElementById("groupName");
+    const participantInput = document.getElementById("participantInput");
+    const addParticipantBtn = document.getElementById("addParticipantBtn");
+    const participantsList = document.getElementById("participantsList");
+
+    const categoriesContainer = document.getElementById("categoriesContainer");
+    const loadQuestionsBtn = document.getElementById("loadQuestionsBtn");
+    const refreshQuestionsBtn = document.getElementById("refreshQuestionsBtn");
+    const confirmVerdictBtn = document.getElementById("confirmVerdictBtn");
+
+    const questionsCard = document.getElementById("questionsCard");
+    const questionsList = document.getElementById("questionsList");
+    const questionsHelp = document.getElementById("questionsHelp");
+
+    const shareCard = document.getElementById("shareCard");
+    const errorBox = document.getElementById("errorBox");
+    const linkInput = document.getElementById("linkInput");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const waBtn = document.getElementById("waBtn");
+    const shareText = document.getElementById("shareText");
+    const copyTextBtn = document.getElementById("copyTextBtn");
+
+    let selectedCategory = null;
+    let currentQuestions = [];
+    let participants = [];
+
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function showError(message){
+      errorBox.textContent = message;
+      show(errorBox);
+    }
+
+    function hideError(){
+      errorBox.textContent = "";
+      hide(errorBox);
+    }
+
+    function generateCode(length = 6){
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "";
+      for(let i=0;i<length;i++){
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    function setupMode(){
+      if(mode === "group"){
+        pageTitle.textContent = "Armá el veredicto del grupo";
+        pageSubtitle.textContent = "Agregá nombres y descubrí quién es quién.";
+        brandSub.textContent = "Veredicto del grupo";
+        hide(selfBlock);
+        show(groupBlock);
+        questionsHelp.textContent = "Estas son las 5 preguntas que verá el grupo para votar entre los participantes.";
+      } else {
+        pageTitle.textContent = "Creá tu veredicto";
+        pageSubtitle.textContent = "Mandá tu link y descubrí qué piensa la gente sobre vos.";
+        brandSub.textContent = "Qué opinan sobre mí";
+        show(selfBlock);
+        hide(groupBlock);
+        questionsHelp.textContent = "Estas son las 5 preguntas que responderán sobre vos.";
+      }
+    }
+
+    function renderParticipants(){
+      participantsList.innerHTML = "";
+
+      participants.forEach((name, index) => {
+        const chip = document.createElement("div");
+        chip.className = "participant-chip";
+        chip.innerHTML = `
+          <span>${name}</span>
+          <button type="button">✕</button>
+        `;
+
+        chip.querySelector("button").addEventListener("click", () => {
+          participants.splice(index, 1);
+          renderParticipants();
+        });
+
+        participantsList.appendChild(chip);
+      });
+    }
+
+    function addParticipant(){
+      const name = participantInput.value.trim();
+      if(!name) return;
+
+      if(participants.length >= 10){
+        showError("Podés agregar hasta 10 participantes.");
+        return;
+      }
+
+      participants.push(name);
+      participantInput.value = "";
+      hideError();
+      renderParticipants();
+    }
+
+    async function loadCategories(){
+      hideError();
+
+      const { data, error } = await supabaseClient
+        .from("categorias")
+        .select("id, nombre, slug")
+        .eq("activa", true)
+        .order("nombre", { ascending: true });
+
+      if(error){
+        console.error(error);
+        showError("No se pudieron cargar las categorías.");
+        return;
+      }
+
+      const icons = {
+        amigos: "😎",
+        familia: "👨‍👩‍👧",
+        pareja: "💘",
+        picante: "🔥"
+      };
+
+      categoriesContainer.innerHTML = "";
+
+      (data || []).forEach(cat => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = category-btn ${cat.slug};
+        btn.innerHTML = ${icons[cat.slug] || "⭐"} <span>${cat.nombre}</span>;
+
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".category-btn").forEach(el => el.classList.remove("active"));
+          btn.classList.add("active");
+          selectedCategory = cat.id;
+          hide(questionsCard);
+          hide(shareCard);
+        });
+
+        categoriesContainer.appendChild(btn);
+      });
+    }
+
+    function renderQuestions(questions){
+      questionsList.innerHTML = "";
+      questions.forEach((q, index) => {
+        const item = document.createElement("div");
+        item.className = "question";
+        item.innerHTML = <strong>${index + 1}.</strong> ${q.texto};
+        questionsList.appendChild(item);
+      });
+    }
+
+    async function fetchRandomQuestions(){
+      hideError();
+
+      if(!selectedCategory){
+        showError("Elegí una categoría para continuar.");
+        return;
+      }
+
+      if(mode === "group" && participants.length < 3){
+        showError("Para el modo grupo agregá al menos 3 participantes.");
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("preguntas")
+        .select("id, texto")
+        .eq("categoria_id", selectedCategory)
+        .eq("activa", true);
+
+      if(error){
+        console.error(error);
+        showError("No se pudieron cargar las preguntas.");
+        return;
+      }
+
+      if(!data || data.length < 5){
+        showError("Esta categoría todavía no tiene suficientes preguntas.");
+        return;
+      }
+
+      currentQuestions = [...data].sort(() => Math.random() - 0.5).slice(0, 5);
+
+      renderQuestions(currentQuestions);
+      show(questionsCard);
+      hide(shareCard);
+      questionsCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function buildShareMessage(link, nickname, groupName){
+      if(mode === "group"){
+        return 🔥 Armé el veredicto del grupo${groupName ? " " + groupName : ""}\n\nEntren y voten quién es quién 😂👇\n${link};
+      }
+      return ⚖️ Hacé mi veredicto anónimo\n\nEntrá y respondé estas 5 preguntas sobre ${nickname} 👇\n${link};
+    }
+
+    async function createVerdict(){
+      hideError();
+
+      const nickname = nicknameInput ? nicknameInput.value.trim() : "";
+      const groupName = groupNameInput ? groupNameInput.value.trim() : "";
+
+      if(mode === "self" && !nickname){
+        showError("Escribí tu nombre o apodo.");
+        return;
+      }
+
+      if(mode === "self" && nickname.length < 2){
+        showError("Poné al menos 2 caracteres.");
+        return;
+      }
+
+      if(mode === "group" && !groupName){
+        showError("Escribí el nombre del grupo.");
+        return;
+      }
+
+      if(mode === "group" && participants.length < 3){
+        showError("Para el modo grupo necesitás al menos 3 participantes.");
+        return;
+      }
+
+      if(!selectedCategory){
+        showError("Elegí una categoría.");
+        return;
+      }
+
+      if(currentQuestions.length !== 5){
+        showError("Primero elegí una tanda de preguntas.");
+        return;
+      }
+
+      confirmVerdictBtn.disabled = true;
+      confirmVerdictBtn.textContent = "Creando...";
+
+      const code = generateCode();
+      const expires = new Date();
+      expires.setHours(expires.getHours() + 24);
+
+      const { data: veredictoData, error: veredictoError } = await supabaseClient
+        .from("veredictos")
+        .insert([{
+          code,
+          nickname: mode === "self" ? nickname : groupName,
+          expires_at: expires.toISOString(),
+          categoria_id: Number(selectedCategory),
+          mode,
+          group_name: mode === "group" ? groupName : null
+        }])
+        .select("id")
+        .single();
+
+      if(veredictoError){
+        console.error(veredictoError);
+        confirmVerdictBtn.disabled = false;
+        confirmVerdictBtn.textContent = "Usar estas preguntas";
+        showError("No se pudo crear el veredicto.");
+        return;
+      }
+
+      if(mode === "group"){
+        const participantRows = participants.map((name, index) => ({
+          veredicto_id: veredictoData.id,
+          nombre: name,
+          orden: index + 1
+        }));
+
+        const { error: participantsError } = await supabaseClient
+          .from("participantes")
+          .insert(participantRows);
+
+        if(participantsError){
+          console.error(participantsError);
+          confirmVerdictBtn.disabled = false;
+          confirmVerdictBtn.textContent = "Usar estas preguntas";
+          showError("El veredicto se creó, pero falló al guardar los participantes.");
+          return;
+        }
+      }
+
+      const relationRows = currentQuestions.map((q, index) => ({
+        veredicto_id: veredictoData.id,
+        pregunta_id: q.id,
+        orden: index + 1
+      }));
+
+      const { error: relationError } = await supabaseClient
+        .from("veredicto_preguntas")
+        .insert(relationRows);
+
+      confirmVerdictBtn.disabled = false;
+      confirmVerdictBtn.textContent = "Usar estas preguntas";
+
+      if(relationError){
+        console.error(relationError);
+        showError("El veredicto se creó, pero falló al guardar las preguntas.");
+        return;
+      }
+
+      const link = window.location.origin + "/votar?code=" + code;
+      const message = buildShareMessage(link, nickname, groupName);
+
+      linkInput.value = link;
+      shareText.value = message;
+      waBtn.href = "https://wa.me/?text=" + encodeURIComponent(message);
+
+      show(shareCard);
+      shareCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    addParticipantBtn?.addEventListener("click", addParticipant);
+
+    participantInput?.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        addParticipant();
+      }
+    });
+
+    loadQuestionsBtn.addEventListener("click", fetchRandomQuestions);
+    refreshQuestionsBtn.addEventListener("click", fetchRandomQuestions);
+    confirmVerdictBtn.addEventListener("click", createVerdict);
+
+    copyLinkBtn.addEventListener("click", async () => {
+      try{
+        await navigator.clipboard.writeText(linkInput.value);
+        copyLinkBtn.textContent = "Copiado ✅";
+        setTimeout(() => copyLinkBtn.textContent = "Copiar", 1400);
+      } catch(err){
+        showError("No se pudo copiar el link.");
+      }
+    });
+
+    copyTextBtn.addEventListener("click", async () => {
+      try{
+        await navigator.clipboard.writeText(shareText.value);
+        copyTextBtn.textContent = "Mensaje copiado ✅";
+        setTimeout(() => copyTextBtn.textContent = "Copiar mensaje", 1400);
+      } catch(err){
+        showError("No se pudo copiar el mensaje.");
+      }
+    });
+
+    setupMode();
+    loadCategories();
+  </script>
 </body>
 </html>
