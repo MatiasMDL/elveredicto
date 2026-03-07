@@ -1,0 +1,7 @@
+﻿{
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/crear", "dest": "/crear.html" },
+    { "src": "/votar", "dest": "/votar.html" }
+  ]
+}
