@@ -13,386 +13,795 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-
 :root{
---bg:#FCF3EC;
---orange:#FF5E29;
---green:#00804A;
---pink:#FFB6EF;
---yellow:#FFD12E;
---white:#fff;
---shadow:0 18px 50px rgba(0,0,0,.08);
+  --bg:#FCF3EC;
+  --orange:#FF5E29;
+  --green:#00804A;
+  --pink:#FFB6EF;
+  --yellow:#FFD12E;
+  --burgundy:#4E080C;
+  --white:#fff;
+  --shadow:0 18px 50px rgba(0,0,0,.08);
 }
 
 *{box-sizing:border-box}
 
 body{
-margin:0;
-background:
-radial-gradient(circle at top right, rgba(255,182,239,.4), transparent 30%),
-radial-gradient(circle at bottom left, rgba(255,209,46,.3), transparent 30%),
-var(--bg);
-font-family:Inter,sans-serif;
-padding:22px 14px 40px;
+  margin:0;
+  background:
+    radial-gradient(circle at top right, rgba(255,182,239,.4), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(255,209,46,.3), transparent 30%),
+    var(--bg);
+  font-family:Inter,sans-serif;
+  padding:22px 14px 40px;
+  color:#000;
 }
 
 .shell{max-width:520px;margin:auto}
+.hidden{display:none!important}
 
 .top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.top-left{
+  display:flex;
+  gap:10px;
+  align-items:center;
 }
 
 .logo{
-width:50px;
-height:50px;
-border-radius:16px;
-background:var(--orange);
-display:flex;
-align-items:center;
-justify-content:center;
-color:#fff;
-font-size:24px;
+  width:50px;
+  height:50px;
+  border-radius:16px;
+  background:var(--orange);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:24px;
+  font-weight:800;
 }
 
 .brand-title{
-font-family:"Baloo 2";
-font-size:28px;
-font-weight:800;
+  font-family:"Baloo 2";
+  font-size:28px;
+  font-weight:800;
+  line-height:1;
+}
+
+.brand-sub{
+  color:#6a6663;
+  font-size:13px;
+  font-weight:700;
+  margin-top:4px;
+}
+
+.badge{
+  background:var(--pink);
+  color:var(--burgundy);
+  padding:9px 14px;
+  border-radius:999px;
+  font-weight:800;
+  border:2px solid rgba(78,8,12,.10);
 }
 
 .card{
-background:#fff;
-border-radius:28px;
-padding:20px;
-box-shadow:var(--shadow);
-margin-bottom:18px;
+  background:#fff;
+  border-radius:28px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
 }
 
 h1,h2{
-font-family:"Baloo 2";
-margin:0 0 8px;
+  font-family:"Baloo 2";
+  margin:0 0 8px;
+  line-height:1;
 }
 
-.story-card{
-aspect-ratio:9/16;
-border-radius:28px;
-padding:26px;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-background:
-radial-gradient(circle at top right, rgba(255,182,239,.5), transparent 30%),
-radial-gradient(circle at bottom left, rgba(255,209,46,.4), transparent 30%),
-linear-gradient(135deg,#fff6f2,#fff,#ffe9fa);
-}
+h1{font-size:42px}
+h2{font-size:32px}
 
-.story-name{
-font-family:"Baloo 2";
-font-size:40px;
-line-height:.9;
-}
-
-.story-role{
-font-size:28px;
-font-weight:800;
-}
-
-.story-badge{
-background:#DFF4E9;
-color:#00804A;
-padding:8px 14px;
-border-radius:999px;
-font-weight:800;
-width:max-content;
+p{
+  margin:0;
+  color:#64605d;
+  font-weight:600;
+  line-height:1.5;
+  font-size:15px;
 }
 
 .btn{
-width:100%;
-padding:16px;
-border-radius:22px;
-border:none;
-font-weight:800;
-font-size:16px;
-margin-top:10px;
-cursor:pointer;
+  width:100%;
+  padding:16px;
+  border-radius:22px;
+  border:none;
+  font-weight:800;
+  font-size:16px;
+  margin-top:10px;
+  cursor:pointer;
+  font-family:Inter,sans-serif;
 }
 
 .btn-orange{background:var(--orange);color:#fff}
 .btn-green{background:#25D366;color:#fff}
-.btn-outline{border:2px solid #00804A;background:#fff;color:#00804A}
+.btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
+.btn-dark{background:var(--burgundy);color:#fff}
+
+.story-shell{
+  background:#fff;
+  border-radius:28px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-top:14px;
+}
+
+.story-card{
+  width:100%;
+  aspect-ratio:9/16;
+  border-radius:30px;
+  overflow:hidden;
+  position:relative;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border:2px solid rgba(0,0,0,.06);
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.45), transparent 22%),
+    radial-gradient(circle at bottom left, rgba(255,255,255,.22), transparent 24%),
+    linear-gradient(135deg,#fff7f1,#fff,#ffeef9);
+}
+
+.story-card.theme-hot{
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(255,209,46,.22), transparent 22%),
+    linear-gradient(135deg,#fff3eb 0%, #ffd7c7 45%, #ffb497 100%);
+}
+
+.story-card.theme-love{
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(255,209,46,.18), transparent 22%),
+    linear-gradient(135deg,#fff6fb 0%, #ffe2f4 42%, #ffc7ea 100%);
+}
+
+.story-card.theme-chaos{
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(255,182,239,.20), transparent 22%),
+    linear-gradient(135deg,#fff9dc 0%, #ffe67d 40%, #ffd12e 100%);
+}
+
+.story-card.theme-soft{
+  background:
+    radial-gradient(circle at top right, rgba(255,255,255,.30), transparent 24%),
+    radial-gradient(circle at bottom left, rgba(255,209,46,.18), transparent 22%),
+    linear-gradient(135deg,#f4fff8 0%, #dff4e9 44%, #c7ecd9 100%);
+}
+
+.story-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.story-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.story-logo{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  background:var(--orange);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  font-weight:800;
+}
+
+.story-brand-title{
+  font-family:"Baloo 2";
+  font-size:24px;
+  line-height:1;
+}
+
+.story-brand-sub{
+  font-size:12px;
+  color:#6d6663;
+  font-weight:700;
+  margin-top:2px;
+}
+
+.story-mode{
+  background:rgba(255,182,239,.95);
+  color:var(--burgundy);
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:800;
+  border:2px solid rgba(78,8,12,.08);
+}
+
+.story-middle{
+  display:grid;
+  gap:12px;
+}
+
+.story-kicker{
+  display:inline-flex;
+  width:max-content;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.75);
+  font-size:12px;
+  font-weight:800;
+  color:#43231b;
+}
+
+.story-emoji{
+  font-size:54px;
+  line-height:1;
+}
+
+.story-name{
+  font-family:"Baloo 2";
+  font-size:44px;
+  line-height:.92;
+  margin-top:2px;
+}
+
+.story-role{
+  font-size:30px;
+  line-height:1.03;
+  font-weight:800;
+  max-width:95%;
+}
+
+.story-bottom{
+  display:grid;
+  gap:12px;
+}
+
+.story-badge{
+  background:#DFF4E9;
+  color:var(--green);
+  padding:11px 15px;
+  border-radius:999px;
+  font-weight:800;
+  width:max-content;
+  font-size:14px;
+}
+
+.story-copy{
+  font-size:17px;
+  line-height:1.32;
+  font-weight:700;
+  color:#4f4a47;
+  max-width:90%;
+}
+
+.story-link-pill{
+  display:inline-flex;
+  width:max-content;
+  background:rgba(255,255,255,.8);
+  border:2px solid rgba(0,0,0,.04);
+  border-radius:999px;
+  padding:10px 14px;
+  font-weight:700;
+  font-size:13px;
+  color:#4b4744;
+}
 
 .tutorial{
-margin-top:16px;
-background:#fff;
-border-radius:24px;
-padding:18px;
-box-shadow:var(--shadow);
+  margin-top:16px;
+  background:#fff;
+  border-radius:24px;
+  padding:18px;
+  box-shadow:var(--shadow);
 }
 
 .steps{
-display:flex;
-gap:10px;
-margin-bottom:10px;
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
 }
 
 .step{
-width:30px;
-height:30px;
-border-radius:50%;
-background:#eee;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:800;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#e8e8e8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
 }
 
-.step.active{background:#000;color:#fff}
+.step.active{
+  background:#000;
+  color:#fff;
+}
 
-.result-list{margin-top:14px}
+.small-note{
+  margin-top:10px;
+  font-size:13px;
+  color:#6a6663;
+  font-weight:700;
+}
+
+.toggle{
+  margin-top:12px;
+}
+
+.result-list{
+  margin-top:14px;
+}
 
 .result-item{
-background:#fff;
-padding:14px;
-border-radius:18px;
-margin-bottom:10px;
-box-shadow:var(--shadow);
-font-weight:700;
+  background:#fff;
+  padding:14px;
+  border-radius:18px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
 }
 
-.hidden{display:none}
+.result-q{
+  font-weight:800;
+  font-size:18px;
+  line-height:1.25;
+  margin-bottom:10px;
+}
+
+.result-w{
+  color:#55504d;
+  font-weight:700;
+}
+
+.loading,.error{
+  text-align:center;
+}
+
+@media (max-width:640px){
+  h1{font-size:36px}
+  h2{font-size:28px}
+  .story-name{font-size:40px}
+  .story-role{font-size:28px}
+}
 
 </style>
 </head>
-
 <body>
 
 <div class="shell">
 
-<div class="top">
-<div style="display:flex;gap:10px;align-items:center">
-<div class="logo">⚖</div>
-<div class="brand-title">ElVeredicto</div>
-</div>
-</div>
+  <div class="top">
+    <div class="top-left">
+      <div class="logo">⚖</div>
+      <div>
+        <div class="brand-title">ElVeredicto</div>
+        <div class="brand-sub" id="brandSub">Resultado del grupo</div>
+      </div>
+    </div>
+    <div class="badge" id="modeBadge">Grupo</div>
+  </div>
 
-<div class="card">
-<h1 id="title">Resultados</h1>
-<p id="subtitle">Estas son las personas elegidas por el grupo.</p>
-</div>
+  <div id="loadingState" class="card loading">
+    <h2>Cargando resultados...</h2>
+    <p>Un segundo.</p>
+  </div>
 
-<!-- STORY PRINCIPAL -->
+  <div id="errorState" class="card error hidden">
+    <h2>Ups</h2>
+    <p id="errorText">No se pudieron cargar los resultados.</p>
+  </div>
 
-<div class="card">
+  <div id="content" class="hidden">
 
-<h2>Tu story ya está lista</h2>
+    <div class="card">
+      <h1 id="title">Resultados</h1>
+      <p id="subtitle">Elegimos la mejor tarjeta para que la compartas al toque.</p>
+    </div>
 
-<div class="story-card" id="storyCard">
+    <div class="card">
+      <h2>Tu story ya está lista</h2>
+      <p>Esta es la tarjeta más compartible del grupo.</p>
 
-<div>
-<div style="display:flex;justify-content:space-between">
-<div style="font-weight:800">ElVeredicto</div>
-<div style="background:var(--pink);padding:6px 12px;border-radius:999px;font-weight:800">Grupo</div>
-</div>
+      <div class="story-shell">
+        <div class="story-card theme-love" id="storyCard">
+          <div class="story-top">
+            <div class="story-brand">
+              <div class="story-logo">⚖</div>
+              <div>
+                <div class="story-brand-title">ElVeredicto</div>
+                <div class="story-brand-sub" id="storyGroupName">Los de siempre</div>
+              </div>
+            </div>
+            <div class="story-mode">Grupo</div>
+          </div>
 
-<div style="margin-top:14px;background:var(--yellow);display:inline-block;padding:6px 12px;border-radius:999px;font-weight:800;font-size:12px">
-resultado compartible
-</div>
+          <div class="story-middle">
+            <div class="story-kicker">resultado compartible</div>
+            <div class="story-emoji" id="storyEmoji">🔥</div>
+            <div class="story-name" id="storyName">Shai</div>
+            <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
+          </div>
 
-<div class="story-name" id="storyName">Nombre</div>
-<div class="story-role" id="storyRole">Categoría</div>
+          <div class="story-bottom">
+            <div class="story-badge" id="storyWins">🏆 Ganó 3 categorías</div>
+            <div class="story-copy">Subí esta historia, pegá el link y armá el veredicto con tu grupo.</div>
+            <div class="story-link-pill" id="storyLinkPill">elveredicto.app</div>
+          </div>
+        </div>
+      </div>
 
-</div>
+      <button class="btn btn-orange" id="shareBtn">📲 Subir a historia</button>
+      <button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
+      <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
+    </div>
 
-<div>
-<div class="story-badge" id="storyWins">🏆 Ganó</div>
-<div style="margin-top:8px;font-weight:600;color:#555">
-Compartí esta historia y armá el veredicto con tu grupo.
-</div>
-</div>
+    <div class="tutorial">
+      <h2>Cómo compartirlo</h2>
+      <div class="steps">
+        <div class="step active">1</div>
+        <div class="step">2</div>
+        <div class="step">3</div>
+      </div>
+      <p>Guardá o compartí la story, subila a Instagram y agregá el sticker <b>Link</b> con el enlace del juego.</p>
+      <div class="small-note">Tip: si querés, primero copiá el link y después abrí Instagram.</div>
+    </div>
 
-</div>
+    <div class="card">
+      <h2>Ver todos los resultados</h2>
+      <button class="btn btn-dark toggle" id="toggleResultsBtn">Mostrar resultados completos</button>
+      <div id="results" class="result-list hidden"></div>
+    </div>
 
-<button class="btn btn-orange" id="shareBtn">📲 Subir a historia</button>
-<button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
-<button class="btn btn-green" id="copyBtn">🔗 Copiar link</button>
+    <div class="card">
+      <h2>¿Qué sigue?</h2>
+      <button class="btn btn-dark" onclick="location.href='/crear?mode=group'">Crear veredicto del grupo</button>
+      <button class="btn btn-outline" onclick="location.href='/crear?mode=self'">Hacer uno sobre mí</button>
+    </div>
 
-</div>
-
-<!-- MINI TUTORIAL -->
-
-<div class="tutorial">
-
-<h2>Cómo agregar el enlace</h2>
-
-<div class="steps">
-<div class="step active">1</div>
-<div class="step">2</div>
-<div class="step">3</div>
-</div>
-
-<p style="font-weight:600">
-Subí la imagen a tu historia y agregá el sticker <b>Link</b> con el enlace del juego.
-</p>
-
-</div>
-
-<!-- RESULTADOS COMPLETOS -->
-
-<div class="card">
-
-<h2 style="cursor:pointer" onclick="toggleResults()">Ver todos los resultados</h2>
-
-<div id="results" class="result-list hidden"></div>
-
-</div>
+  </div>
 
 </div>
 
 <script>
-
 const SUPABASE_URL="https://ytupmzjhhulcwfuidkzc.supabase.co";
 const SUPABASE_KEY="sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
+const loadingState=document.getElementById("loadingState");
+const errorState=document.getElementById("errorState");
+const errorText=document.getElementById("errorText");
+const content=document.getElementById("content");
+
+const title=document.getElementById("title");
+const subtitle=document.getElementById("subtitle");
+const brandSub=document.getElementById("brandSub");
+const modeBadge=document.getElementById("modeBadge");
+
+const storyCard=document.getElementById("storyCard");
+const storyGroupName=document.getElementById("storyGroupName");
 const storyName=document.getElementById("storyName");
 const storyRole=document.getElementById("storyRole");
 const storyWins=document.getElementById("storyWins");
-const storyCard=document.getElementById("storyCard");
+const storyEmoji=document.getElementById("storyEmoji");
+const storyLinkPill=document.getElementById("storyLinkPill");
 
-const resultsDiv=document.getElementById("results");
+const results=document.getElementById("results");
+const toggleResultsBtn=document.getElementById("toggleResultsBtn");
 
 function getCode(){
-return new URLSearchParams(location.search).get("code");
+  return new URLSearchParams(location.search).get("code");
+}
+
+function show(el){el.classList.remove("hidden")}
+function hide(el){el.classList.add("hidden")}
+
+function slugify(text){
+  return (text || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s-]/g,"")
+    .trim();
+}
+
+function getThemeForQuestion(text){
+  const t = slugify(text);
+
+  if(
+    t.includes("ex") ||
+    t.includes("chaparse") ||
+    t.includes("mensaje a las 3") ||
+    t.includes("stalkear") ||
+    t.includes("chamuyo") ||
+    t.includes("picante") ||
+    t.includes("fiesta")
+  ){
+    return { cls:"theme-hot", emoji:"🔥" };
+  }
+
+  if(
+    t.includes("enamor") ||
+    t.includes("amor") ||
+    t.includes("pareja") ||
+    t.includes("engancharse") ||
+    t.includes("novio") ||
+    t.includes("novia")
+  ){
+    return { cls:"theme-love", emoji:"💘" };
+  }
+
+  if(
+    t.includes("personaje") ||
+    t.includes("anecdota") ||
+    t.includes("grupo") ||
+    t.includes("nunca paga") ||
+    t.includes("quilombo") ||
+    t.includes("caos")
+  ){
+    return { cls:"theme-chaos", emoji:"😂" };
+  }
+
+  return { cls:"theme-soft", emoji:"✨" };
 }
 
 function toggleResults(){
-resultsDiv.classList.toggle("hidden");
+  results.classList.toggle("hidden");
+  toggleResultsBtn.textContent = results.classList.contains("hidden")
+    ? "Mostrar resultados completos"
+    : "Ocultar resultados completos";
+}
+
+toggleResultsBtn.addEventListener("click", toggleResults);
+
+async function downloadStoryCard(cardElement, filename){
+  const canvas = await html2canvas(cardElement, {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true
+  });
+
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+async function shareStoryCard(cardElement){
+  const canvas = await html2canvas(cardElement, {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true
+  });
+
+  return new Promise((resolve) => {
+    canvas.toBlob(async function(blob){
+      try{
+        if(blob && navigator.canShare){
+          const file = new File([blob], "story-elveredicto.png", { type: "image/png" });
+          if(navigator.canShare({ files:[file] })){
+            await navigator.share({
+              files:[file],
+              title:"Mi resultado en ElVeredicto",
+              text:"Mirá lo que me tocó 🔥"
+            });
+          }else{
+            await navigator.clipboard.writeText(location.origin + "/votar?code=" + getCode());
+            alert("Tu celu no permite compartir la imagen directo. Ya te copié el link.");
+          }
+        }
+      }catch(err){
+        console.error(err);
+      }
+      resolve();
+    }, "image/png");
+  });
 }
 
 async function load(){
 
-const code=getCode();
+  const code=getCode();
 
-const {data:veredicto}=await db
-.from("veredictos")
-.select("*")
-.eq("code",code)
-.single();
+  if(!code){
+    hide(loadingState);
+    show(errorState);
+    errorText.textContent="No encontré el código.";
+    return;
+  }
 
-const {data:preguntasRel}=await db
-.from("veredicto_preguntas")
-.select("pregunta_id,preguntas(texto)")
-.eq("veredicto_id",veredicto.id);
+  const {data:veredicto,error:veredictoError}=await db
+    .from("veredictos")
+    .select("*")
+    .eq("code",code)
+    .single();
 
-const preguntas=preguntasRel.map(p=>({
-id:p.pregunta_id,
-texto:p.preguntas.texto
-}));
+  if(veredictoError || !veredicto){
+    hide(loadingState);
+    show(errorState);
+    errorText.textContent="No se pudo cargar este veredicto.";
+    return;
+  }
 
-const {data:participantes}=await db
-.from("participantes")
-.select("*")
-.eq("veredicto_id",veredicto.id);
+  brandSub.textContent = veredicto.mode === "group" ? "Resultado del grupo" : "Resultado anónimo";
+  modeBadge.textContent = veredicto.mode === "group" ? "Grupo" : "Sobre mí";
 
-const {data:votos}=await db
-.from("votos")
-.select("*")
-.eq("veredicto_id",veredicto.id);
+  title.textContent = veredicto.group_name
+    ? "Resultados de " + veredicto.group_name
+    : "Resultados";
 
-const map={};
+  subtitle.textContent = veredicto.mode === "group"
+    ? "Elegimos la tarjeta más potente para que la compartas al toque."
+    : "Mirá cómo respondió la gente.";
 
-participantes.forEach(p=>{
-map[p.id]={nombre:p.nombre,wins:0,best:null};
+  const {data:preguntasRel,error:preguntasError}=await db
+    .from("veredicto_preguntas")
+    .select("pregunta_id,preguntas(texto)")
+    .eq("veredicto_id",veredicto.id)
+    .order("orden",{ascending:true});
+
+  if(preguntasError || !preguntasRel){
+    hide(loadingState);
+    show(errorState);
+    errorText.textContent="No se pudieron cargar las preguntas.";
+    return;
+  }
+
+  const preguntas=preguntasRel.map(p=>({
+    id:p.pregunta_id,
+    texto:p.preguntas?.texto || "Pregunta"
+  }));
+
+  const {data:votos,error:votosError}=await db
+    .from("votos")
+    .select("*")
+    .eq("veredicto_id",veredicto.id);
+
+  if(votosError){
+    hide(loadingState);
+    show(errorState);
+    errorText.textContent="No se pudieron cargar los votos.";
+    return;
+  }
+
+  if(veredicto.mode !== "group"){
+    hide(loadingState);
+    show(content);
+    storyName.textContent = veredicto.nickname || "Tu resultado";
+    storyRole.textContent = "Mirá qué respondió la gente sobre vos";
+    storyWins.textContent = "⚖️ Resultado anónimo";
+    storyEmoji.textContent = "💭";
+    storyGroupName.textContent = "Sobre mí";
+    storyCard.className = "story-card theme-soft";
+    storyLinkPill.textContent = location.host;
+
+    results.innerHTML = "";
+    preguntas.forEach(q=>{
+      const yesCount = votos.filter(v=>v.pregunta_id===q.id && v.respuesta==="si").length;
+      const noCount = votos.filter(v=>v.pregunta_id===q.id && v.respuesta==="no").length;
+
+      const div=document.createElement("div");
+      div.className="result-item";
+      div.innerHTML = `
+        <div class="result-q">${q.texto}</div>
+        <div class="result-w">Sí: ${yesCount} · No: ${noCount}</div>
+      `;
+      results.appendChild(div);
+    });
+    return;
+  }
+
+  const {data:participantes,error:participantesError}=await db
+    .from("participantes")
+    .select("*")
+    .eq("veredicto_id",veredicto.id)
+    .order("orden",{ascending:true});
+
+  if(participantesError || !participantes){
+    hide(loadingState);
+    show(errorState);
+    errorText.textContent="No se pudieron cargar los participantes.";
+    return;
+  }
+
+  const map={};
+
+  participantes.forEach(p=>{
+    map[p.id]={
+      nombre:p.nombre,
+      wins:0,
+      best:null
+    };
+  });
+
+  results.innerHTML="";
+
+  preguntas.forEach(q=>{
+    const votes=votos.filter(v=>v.pregunta_id===q.id && v.participante_id);
+
+    const count={};
+
+    votes.forEach(v=>{
+      count[v.participante_id]=(count[v.participante_id]||0)+1;
+    });
+
+    let winner=null;
+    let max=0;
+
+    Object.keys(count).forEach(id=>{
+      if(count[id]>max){
+        max=count[id];
+        winner=id;
+      }
+    });
+
+    if(!winner) return;
+
+    map[winner].wins++;
+
+    if(!map[winner].best || max > map[winner].best.v){
+      map[winner].best = {
+        t:q.texto,
+        v:max
+      };
+    }
+
+    const div=document.createElement("div");
+    div.className="result-item";
+    div.innerHTML=`
+      <div class="result-q">${q.texto}</div>
+      <div class="result-w">${map[winner].nombre} · ${max} voto${max===1?"":"s"}</div>
+    `;
+    results.appendChild(div);
+  });
+
+  const sorted=Object.values(map)
+    .filter(x=>x.best)
+    .sort((a,b)=>b.wins-a.wins || b.best.v-a.best.v);
+
+  if(sorted.length){
+    const best=sorted[0];
+    const theme=getThemeForQuestion(best.best.t);
+
+    storyCard.className = "story-card " + theme.cls;
+    storyEmoji.textContent = theme.emoji;
+    storyName.textContent = best.nombre;
+    storyRole.textContent = best.best.t;
+    storyWins.textContent = `🏆 Ganó ${best.wins} categoría${best.wins===1?"":"s"}`;
+    storyGroupName.textContent = veredicto.group_name || veredicto.nickname || "Tu grupo";
+    storyLinkPill.textContent = location.host;
+  }
+
+  hide(loadingState);
+  show(content);
+}
+
+document.getElementById("downloadBtn").addEventListener("click", async ()=>{
+  await downloadStoryCard(storyCard, "story-elveredicto.png");
 });
 
-preguntas.forEach(q=>{
-
-const votes=votos.filter(v=>v.pregunta_id===q.id);
-
-const count={};
-
-votes.forEach(v=>{
-count[v.participante_id]=(count[v.participante_id]||0)+1;
+document.getElementById("shareBtn").addEventListener("click", async ()=>{
+  await shareStoryCard(storyCard);
 });
 
-let winner=null;
-let max=0;
-
-Object.keys(count).forEach(id=>{
-if(count[id]>max){
-max=count[id];
-winner=id;
-}
+document.getElementById("copyBtn").addEventListener("click", async ()=>{
+  const link = location.origin + "/votar?code=" + getCode();
+  await navigator.clipboard.writeText(link);
+  alert("Link copiado");
 });
-
-if(!winner)return;
-
-map[winner].wins++;
-
-if(!map[winner].best||max>map[winner].best.v){
-map[winner].best={t:q.texto,v:max};
-}
-
-const div=document.createElement("div");
-div.className="result-item";
-div.textContent=`${q.texto} → ${map[winner].nombre}`;
-resultsDiv.appendChild(div);
-
-});
-
-const sorted=Object.values(map).sort((a,b)=>b.wins-a.wins);
-
-const best=sorted[0];
-
-storyName.textContent=best.nombre;
-storyRole.textContent=best.best.t;
-storyWins.textContent=`🏆 Ganó ${best.wins} categorías`;
-
-}
-
-document.getElementById("downloadBtn").onclick=async()=>{
-
-const canvas=await html2canvas(storyCard,{scale:2});
-const a=document.createElement("a");
-a.download="story-elveredicto.png";
-a.href=canvas.toDataURL();
-a.click();
-
-}
-
-document.getElementById("shareBtn").onclick=async()=>{
-
-const canvas=await html2canvas(storyCard,{scale:2});
-
-canvas.toBlob(async blob=>{
-
-if(navigator.canShare){
-const file=new File([blob],"story.png",{type:"image/png"});
-navigator.share({files:[file]});
-}else{
-alert("Guardá la imagen y subila a historias.");
-}
-
-});
-
-}
-
-document.getElementById("copyBtn").onclick=async()=>{
-
-const link=location.origin+"/votar?code="+getCode();
-
-await navigator.clipboard.writeText(link);
-
-alert("Link copiado");
-
-}
 
 load();
-
 </script>
 
 </body>
