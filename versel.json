@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/crear", "destination": "/crear.html" },
-    { "source": "/votar", "destination": "/votar.html" },
-    { "source": "/resultado", "destination": "/resultado.html" }
-  ]
-}
