@@ -28,6 +28,7 @@
     }
 
     *{box-sizing:border-box}
+
     body{
       margin:0;
       color:var(--ink);
@@ -447,7 +448,7 @@
       background:
         radial-gradient(circle at 85% 15%, rgba(255,255,255,.16), transparent 14%),
         radial-gradient(circle at 10% 82%, rgba(255,255,255,.10), transparent 20%),
-        linear-gradient(155deg,#fffef5 0%, #ffe978 44%, #ffd12e 100%);
+        linear-gradient(155deg,#fffef4 0%, #ffe978 44%, #ffd12e 100%);
     }
 
     .story-card.theme-chaos::before{
@@ -493,7 +494,7 @@
 
     .story-card.theme-soft{
       background:
-        radial-gradient(circle at 82% 20%, rgba(255,255,255,.20), transparent 18%),
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.18), transparent 22%),
         radial-gradient(circle at 20% 82%, rgba(255,255,255,.14), transparent 18%),
         linear-gradient(155deg,#f7fff9 0%, #def5e8 44%, #bce6d1 100%);
     }
@@ -612,8 +613,17 @@
           <div class="picker-scroll" id="personPicker"></div>
         </div>
 
+        <div class="picker" style="margin-top:18px">
+          <div class="picker-label">Tipo de story</div>
+          <div class="picker-scroll" id="stylePicker">
+            <button class="person-chip active" data-style="hot">🌶 Picante</button>
+            <button class="person-chip" data-style="love">💘 Romántica</button>
+            <button class="person-chip" data-style="chaos">😂 Graciosa</button>
+          </div>
+        </div>
+
         <div class="story-shell">
-          <div class="story-card theme-love" id="storyCard">
+          <div class="story-card theme-hot" id="storyCard">
             <div class="story-inner">
               <div class="story-top">
                 <div class="story-brand">
@@ -628,7 +638,7 @@
 
               <div class="story-middle">
                 <div class="story-kicker">resultado compartible</div>
-                <div class="story-emoji" id="storyEmoji">💘</div>
+                <div class="story-emoji" id="storyEmoji">🔥</div>
                 <div class="story-name" id="storyName">Shai</div>
                 <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
               </div>
@@ -696,6 +706,7 @@
     let currentCode = null;
     let storyCandidates = [];
     let currentStoryIndex = 0;
+    let currentStyle = "hot";
 
     function getCode(){
       return new URLSearchParams(location.search).get("code");
@@ -712,7 +723,7 @@
         .trim();
     }
 
-    function getThemeForQuestion(text){
+    function inferNaturalStyle(text){
       const t = slugify(text);
 
       if(
@@ -754,6 +765,13 @@
       }
 
       return { cls:"theme-soft", emoji:"✨" };
+    }
+
+    function getThemeFromSelectedStyle(text){
+      if(currentStyle === "hot") return { cls:"theme-hot", emoji:"🔥" };
+      if(currentStyle === "love") return { cls:"theme-love", emoji:"💘" };
+      if(currentStyle === "chaos") return { cls:"theme-chaos", emoji:"😂" };
+      return inferNaturalStyle(text);
     }
 
     function toggleResults(){
@@ -803,7 +821,8 @@
 
         map[winner].results.push({
           texto: q.texto,
-          votos: max
+          votos: max,
+          naturalStyle: inferNaturalStyle(q.texto)
         });
       });
 
@@ -813,17 +832,37 @@
         if(!person.results.length) return;
 
         person.results.sort((a,b) => b.votos - a.votos || b.texto.length - a.texto.length);
-        const best = person.results[0];
 
         candidates.push({
           participante_id: person.participante_id,
           nombre: person.nombre,
-          texto: best.texto,
-          votos: best.votos
+          results: person.results
         });
       });
 
-      return candidates.sort((a,b) => b.votos - a.votos || a.nombre.localeCompare(b.nombre));
+      return candidates.sort((a,b) => {
+        const av = a.results[0]?.votos || 0;
+        const bv = b.results[0]?.votos || 0;
+        return bv - av || a.nombre.localeCompare(b.nombre);
+      });
+    }
+
+    function pickResultForStyle(candidate){
+      if(!candidate || !candidate.results?.length) return null;
+
+      if(currentStyle === "hot"){
+        return candidate.results.find(r => r.naturalStyle.cls === "theme-hot") || candidate.results[0];
+      }
+
+      if(currentStyle === "love"){
+        return candidate.results.find(r => r.naturalStyle.cls === "theme-love") || candidate.results[0];
+      }
+
+      if(currentStyle === "chaos"){
+        return candidate.results.find(r => r.naturalStyle.cls === "theme-chaos") || candidate.results[0];
+      }
+
+      return candidate.results[0];
     }
 
     function renderPicker(){
@@ -845,17 +884,33 @@
       });
     }
 
+    function setupStylePicker(){
+      const buttons = document.querySelectorAll("#stylePicker button");
+
+      buttons.forEach(btn => {
+        btn.addEventListener("click", function(){
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentStyle = btn.dataset.style;
+          renderCurrentStory();
+        });
+      });
+    }
+
     function renderCurrentStory(){
       const current = storyCandidates[currentStoryIndex];
       if(!current) return;
 
-      const theme = getThemeForQuestion(current.texto);
+      const selectedResult = pickResultForStyle(current);
+      if(!selectedResult) return;
+
+      const theme = getThemeFromSelectedStyle(selectedResult.texto);
 
       storyCard.className = "story-card " + theme.cls;
       storyEmoji.textContent = theme.emoji;
       storyName.textContent = current.nombre;
-      storyRole.textContent = current.texto;
-      storyVotes.textContent = voteCopyText(current.votos, current.nombre);
+      storyRole.textContent = selectedResult.texto;
+      storyVotes.textContent = voteCopyText(selectedResult.votos, current.nombre);
     }
 
     async function downloadStoryCard(cardElement, filename){
@@ -978,6 +1033,7 @@
         storyRole.textContent = "Mirá qué respondió la gente sobre vos";
         storyVotes.textContent = `💬 ${votos.length} respuesta${votos.length === 1 ? "" : "s"}`;
         personPicker.innerHTML = "";
+        document.getElementById("stylePicker").parentElement.classList.add("hidden");
 
         preguntas.forEach(q => {
           const yesCount = votos.filter(v => v.pregunta_id === q.id && v.respuesta === "si").length;
@@ -1048,6 +1104,7 @@
         currentStoryIndex = 0;
         renderCurrentStory();
         renderPicker();
+        setupStylePicker();
       }
 
       hide(loadingState);
