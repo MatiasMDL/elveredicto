@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     :root{
@@ -25,7 +26,6 @@
       --line:rgba(0,0,0,.08);
       --shadow:0 18px 50px rgba(0,0,0,.08);
       --shadow-soft:0 10px 26px rgba(0,0,0,.06);
-      --radius:28px;
     }
 
     *{box-sizing:border-box}
@@ -123,9 +123,7 @@
       font-size:15px;
     }
 
-    .field{
-      margin-top:18px;
-    }
+    .field{margin-top:18px}
 
     .field label{
       display:block;
@@ -159,8 +157,7 @@
       margin-top:6px;
     }
 
-    .mode-btn,
-    .cat-btn{
+    .mode-btn,.cat-btn{
       border:none;
       border-radius:28px;
       padding:18px 18px;
@@ -184,15 +181,8 @@
       transform:translateY(-1px);
     }
 
-    .mode-self.active{
-      background:#e8f5ef;
-      color:#0b6b45;
-    }
-
-    .mode-group.active{
-      background:#ffe5d6;
-      color:#8a2d12;
-    }
+    .mode-self.active{background:#e8f5ef;color:#0b6b45}
+    .mode-group.active{background:#ffe5d6;color:#8a2d12}
 
     .cats{
       display:grid;
@@ -235,6 +225,7 @@
     .btn-orange{background:var(--orange);color:#fff}
     .btn-dark{background:var(--burgundy);color:#fff}
     .btn-outline{background:#fff;color:var(--green);border:2px solid var(--green)}
+    .btn-green{background:#25D366;color:#fff}
 
     .participants-row{
       display:flex;
@@ -242,10 +233,7 @@
       margin-top:8px;
     }
 
-    .participants-row .input{
-      flex:1;
-      min-width:0;
-    }
+    .participants-row .input{flex:1;min-width:0}
 
     .mini-btn{
       border:none;
@@ -359,16 +347,243 @@
       color:#77706c;
     }
 
-    .success{
-      color:var(--green);
-      font-weight:800;
-      margin-top:12px;
+    .success{color:var(--green);font-weight:800;margin-top:12px}
+    .error{color:#a12424;font-weight:800;margin-top:12px}
+
+    .story-shell{
+      background:#fff;
+      border-radius:30px;
+      padding:16px;
+      box-shadow:var(--shadow-soft);
+      margin-top:14px;
     }
 
-    .error{
-      color:#a12424;
+    .story-card{
+      width:100%;
+      aspect-ratio:9/16;
+      border-radius:38px;
+      overflow:hidden;
+      position:relative;
+      padding:22px;
+      border:2px solid rgba(0,0,0,.05);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+      isolation:isolate;
+    }
+
+    .story-inner{
+      position:relative;
+      z-index:3;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .story-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .story-logo{
+      width:50px;
+      height:50px;
+      border-radius:16px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
       font-weight:800;
-      margin-top:12px;
+      box-shadow:var(--shadow-soft);
+      flex-shrink:0;
+    }
+
+    .story-pill{
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:14px;
+      line-height:1;
+      flex-shrink:0;
+      border:2px solid rgba(0,0,0,.06);
+      box-shadow:0 8px 24px rgba(0,0,0,.05);
+      max-width:150px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      background:rgba(255,255,255,.92);
+    }
+
+    .story-middle{
+      display:grid;
+      gap:10px;
+      position:relative;
+    }
+
+    .story-kicker{
+      display:inline-flex;
+      width:max-content;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.84);
+      font-size:12px;
+      font-weight:800;
+      color:#43231b;
+      box-shadow:0 6px 20px rgba(0,0,0,.04);
+      backdrop-filter:blur(6px);
+      animation:stickerFloat 3.4s ease-in-out infinite;
+    }
+
+    .story-emoji{
+      font-size:72px;
+      line-height:1;
+      margin-top:2px;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.10));
+      animation:emojiFloat 2.6s ease-in-out infinite;
+      transform-origin:center;
+    }
+
+    .story-title{
+      font-family:"Baloo 2", cursive;
+      font-size:62px;
+      line-height:.9;
+      letter-spacing:-1.6px;
+      margin-top:2px;
+      max-width:96%;
+      word-break:break-word;
+    }
+
+    .story-copy{
+      font-size:34px;
+      line-height:1.02;
+      font-weight:800;
+      max-width:92%;
+      text-wrap:balance;
+      margin-top:6px;
+    }
+
+    .story-bottom{
+      display:grid;
+      gap:12px;
+    }
+
+    .story-vote-badge{
+      background:rgba(255,255,255,.92);
+      color:#7a2455;
+      padding:12px 16px;
+      border-radius:999px;
+      font-weight:800;
+      width:max-content;
+      font-size:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+      animation:badgePulse 2.8s ease-in-out infinite;
+    }
+
+    .story-sign{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.4px;
+      color:#4b4744;
+      text-transform:uppercase;
+      opacity:.86;
+    }
+
+    .story-glow{
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+      filter:blur(20px);
+      opacity:.72;
+      z-index:0;
+      animation:blobFloat 6s ease-in-out infinite;
+    }
+
+    .story-shine{
+      position:absolute;
+      top:-8%;
+      left:-45%;
+      width:32%;
+      height:140%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      transform:rotate(16deg);
+      animation:shineMove 4.8s linear infinite;
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .theme-hot{
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,.14), transparent 15%),
+        radial-gradient(circle at 15% 78%, rgba(255,240,220,.18), transparent 20%),
+        linear-gradient(160deg,#fff8f2 0%, #ffd6c2 36%, #ff8a5d 100%);
+    }
+
+    .theme-hot .story-pill,
+    .theme-hot .story-kicker{
+      background:rgba(78,8,12,.95);
+      color:#fff;
+    }
+
+    .theme-love{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.22), transparent 18%),
+        radial-gradient(circle at 20% 78%, rgba(255,255,255,.12), transparent 20%),
+        linear-gradient(155deg,#fff8fd 0%, #ffe1f4 42%, #ffc0ea 100%);
+    }
+
+    .theme-love .story-pill{color:#7a2455}
+
+    .theme-chaos{
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,.16), transparent 14%),
+        radial-gradient(circle at 10% 82%, rgba(255,255,255,.10), transparent 20%),
+        linear-gradient(155deg,#fffef4 0%, #ffe97d 44%, #ffd12e 100%);
+    }
+
+    .theme-chaos .story-pill{color:#6a4a00}
+
+    .theme-soft{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(circle at 20% 82%, rgba(255,255,255,.14), transparent 18%),
+        linear-gradient(155deg,#f7fff9 0%, #def5e8 44%, #bce6d1 100%);
+    }
+
+    .theme-soft .story-pill{color:#1c6b49}
+
+    @keyframes emojiFloat{
+      0%,100%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-9px) scale(1.03)}
+    }
+
+    @keyframes badgePulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.035)}
+    }
+
+    @keyframes blobFloat{
+      0%,100%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(14px,-14px,0) scale(1.08)}
+    }
+
+    @keyframes shineMove{
+      0%{transform:translateX(-10%) rotate(16deg)}
+      100%{transform:translateX(280%) rotate(16deg)}
+    }
+
+    @keyframes stickerFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-4px)}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .story-emoji,.story-vote-badge,.story-glow,.story-shine,.story-kicker{
+        animation:none!important;
+      }
     }
 
     @media (max-width:640px){
@@ -378,6 +593,10 @@
       .mode-grid{grid-template-columns:1fr}
       .participants-row{flex-direction:column}
       .mini-btn{min-height:56px}
+      .story-title{font-size:52px}
+      .story-copy{font-size:28px}
+      .story-emoji{font-size:58px}
+      .story-pill{max-width:128px;font-size:13px;padding:10px 12px}
     }
   </style>
 </head>
@@ -462,11 +681,46 @@
 
       <div class="actions">
         <button class="btn btn-orange" id="copyLinkBtn" type="button">Copiar link</button>
-        <button class="btn btn-outline" id="waBtn" type="button">Compartir por WhatsApp</button>
+        <button class="btn btn-green" id="waBtn" type="button">Compartir por WhatsApp</button>
       </div>
 
       <div class="success hidden" id="successMsg">Link copiado.</div>
       <div class="error hidden" id="errorMsg">Pasó algo. Probá de nuevo.</div>
+    </div>
+
+    <div class="card hidden" id="selfPromoSection">
+      <h2>Tu story para conseguir votos</h2>
+      <p>Esta es la tarjeta para subir cuando ya tenés tu link listo.</p>
+
+      <div class="story-shell">
+        <div class="story-card theme-soft" id="selfPromoCard">
+          <div class="story-glow" id="promoGlowOne"></div>
+          <div class="story-glow" id="promoGlowTwo"></div>
+          <div class="story-shine"></div>
+
+          <div class="story-inner">
+            <div class="story-top">
+              <div class="story-logo">⚖</div>
+              <div class="story-pill" id="promoCategoryPill">amigos</div>
+            </div>
+
+            <div class="story-middle">
+              <div class="story-kicker">elveredicto.app</div>
+              <div class="story-emoji" id="promoEmoji">🧠</div>
+              <div class="story-title">Respondé<br>mi veredicto</div>
+              <div class="story-copy" id="promoCopy">No vale caretearla</div>
+            </div>
+
+            <div class="story-bottom">
+              <div class="story-vote-badge">Es anónimo 🤐</div>
+              <div class="story-sign">elveredicto.app</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-orange" id="sharePromoBtn">📲 Subir story previa</button>
+      <button class="btn btn-outline" id="downloadPromoBtn">💾 Guardar story previa</button>
     </div>
 
   </div>
@@ -480,7 +734,6 @@
     const heroText = document.getElementById("heroText");
     const brandSub = document.getElementById("brandSub");
 
-    const modeField = document.getElementById("modeField");
     const modeSelfBtn = document.getElementById("modeSelfBtn");
     const modeGroupBtn = document.getElementById("modeGroupBtn");
 
@@ -498,19 +751,28 @@
     const loadQuestionsBtn = document.getElementById("loadQuestionsBtn");
 
     const questionsSection = document.getElementById("questionsSection");
-    const questionsTitle = document.getElementById("questionsTitle");
     const questionsSubtitle = document.getElementById("questionsSubtitle");
     const questionsList = document.getElementById("questionsList");
     const shuffleBtn = document.getElementById("shuffleBtn");
     const useQuestionsBtn = document.getElementById("useQuestionsBtn");
 
     const shareSection = document.getElementById("shareSection");
+    const selfPromoSection = document.getElementById("selfPromoSection");
     const shareText = document.getElementById("shareText");
     const shareLink = document.getElementById("shareLink");
     const copyLinkBtn = document.getElementById("copyLinkBtn");
     const waBtn = document.getElementById("waBtn");
     const successMsg = document.getElementById("successMsg");
     const errorMsg = document.getElementById("errorMsg");
+
+    const selfPromoCard = document.getElementById("selfPromoCard");
+    const promoCategoryPill = document.getElementById("promoCategoryPill");
+    const promoEmoji = document.getElementById("promoEmoji");
+    const promoCopy = document.getElementById("promoCopy");
+    const promoGlowOne = document.getElementById("promoGlowOne");
+    const promoGlowTwo = document.getElementById("promoGlowTwo");
+    const sharePromoBtn = document.getElementById("sharePromoBtn");
+    const downloadPromoBtn = document.getElementById("downloadPromoBtn");
 
     let mode = "self";
     let categories = [];
@@ -534,12 +796,46 @@
       return (text || "").replaceAll("{nombre}", nickname || "Esta persona");
     }
 
-    function slugifyText(text){
-      return (text || "")
-        .toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^\w\s-]/g, "")
-        .trim();
+    function categoryToneForSelf(slug){
+      if(slug === "picante"){
+        return { pill:"picante", emoji:"🔥", copy:"Votá sin filtro", theme:"theme-hot" };
+      }
+      if(slug === "amigos"){
+        return { pill:"amigos", emoji:"😎", copy:"No vale caretearla", theme:"theme-soft" };
+      }
+      if(slug === "pareja"){
+        return { pill:"pareja", emoji:"💘", copy:"Entrá y decime la verdad", theme:"theme-love" };
+      }
+      if(slug === "familia"){
+        return { pill:"familia", emoji:"👪", copy:"Decime qué pensás posta", theme:"theme-chaos" };
+      }
+      return { pill:"sin filtro", emoji:"🧠", copy:"Es anónimo 🤐", theme:"theme-soft" };
+    }
+
+    function applyGlow(targetOne, targetTwo, themeCls){
+      if(themeCls === "theme-hot"){
+        targetOne.style.cssText = "top:16%; left:-4%; width:190px; height:190px; background:rgba(255,110,70,.36);";
+        targetTwo.style.cssText = "bottom:10%; right:-4%; width:240px; height:240px; background:rgba(255,210,150,.30); animation-delay:-2s;";
+      } else if(themeCls === "theme-love"){
+        targetOne.style.cssText = "top:18%; right:-2%; width:200px; height:200px; background:rgba(255,185,230,.34);";
+        targetTwo.style.cssText = "bottom:6%; left:-2%; width:210px; height:210px; background:rgba(255,255,255,.20); animation-delay:-2s;";
+      } else if(themeCls === "theme-chaos"){
+        targetOne.style.cssText = "top:18%; left:-3%; width:190px; height:190px; background:rgba(255,240,130,.34);";
+        targetTwo.style.cssText = "bottom:8%; right:-3%; width:240px; height:240px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+      } else {
+        targetOne.style.cssText = "top:18%; left:-4%; width:180px; height:180px; background:rgba(210,255,230,.28);";
+        targetTwo.style.cssText = "bottom:8%; right:-4%; width:220px; height:220px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+      }
+    }
+
+    function renderPromoCard(){
+      if(mode !== "self" || !selectedCategory) return;
+      const tone = categoryToneForSelf(selectedCategory.slug);
+      selfPromoCard.className = "story-card " + tone.theme;
+      promoCategoryPill.textContent = tone.pill;
+      promoEmoji.textContent = tone.emoji;
+      promoCopy.textContent = tone.copy;
+      applyGlow(promoGlowOne, promoGlowTwo, tone.theme);
     }
 
     function setMode(nextMode){
@@ -568,6 +864,7 @@
 
       questionsSection.classList.add("hidden");
       shareSection.classList.add("hidden");
+      selfPromoSection.classList.add("hidden");
       selectedQuestions = [];
       allCurrentQuestions = [];
       createdCode = null;
@@ -593,7 +890,7 @@
     addParticipantBtn.addEventListener("click", () => {
       const value = participantInput.value.trim();
       if(!value) return;
-      if(participants.includes(value)) {
+      if(participants.includes(value)){
         participantInput.value = "";
         return;
       }
@@ -634,13 +931,17 @@
         btn.dataset.id = cat.id;
         btn.dataset.slug = cat.slug;
         btn.innerHTML = `${iconMap[cat.slug] || "✨"} ${cat.nombre}`;
+
         btn.addEventListener("click", () => {
           document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedCategory = cat;
           questionsSection.classList.add("hidden");
           shareSection.classList.add("hidden");
+          selfPromoSection.classList.add("hidden");
+          renderPromoCard();
         });
+
         catsContainer.appendChild(btn);
       });
     }
@@ -694,6 +995,7 @@
       renderQuestions();
       questionsSection.classList.remove("hidden");
       shareSection.classList.add("hidden");
+      selfPromoSection.classList.add("hidden");
       questionsSection.scrollIntoView({ behavior:"smooth", block:"start" });
     }
 
@@ -705,11 +1007,9 @@
       selectedQuestions.forEach((q, i) => {
         const div = document.createElement("div");
         div.className = "question-item";
-
         const visibleText = mode === "self"
           ? applyNameToQuestion(q.texto, nickname)
           : q.texto;
-
         div.textContent = `${i + 1}. ${visibleText}`;
         questionsList.appendChild(div);
       });
@@ -813,6 +1113,12 @@
         : "Tu link ya está listo para compartir con el grupo.";
 
       shareSection.classList.remove("hidden");
+
+      if(mode === "self"){
+        renderPromoCard();
+        selfPromoSection.classList.remove("hidden");
+      }
+
       shareSection.scrollIntoView({ behavior:"smooth", block:"start" });
     }
 
@@ -839,6 +1145,54 @@
         ? `Respondé mi veredicto anónimo 👀 ${publicLink}`
         : `Entrá a votar el veredicto del grupo 🔥 ${publicLink}`;
       location.href = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    });
+
+    async function downloadCard(cardElement, filename){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    async function shareCard(cardElement, text){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob(async function(blob){
+          try{
+            if(blob && navigator.canShare){
+              const file = new File([blob], "story-elveredicto.png", { type: "image/png" });
+              if(navigator.canShare({ files:[file] })){
+                await navigator.share({
+                  files:[file],
+                  title:"ElVeredicto",
+                  text
+                });
+              }
+            }
+          } catch(err){
+            console.error(err);
+          }
+          resolve();
+        }, "image/png");
+      });
+    }
+
+    sharePromoBtn.addEventListener("click", async () => {
+      await shareCard(selfPromoCard, "Respondé mi veredicto anónimo 👀");
+    });
+
+    downloadPromoBtn.addEventListener("click", async () => {
+      await downloadCard(selfPromoCard, "story-previa-elveredicto.png");
     });
 
     modeSelfBtn.addEventListener("click", () => setMode("self"));
