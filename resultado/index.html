@@ -104,7 +104,7 @@
       margin-bottom:18px;
     }
 
-    h1,h2{
+    h1,h2,h3{
       font-family:"Baloo 2", cursive;
       margin:0 0 8px;
       line-height:.98;
@@ -112,6 +112,7 @@
 
     h1{font-size:42px}
     h2{font-size:32px}
+    h3{font-size:24px}
 
     p{
       margin:0;
@@ -170,8 +171,8 @@
       font-size:16px;
       margin-top:10px;
       cursor:pointer;
-      font-family:Inter,sans-serif;
       transition:.18s ease;
+      font-family:Inter,sans-serif;
     }
 
     .btn:hover{transform:translateY(-1px)}
@@ -281,6 +282,7 @@
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
+      background:rgba(255,255,255,.9);
     }
 
     .story-middle{
@@ -393,16 +395,6 @@
       color:#fff;
     }
 
-    .story-card.theme-hot .story-name{
-      text-transform:uppercase;
-      font-size:72px;
-      line-height:.77;
-    }
-
-    .story-card.theme-hot .story-role{
-      font-size:36px;
-    }
-
     .story-card.theme-hot .story-kicker{
       background:rgba(78,8,12,.92);
       color:#fff;
@@ -416,17 +408,7 @@
     }
 
     .story-card.theme-love .story-pill{
-      background:rgba(255,255,255,.88);
       color:#7a2455;
-    }
-
-    .story-card.theme-love .story-name{
-      font-size:74px;
-    }
-
-    .story-card.theme-love .story-role{
-      max-width:88%;
-      font-size:33px;
     }
 
     .story-card.theme-chaos{
@@ -437,25 +419,7 @@
     }
 
     .story-card.theme-chaos .story-pill{
-      background:rgba(255,255,255,.9);
       color:#6a4a00;
-      transform:rotate(-2deg);
-    }
-
-    .story-card.theme-chaos .story-name{
-      text-transform:uppercase;
-      font-size:70px;
-      line-height:.77;
-    }
-
-    .story-card.theme-chaos .story-role{
-      font-size:34px;
-      max-width:90%;
-    }
-
-    .story-card.theme-chaos .story-kicker{
-      transform:rotate(-2deg);
-      background:#fff8d8;
     }
 
     .story-card.theme-soft{
@@ -466,17 +430,7 @@
     }
 
     .story-card.theme-soft .story-pill{
-      background:rgba(255,255,255,.9);
       color:#1c6b49;
-    }
-
-    .story-card.theme-soft .story-name{
-      font-size:74px;
-    }
-
-    .story-card.theme-soft .story-role{
-      font-size:32px;
-      max-width:90%;
     }
 
     .action-note{
@@ -506,6 +460,47 @@
       color:#55504d;
       font-weight:700;
       font-size:14px;
+      margin-top:8px;
+    }
+
+    .bar-wrap{
+      margin-top:10px;
+      background:#f1ece8;
+      border-radius:999px;
+      height:14px;
+      overflow:hidden;
+    }
+
+    .bar-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, #00804A 0%, #2eb36d 100%);
+    }
+
+    .summary-grid{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .summary-item{
+      padding:14px;
+      border-radius:20px;
+      background:#fff;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .summary-item .label{
+      font-size:16px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .summary-item .meta{
+      margin-top:8px;
+      color:#5e5955;
+      font-size:13px;
+      font-weight:700;
     }
 
     .loading,.error{text-align:center}
@@ -565,18 +560,6 @@
         padding:10px 12px;
         max-width:128px;
       }
-      .story-card.theme-hot .story-name,
-      .story-card.theme-love .story-name,
-      .story-card.theme-chaos .story-name,
-      .story-card.theme-soft .story-name{
-        font-size:58px;
-      }
-      .story-card.theme-hot .story-role,
-      .story-card.theme-love .story-role,
-      .story-card.theme-chaos .story-role,
-      .story-card.theme-soft .story-role{
-        font-size:29px;
-      }
     }
   </style>
 </head>
@@ -588,7 +571,7 @@
         <div class="logo">⚖</div>
         <div>
           <div class="brand-title">ElVeredicto</div>
-          <div class="brand-sub" id="brandSub">Resultado del grupo</div>
+          <div class="brand-sub" id="brandSub">Resultado</div>
         </div>
       </div>
       <div class="badge" id="modeBadge">Grupo</div>
@@ -606,16 +589,65 @@
 
     <div id="content" class="hidden">
 
-      <div class="card">
+      <!-- HEADER GROUP -->
+      <div class="card hidden" id="groupHeaderCard">
         <div class="kicker">resultado</div>
         <div class="result-heading">
           <div class="result-pretitle">Resultados de</div>
           <h1 id="titleGroup" class="result-group-name">Tu grupo</h1>
         </div>
-        <p id="subtitle">Elegí la tarjeta más fuerte del grupo y compartila.</p>
+        <p id="groupSubtitle">Elegí la tarjeta más fuerte del grupo y compartila.</p>
       </div>
 
-      <div class="card">
+      <!-- HEADER SELF -->
+      <div class="card hidden" id="selfHeaderCard">
+        <div class="kicker">resultado</div>
+        <h1 id="selfTitle">Tus resultados</h1>
+        <p id="selfSubtitle">Mirá cómo respondió la gente.</p>
+      </div>
+
+      <!-- SELF PREVIA -->
+      <div class="card hidden" id="selfPreCard">
+        <h2>Tu story para conseguir votos</h2>
+        <p>Esta es la tarjeta para subir antes de que entren a responder.</p>
+
+        <div class="story-shell">
+          <div class="story-card theme-soft" id="selfPromoCard">
+            <div class="story-glow" id="promoGlowOne"></div>
+            <div class="story-glow" id="promoGlowTwo"></div>
+            <div class="story-shine"></div>
+
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-logo">⚖</div>
+                <div class="story-pill" id="promoCategoryPill">amigos</div>
+              </div>
+
+              <div class="story-middle">
+                <div class="story-kicker">elveredicto.app</div>
+                <div class="story-emoji" id="promoEmoji">🧠</div>
+                <div class="story-name" id="promoName">MATIAS</div>
+                <div class="story-role" id="promoTitle">Respondé mi veredicto</div>
+                <div class="result-w" id="promoCopy" style="font-size:28px;font-weight:800;color:#3f3a37;line-height:1.12;">
+                  Votá sin filtro
+                </div>
+                <div class="story-vote-badge" style="background:#fff3f7;color:#7a2455;">Es anónimo 🤐</div>
+              </div>
+
+              <div class="story-bottom">
+                <div class="story-sign">elveredicto.app</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-orange" id="sharePromoBtn">📲 Subir story previa</button>
+        <button class="btn btn-outline" id="downloadPromoBtn">💾 Guardar story previa</button>
+        <button class="btn btn-green" id="copyVoteLinkBtn">🔗 Copiar link para votar</button>
+      </div>
+
+      <!-- GROUP STORY -->
+      <div class="card hidden" id="groupStorySection">
         <h2>La story que sí da ganas de subir</h2>
         <p>Probá entre personas y elegí cuál compartir.</p>
 
@@ -634,7 +666,7 @@
         </div>
 
         <div class="story-shell">
-          <div class="story-card theme-hot" id="storyCard">
+          <div class="story-card theme-hot" id="groupStoryCard">
             <div class="story-glow" id="glowOne"></div>
             <div class="story-glow" id="glowTwo"></div>
             <div class="story-shine"></div>
@@ -669,7 +701,57 @@
         </div>
       </div>
 
-      <div class="card">
+      <!-- SELF VIRAL -->
+      <div class="card hidden" id="selfViralSection">
+        <h2>Tu resultado más viral</h2>
+        <p>Esta es la pregunta más fuerte para compartir.</p>
+
+        <div class="story-shell">
+          <div class="story-card theme-love" id="selfViralCard">
+            <div class="story-glow" id="selfGlowOne"></div>
+            <div class="story-glow" id="selfGlowTwo"></div>
+            <div class="story-shine"></div>
+
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-logo">⚖</div>
+                <div class="story-pill" id="selfTonePill">sin filtro</div>
+              </div>
+
+              <div class="story-middle">
+                <div class="story-kicker">elveredicto.app</div>
+                <div class="story-emoji" id="selfResultEmoji">💘</div>
+                <div class="story-name" id="selfResultName">MATIAS</div>
+                <div class="story-role" id="selfResultQuestion">¿tiene más levante?</div>
+              </div>
+
+              <div class="story-bottom">
+                <div class="story-vote-badge" id="selfResultPercent">83% dijo que sí</div>
+                <div>
+                  <div class="bar-wrap">
+                    <div class="bar-fill" id="selfResultBar" style="width:83%"></div>
+                  </div>
+                  <div class="result-w" id="selfBarMeta">Sí 83% · No 17%</div>
+                </div>
+                <div class="story-sign">elveredicto.app</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-orange" id="shareSelfViralBtn">📲 Subir resultado viral</button>
+        <button class="btn btn-outline" id="downloadSelfViralBtn">💾 Guardar resultado viral</button>
+      </div>
+
+      <!-- SELF SUMMARY -->
+      <div class="card hidden" id="selfSummarySection">
+        <h2>Tus 5 resultados</h2>
+        <p>Resumen completo para ver cómo salió cada pregunta.</p>
+        <div class="summary-grid" id="selfSummaryGrid"></div>
+      </div>
+
+      <!-- GROUP FULL RESULTS -->
+      <div class="card hidden" id="groupResultsSection">
         <h2>Ver todos los resultados</h2>
         <button class="btn btn-dark" id="toggleResultsBtn">Mostrar resultados completos</button>
         <div id="results" class="result-list hidden"></div>
@@ -694,18 +776,27 @@
     const errorText = document.getElementById("errorText");
     const content = document.getElementById("content");
 
+    const groupHeaderCard = document.getElementById("groupHeaderCard");
+    const selfHeaderCard = document.getElementById("selfHeaderCard");
+    const selfPreCard = document.getElementById("selfPreCard");
+    const groupStorySection = document.getElementById("groupStorySection");
+    const selfViralSection = document.getElementById("selfViralSection");
+    const selfSummarySection = document.getElementById("selfSummarySection");
+    const groupResultsSection = document.getElementById("groupResultsSection");
+
     const titleGroup = document.getElementById("titleGroup");
-    const subtitle = document.getElementById("subtitle");
+    const groupSubtitle = document.getElementById("groupSubtitle");
+    const selfTitle = document.getElementById("selfTitle");
+    const selfSubtitle = document.getElementById("selfSubtitle");
     const brandSub = document.getElementById("brandSub");
     const modeBadge = document.getElementById("modeBadge");
 
-    const storyCard = document.getElementById("storyCard");
+    const groupStoryCard = document.getElementById("groupStoryCard");
     const storyName = document.getElementById("storyName");
     const storyRole = document.getElementById("storyRole");
     const storyVotes = document.getElementById("storyVotes");
     const storyEmoji = document.getElementById("storyEmoji");
     const storyTonePill = document.getElementById("storyTonePill");
-
     const glowOne = document.getElementById("glowOne");
     const glowTwo = document.getElementById("glowTwo");
 
@@ -713,10 +804,31 @@
     const toggleResultsBtn = document.getElementById("toggleResultsBtn");
     const personPicker = document.getElementById("personPicker");
 
+    const selfPromoCard = document.getElementById("selfPromoCard");
+    const promoCategoryPill = document.getElementById("promoCategoryPill");
+    const promoEmoji = document.getElementById("promoEmoji");
+    const promoName = document.getElementById("promoName");
+    const promoCopy = document.getElementById("promoCopy");
+    const promoGlowOne = document.getElementById("promoGlowOne");
+    const promoGlowTwo = document.getElementById("promoGlowTwo");
+
+    const selfViralCard = document.getElementById("selfViralCard");
+    const selfTonePill = document.getElementById("selfTonePill");
+    const selfResultEmoji = document.getElementById("selfResultEmoji");
+    const selfResultName = document.getElementById("selfResultName");
+    const selfResultQuestion = document.getElementById("selfResultQuestion");
+    const selfResultPercent = document.getElementById("selfResultPercent");
+    const selfResultBar = document.getElementById("selfResultBar");
+    const selfBarMeta = document.getElementById("selfBarMeta");
+    const selfGlowOne = document.getElementById("selfGlowOne");
+    const selfGlowTwo = document.getElementById("selfGlowTwo");
+    const selfSummaryGrid = document.getElementById("selfSummaryGrid");
+
     let currentCode = null;
     let storyCandidates = [];
     let currentStoryIndex = 0;
     let currentStyle = "hot";
+    let veredicto = null;
 
     function getCode(){
       return new URLSearchParams(location.search).get("code");
@@ -725,12 +837,67 @@
     function show(el){ el.classList.remove("hidden"); }
     function hide(el){ el.classList.add("hidden"); }
 
+    function applyNameToQuestion(text, nickname){
+      return (text || "").replaceAll("{nombre}", nickname || "Esta persona");
+    }
+
+    function stripNicknameFromQuestion(text, nickname){
+      if(!nickname) return text || "";
+      const escaped = nickname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return (text || "")
+        .replace(new RegExp(escaped, "ig"), "")
+        .replace(/\s+/g, " ")
+        .replace("¿ ", "¿")
+        .trim();
+    }
+
     function slugify(text){
       return (text || "")
         .toLowerCase()
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[^\w\s-]/g,"")
         .trim();
+    }
+
+    function categoryToneForSelf(slug){
+      if(slug === "picante"){
+        return {
+          pill: "picante",
+          emoji: "🔥",
+          copy: "Votá sin filtro",
+          theme: "theme-hot"
+        };
+      }
+      if(slug === "amigos"){
+        return {
+          pill: "amigos",
+          emoji: "😎",
+          copy: "No vale caretearla",
+          theme: "theme-soft"
+        };
+      }
+      if(slug === "pareja"){
+        return {
+          pill: "pareja",
+          emoji: "💘",
+          copy: "Entrá y decime la verdad",
+          theme: "theme-love"
+        };
+      }
+      if(slug === "familia"){
+        return {
+          pill: "familia",
+          emoji: "👪",
+          copy: "Decime qué pensás posta",
+          theme: "theme-chaos"
+        };
+      }
+      return {
+        pill: "sin filtro",
+        emoji: "🧠",
+        copy: "Es anónimo 🤐",
+        theme: "theme-soft"
+      };
     }
 
     function inferNaturalStyle(text){
@@ -747,7 +914,7 @@
         t.includes("picante") ||
         t.includes("fiesta")
       ){
-        return { cls:"theme-hot", emoji:"🔥", pill:"picante" };
+        return { cls:"theme-hot", emoji:"🔥", pill:"picante", score:3 };
       }
 
       if(
@@ -756,9 +923,10 @@
         t.includes("pareja") ||
         t.includes("engancharse") ||
         t.includes("novio") ||
-        t.includes("novia")
+        t.includes("novia") ||
+        t.includes("levante")
       ){
-        return { cls:"theme-love", emoji:"💘", pill:"sin filtro" };
+        return { cls:"theme-love", emoji:"💘", pill:"sin filtro", score:2 };
       }
 
       if(
@@ -772,10 +940,10 @@
         t.includes("siempre") ||
         t.includes("olvida")
       ){
-        return { cls:"theme-chaos", emoji:"😂", pill:"sin anestesia" };
+        return { cls:"theme-chaos", emoji:"😂", pill:"sin anestesia", score:1 };
       }
 
-      return { cls:"theme-soft", emoji:"✨", pill:"sin filtro" };
+      return { cls:"theme-soft", emoji:"✨", pill:"sin filtro", score:0 };
     }
 
     function getThemeFromSelectedStyle(text){
@@ -792,7 +960,7 @@
         : "Ocultar resultados completos";
     }
 
-    toggleResultsBtn.addEventListener("click", toggleResults);
+    toggleResultsBtn?.addEventListener("click", toggleResults);
 
     function voteCopyText(votes){
       if(votes <= 1) return "💬 1 dijo que sí";
@@ -811,8 +979,8 @@
 
       preguntas.forEach(q => {
         const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
-
         const count = {};
+
         votesForQuestion.forEach(v => {
           count[v.participante_id] = (count[v.participante_id] || 0) + 1;
         });
@@ -827,8 +995,7 @@
           }
         });
 
-        if(!winner) return;
-        if(!map[winner]) return;
+        if(!winner || !map[winner]) return;
 
         map[winner].results.push({
           texto: q.texto,
@@ -864,11 +1031,9 @@
       if(currentStyle === "hot"){
         return candidate.results.find(r => r.naturalStyle.cls === "theme-hot") || candidate.results[0];
       }
-
       if(currentStyle === "love"){
         return candidate.results.find(r => r.naturalStyle.cls === "theme-love") || candidate.results[0];
       }
-
       if(currentStyle === "chaos"){
         return candidate.results.find(r => r.naturalStyle.cls === "theme-chaos") || candidate.results[0];
       }
@@ -908,19 +1073,19 @@
       });
     }
 
-    function applyGlow(themeCls){
+    function applyGlow(targetOne, targetTwo, themeCls){
       if(themeCls === "theme-hot"){
-        glowOne.style.cssText = "top:16%; left:-4%; width:190px; height:190px; background:rgba(255,110,70,.36);";
-        glowTwo.style.cssText = "bottom:10%; right:-4%; width:240px; height:240px; background:rgba(255,210,150,.30); animation-delay:-2s;";
+        targetOne.style.cssText = "top:16%; left:-4%; width:190px; height:190px; background:rgba(255,110,70,.36);";
+        targetTwo.style.cssText = "bottom:10%; right:-4%; width:240px; height:240px; background:rgba(255,210,150,.30); animation-delay:-2s;";
       } else if(themeCls === "theme-love"){
-        glowOne.style.cssText = "top:18%; right:-2%; width:200px; height:200px; background:rgba(255,185,230,.34);";
-        glowTwo.style.cssText = "bottom:6%; left:-2%; width:210px; height:210px; background:rgba(255,255,255,.20); animation-delay:-2s;";
+        targetOne.style.cssText = "top:18%; right:-2%; width:200px; height:200px; background:rgba(255,185,230,.34);";
+        targetTwo.style.cssText = "bottom:6%; left:-2%; width:210px; height:210px; background:rgba(255,255,255,.20); animation-delay:-2s;";
       } else if(themeCls === "theme-chaos"){
-        glowOne.style.cssText = "top:18%; left:-3%; width:190px; height:190px; background:rgba(255,240,130,.34);";
-        glowTwo.style.cssText = "bottom:8%; right:-3%; width:240px; height:240px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+        targetOne.style.cssText = "top:18%; left:-3%; width:190px; height:190px; background:rgba(255,240,130,.34);";
+        targetTwo.style.cssText = "bottom:8%; right:-3%; width:240px; height:240px; background:rgba(255,255,255,.18); animation-delay:-2s;";
       } else {
-        glowOne.style.cssText = "top:18%; left:-4%; width:180px; height:180px; background:rgba(210,255,230,.28);";
-        glowTwo.style.cssText = "bottom:8%; right:-4%; width:220px; height:220px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+        targetOne.style.cssText = "top:18%; left:-4%; width:180px; height:180px; background:rgba(210,255,230,.28);";
+        targetTwo.style.cssText = "bottom:8%; right:-4%; width:220px; height:220px; background:rgba(255,255,255,.18); animation-delay:-2s;";
       }
     }
 
@@ -933,26 +1098,21 @@
 
       const theme = getThemeFromSelectedStyle(selectedResult.texto);
 
-      storyCard.className = "story-card " + theme.cls;
+      groupStoryCard.className = "story-card " + theme.cls;
       storyEmoji.textContent = theme.emoji;
       storyName.textContent = current.nombre;
       storyRole.textContent = selectedResult.texto;
       storyVotes.textContent = voteCopyText(selectedResult.votos);
       storyTonePill.textContent = theme.pill;
-      applyGlow(theme.cls);
+      applyGlow(glowOne, glowTwo, theme.cls);
     }
 
-    async function downloadStoryCard(cardElement, filename){
-      const hadAnimations = cardElement.classList.contains("exporting");
-      if(!hadAnimations) cardElement.classList.add("exporting");
-
+    async function downloadCard(cardElement, filename){
       const canvas = await html2canvas(cardElement, {
         backgroundColor: null,
         scale: 2,
         useCORS: true
       });
-
-      if(!hadAnimations) cardElement.classList.remove("exporting");
 
       const link = document.createElement("a");
       link.download = filename;
@@ -960,17 +1120,12 @@
       link.click();
     }
 
-    async function shareStoryCard(cardElement){
-      const hadAnimations = cardElement.classList.contains("exporting");
-      if(!hadAnimations) cardElement.classList.add("exporting");
-
+    async function shareCard(cardElement, text){
       const canvas = await html2canvas(cardElement, {
         backgroundColor: null,
         scale: 2,
         useCORS: true
       });
-
-      if(!hadAnimations) cardElement.classList.remove("exporting");
 
       return new Promise((resolve) => {
         canvas.toBlob(async function(blob){
@@ -980,12 +1135,9 @@
               if(navigator.canShare({ files:[file] })){
                 await navigator.share({
                   files:[file],
-                  title:"Mi resultado en ElVeredicto",
-                  text:"Mirá lo que salió en nuestro grupo 🔥"
+                  title:"ElVeredicto",
+                  text
                 });
-              } else {
-                await navigator.clipboard.writeText(location.origin + "/votar?code=" + currentCode);
-                alert("No pude compartir la imagen directo. Ya te copié el link.");
               }
             }
           } catch(err){
@@ -993,6 +1145,114 @@
           }
           resolve();
         }, "image/png");
+      });
+    }
+
+    function getSelfQuestionStats(votos, preguntaId){
+      const questionVotes = votos.filter(v => v.pregunta_id === preguntaId);
+      const yes = questionVotes.filter(v => v.respuesta === "si").length;
+      const no = questionVotes.filter(v => v.respuesta === "no").length;
+      const total = yes + no;
+      const yesPct = total ? Math.round((yes / total) * 100) : 0;
+      const noPct = total ? 100 - yesPct : 0;
+
+      return { yes, no, total, yesPct, noPct };
+    }
+
+    function scoreSelfQuestion(texto){
+      const natural = inferNaturalStyle(texto);
+      const t = slugify(texto);
+      let score = natural.score || 0;
+
+      if(t.includes("levante")) score += 4;
+      if(t.includes("ex")) score += 5;
+      if(t.includes("enamor")) score += 4;
+      if(t.includes("engancha")) score += 4;
+      if(t.includes("chamuyo")) score += 4;
+      if(t.includes("3 am")) score += 5;
+      if(t.includes("chaparse")) score += 5;
+      if(t.includes("cae bien")) score += 1;
+
+      return score;
+    }
+
+    function pickBestSelfResult(questionRows, votos){
+      const withStats = questionRows.map(q => {
+        const stats = getSelfQuestionStats(votos, q.id);
+        return {
+          ...q,
+          ...stats,
+          score: scoreSelfQuestion(q.texto)
+        };
+      }).filter(q => q.total > 0);
+
+      if(!withStats.length) return null;
+
+      withStats.sort((a,b) => {
+        const extremeA = Math.abs(a.yesPct - 50);
+        const extremeB = Math.abs(b.yesPct - 50);
+
+        if(b.score !== a.score) return b.score - a.score;
+        if(extremeB !== extremeA) return extremeB - extremeA;
+        if(b.total !== a.total) return b.total - a.total;
+        return b.yesPct - a.yesPct;
+      });
+
+      return withStats[0];
+    }
+
+    function selfCategoryVisual(slug){
+      if(slug === "picante") return { pill:"picante", emoji:"🔥", theme:"theme-hot" };
+      if(slug === "pareja") return { pill:"pareja", emoji:"💘", theme:"theme-love" };
+      if(slug === "amigos") return { pill:"amigos", emoji:"😎", theme:"theme-soft" };
+      if(slug === "familia") return { pill:"familia", emoji:"👪", theme:"theme-chaos" };
+      return { pill:"sin filtro", emoji:"🧠", theme:"theme-soft" };
+    }
+
+    function renderSelfPromo(categorySlug){
+      const tone = categoryToneForSelf(categorySlug);
+      promoCategoryPill.textContent = tone.pill;
+      promoEmoji.textContent = tone.emoji;
+      promoName.textContent = (veredicto.nickname || "ALGUIEN").toUpperCase();
+      promoCopy.textContent = tone.copy;
+      selfPromoCard.className = "story-card " + tone.theme;
+      applyGlow(promoGlowOne, promoGlowTwo, tone.theme);
+    }
+
+    function renderSelfViral(bestQuestion){
+      const visual = inferNaturalStyle(bestQuestion.texto);
+      const cleaned = stripNicknameFromQuestion(
+        applyNameToQuestion(bestQuestion.texto, veredicto.nickname),
+        veredicto.nickname
+      );
+
+      selfViralCard.className = "story-card " + visual.cls;
+      selfTonePill.textContent = visual.pill;
+      selfResultEmoji.textContent = visual.emoji;
+      selfResultName.textContent = (veredicto.nickname || "ALGUIEN").toUpperCase();
+      selfResultQuestion.textContent = cleaned.startsWith("¿") ? cleaned : `¿${cleaned}`;
+      selfResultPercent.textContent = `${bestQuestion.yesPct}% dijo que sí`;
+      selfResultBar.style.width = `${bestQuestion.yesPct}%`;
+      selfBarMeta.textContent = `Sí ${bestQuestion.yesPct}% · No ${bestQuestion.noPct}%`;
+      applyGlow(selfGlowOne, selfGlowTwo, visual.cls);
+    }
+
+    function renderSelfSummary(questionRows, votos){
+      selfSummaryGrid.innerHTML = "";
+
+      questionRows.forEach(q => {
+        const stats = getSelfQuestionStats(votos, q.id);
+        const full = applyNameToQuestion(q.texto, veredicto.nickname);
+        const clean = stripNicknameFromQuestion(full, veredicto.nickname);
+
+        const item = document.createElement("div");
+        item.className = "summary-item";
+        item.innerHTML = `
+          <div class="label">${clean.startsWith("¿") ? clean : "¿" + clean}</div>
+          <div class="bar-wrap"><div class="bar-fill" style="width:${stats.yesPct}%"></div></div>
+          <div class="meta">Sí ${stats.yesPct}% · No ${stats.noPct}% · ${stats.total} respuesta${stats.total === 1 ? "" : "s"}</div>
+        `;
+        selfSummaryGrid.appendChild(item);
       });
     }
 
@@ -1006,33 +1266,24 @@
         return;
       }
 
-      const { data: veredicto, error: veredictoError } = await db
+      const { data: verdictData, error: verdictError } = await db
         .from("veredictos")
-        .select("*")
+        .select("*, categorias(slug,nombre)")
         .eq("code", currentCode)
         .single();
 
-      if(veredictoError || !veredicto){
+      if(verdictError || !verdictData){
         hide(loadingState);
         show(errorState);
         errorText.textContent = "No se pudo cargar este veredicto.";
         return;
       }
 
-      brandSub.textContent = veredicto.mode === "group" ? "Resultado del grupo" : "Resultado anónimo";
-      modeBadge.textContent = veredicto.mode === "group" ? "Grupo" : "Sobre mí";
-
-      titleGroup.textContent = veredicto.group_name
-        ? veredicto.group_name
-        : "Tu grupo";
-
-      subtitle.textContent = veredicto.mode === "group"
-        ? "Elegí la tarjeta más fuerte del grupo y compartila."
-        : "Mirá cómo respondió la gente.";
+      veredicto = verdictData;
 
       const { data: preguntasRel, error: preguntasError } = await db
         .from("veredicto_preguntas")
-        .select("pregunta_id,preguntas(texto)")
+        .select("pregunta_id,preguntas(texto),orden")
         .eq("veredicto_id", veredicto.id)
         .order("orden", { ascending:true });
 
@@ -1045,7 +1296,8 @@
 
       const preguntas = preguntasRel.map(p => ({
         id: p.pregunta_id,
-        texto: p.preguntas?.texto || "Pregunta"
+        texto: p.preguntas?.texto || "Pregunta",
+        orden: p.orden
       }));
 
       const { data: votos, error: votosError } = await db
@@ -1060,112 +1312,140 @@
         return;
       }
 
-      results.innerHTML = "";
+      if(veredicto.mode === "group"){
+        brandSub.textContent = "Resultado del grupo";
+        modeBadge.textContent = "Grupo";
 
-      if(veredicto.mode !== "group"){
-        storyCard.className = "story-card theme-soft";
-        storyEmoji.textContent = "💭";
-        storyName.textContent = veredicto.nickname || "Tu resultado";
-        storyRole.textContent = "Mirá qué respondió la gente sobre vos";
-        storyVotes.textContent = `💬 ${votos.length} respuesta${votos.length === 1 ? "" : "s"}`;
-        storyTonePill.textContent = "sin filtro";
-        personPicker.innerHTML = "";
-        document.getElementById("stylePicker").parentElement.classList.add("hidden");
-        applyGlow("theme-soft");
+        show(groupHeaderCard);
+        show(groupStorySection);
+        show(groupResultsSection);
+
+        titleGroup.textContent = veredicto.group_name || "Tu grupo";
+        groupSubtitle.textContent = "Elegí la tarjeta más fuerte del grupo y compartila.";
+
+        const { data: participantes, error: participantesError } = await db
+          .from("participantes")
+          .select("*")
+          .eq("veredicto_id", veredicto.id)
+          .order("orden", { ascending:true });
+
+        if(participantesError || !participantes){
+          hide(loadingState);
+          show(errorState);
+          errorText.textContent = "No se pudieron cargar los participantes.";
+          return;
+        }
 
         preguntas.forEach(q => {
-          const yesCount = votos.filter(v => v.pregunta_id === q.id && v.respuesta === "si").length;
-          const noCount = votos.filter(v => v.pregunta_id === q.id && v.respuesta === "no").length;
+          const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+          const count = {};
+
+          votesForQuestion.forEach(v => {
+            count[v.participante_id] = (count[v.participante_id] || 0) + 1;
+          });
+
+          let winner = null;
+          let max = 0;
+
+          Object.keys(count).forEach(id => {
+            if(count[id] > max){
+              max = count[id];
+              winner = Number(id);
+            }
+          });
+
+          if(!winner) return;
+
+          const participant = participantes.find(p => p.id === winner);
+          if(!participant) return;
 
           const div = document.createElement("div");
           div.className = "result-item";
           div.innerHTML = `
             <div class="result-q">${q.texto}</div>
-            <div class="result-w">Sí: ${yesCount} · No: ${noCount}</div>
+            <div class="result-w">${participant.nombre} · ${max} voto${max === 1 ? "" : "s"}</div>
           `;
           results.appendChild(div);
         });
 
-        hide(loadingState);
-        show(content);
-        return;
-      }
+        storyCandidates = buildCandidates(preguntas, participantes, votos);
 
-      const { data: participantes, error: participantesError } = await db
-        .from("participantes")
-        .select("*")
-        .eq("veredicto_id", veredicto.id)
-        .order("orden", { ascending:true });
+        if(storyCandidates.length){
+          currentStoryIndex = 0;
+          renderCurrentStory();
+          renderPicker();
+          setupStylePicker();
+        }
+      } else {
+        brandSub.textContent = "Qué opinan sobre mí";
+        modeBadge.textContent = "Self";
 
-      if(participantesError || !participantes){
-        hide(loadingState);
-        show(errorState);
-        errorText.textContent = "No se pudieron cargar los participantes.";
-        return;
-      }
+        show(selfHeaderCard);
+        show(selfPreCard);
+        show(selfViralSection);
+        show(selfSummarySection);
 
-      preguntas.forEach(q => {
-        const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+        selfTitle.textContent = `Resultados de ${veredicto.nickname || "vos"}`;
+        selfSubtitle.textContent = "Primero compartís tu link. Después elegís qué resultado mostrar.";
 
-        const count = {};
-        votesForQuestion.forEach(v => {
-          count[v.participante_id] = (count[v.participante_id] || 0) + 1;
-        });
+        const categorySlug = veredicto.categorias?.slug || "amigos";
+        renderSelfPromo(categorySlug);
 
-        let winner = null;
-        let max = 0;
+        const best = pickBestSelfResult(preguntas, votos);
+        if(best){
+          renderSelfViral(best);
+        } else {
+          selfResultPercent.textContent = "Todavía sin respuestas";
+          selfResultQuestion.textContent = "Compartí tu link y empezá a recibir votos";
+          selfResultBar.style.width = "0%";
+          selfBarMeta.textContent = "Aún no hay respuestas";
+        }
 
-        Object.keys(count).forEach(id => {
-          if(count[id] > max){
-            max = count[id];
-            winner = Number(id);
-          }
-        });
-
-        if(!winner) return;
-
-        const participant = participantes.find(p => p.id === winner);
-        if(!participant) return;
-
-        const div = document.createElement("div");
-        div.className = "result-item";
-        div.innerHTML = `
-          <div class="result-q">${q.texto}</div>
-          <div class="result-w">${participant.nombre} · ${max} voto${max === 1 ? "" : "s"}</div>
-        `;
-        results.appendChild(div);
-      });
-
-      storyCandidates = buildCandidates(preguntas, participantes, votos);
-
-      if(storyCandidates.length){
-        currentStoryIndex = 0;
-        renderCurrentStory();
-        renderPicker();
-        setupStylePicker();
+        renderSelfSummary(preguntas, votos);
       }
 
       hide(loadingState);
       show(content);
     }
 
-    document.getElementById("downloadBtn").addEventListener("click", async () => {
+    document.getElementById("downloadBtn")?.addEventListener("click", async () => {
       const current = storyCandidates[currentStoryIndex];
       const filename = current
         ? `${current.nombre.toLowerCase().replace(/\s+/g,"-")}-elveredicto.png`
         : "story-elveredicto.png";
-
-      await downloadStoryCard(storyCard, filename);
+      await downloadCard(groupStoryCard, filename);
     });
 
-    document.getElementById("shareBtn").addEventListener("click", async () => {
-      await shareStoryCard(storyCard);
+    document.getElementById("shareBtn")?.addEventListener("click", async () => {
+      await shareCard(groupStoryCard, "Mirá lo que salió en nuestro grupo 🔥");
     });
 
-    document.getElementById("copyBtn").addEventListener("click", async () => {
+    document.getElementById("copyBtn")?.addEventListener("click", async () => {
       const link = location.origin + "/votar?code=" + currentCode;
       await navigator.clipboard.writeText(link);
       alert("Link copiado");
+    });
+
+    document.getElementById("downloadPromoBtn")?.addEventListener("click", async () => {
+      await downloadCard(selfPromoCard, "story-previa-elveredicto.png");
+    });
+
+    document.getElementById("sharePromoBtn")?.addEventListener("click", async () => {
+      await shareCard(selfPromoCard, "Respondé mi veredicto anónimo 👀");
+    });
+
+    document.getElementById("copyVoteLinkBtn")?.addEventListener("click", async () => {
+      const link = location.origin + "/votar?code=" + currentCode;
+      await navigator.clipboard.writeText(link);
+      alert("Link copiado");
+    });
+
+    document.getElementById("downloadSelfViralBtn")?.addEventListener("click", async () => {
+      await downloadCard(selfViralCard, "resultado-viral-elveredicto.png");
+    });
+
+    document.getElementById("shareSelfViralBtn")?.addEventListener("click", async () => {
+      await shareCard(selfViralCard, "Mirá lo que respondió la gente sobre mí 👀");
     });
 
     load();
