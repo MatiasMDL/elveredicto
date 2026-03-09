@@ -3,194 +3,472 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crear veredicto — ElVeredicto</title>
+  <title>Crear — ElVeredicto</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
-      --bg:#FCF3EC; --text:#000; --orange:#FF5E29; --green:#00804A; --pink:#FFB6EF;
-      --burgundy:#4E080C; --white:#fff; --line:rgba(0,0,0,.12);
-      --shadow:0 18px 50px rgba(0,0,0,.08); --radius:30px;
+      --bg:#FCF3EC;
+      --orange:#FF5E29;
+      --green:#00804A;
+      --pink:#FFB6EF;
+      --yellow:#FFD12E;
+      --burgundy:#4E080C;
+      --white:#fff;
+      --ink:#000;
+      --muted:#65605c;
+      --line:rgba(0,0,0,.08);
+      --shadow:0 18px 50px rgba(0,0,0,.08);
+      --shadow-soft:0 10px 26px rgba(0,0,0,.06);
+      --radius:28px;
     }
+
     *{box-sizing:border-box}
     body{
-      margin:0; padding:24px 14px 40px; min-height:100vh; font-family:Inter,sans-serif; color:var(--text);
+      margin:0;
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+      padding:22px 14px 40px;
       background:
-        radial-gradient(circle at top right, rgba(255,182,239,.45), transparent 26%),
-        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 24%),
+        radial-gradient(circle at top right, rgba(255,182,239,.42), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 28%),
         var(--bg);
     }
+
+    .shell{max-width:560px;margin:auto}
     .hidden{display:none!important}
-    .shell{max-width:560px;margin:0 auto}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
-    .brand{display:flex;align-items:center;gap:12px}
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .top-left{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
     .logo{
-      width:54px;height:54px;border-radius:20px;background:var(--orange);color:#fff;
-      display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;box-shadow:var(--shadow)
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      background:var(--orange);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:24px;
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+      flex-shrink:0;
     }
-    .brand-title{font-family:"Baloo 2",cursive;font-size:28px;line-height:1;font-weight:800}
-    .brand-sub{color:rgba(0,0,0,.58);font-size:13px;font-weight:700;margin-top:2px}
-    .beta{
-      background:var(--pink);color:var(--burgundy);border:2px solid rgba(78,8,12,.15);
-      border-radius:999px;padding:9px 14px;font-weight:800;font-size:13px
+
+    .brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:30px;
+      font-weight:800;
+      line-height:1;
     }
+
+    .brand-sub{
+      color:#6a6663;
+      font-size:13px;
+      font-weight:700;
+      margin-top:4px;
+    }
+
+    .badge{
+      background:var(--pink);
+      color:var(--burgundy);
+      padding:9px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:13px;
+      border:2px solid rgba(78,8,12,.10);
+      white-space:nowrap;
+    }
+
     .card{
-      background:
-        radial-gradient(circle at top right, rgba(255,182,239,.55), transparent 34%),
-        radial-gradient(circle at bottom left, rgba(255,209,46,.30), transparent 28%),
-        var(--white);
-      border:2px solid rgba(0,0,0,.06);border-radius:var(--radius);box-shadow:var(--shadow);
-      padding:22px;margin-bottom:16px
+      background:#fff;
+      border-radius:32px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
     }
-    h1,h2{font-family:"Baloo 2",cursive;margin:0 0 8px;line-height:1}
-    h1{font-size:42px} h2{font-size:34px}
-    p,.help{color:rgba(0,0,0,.68);font-size:15px;line-height:1.55;margin:0 0 18px;font-weight:600}
-    .field{margin-bottom:14px}
-    .field label{display:block;font-size:13px;font-weight:800;margin-bottom:8px}
-    input,textarea{
-      width:100%;border:2px solid var(--line);background:#fff;border-radius:20px;padding:16px;
-      font-size:15px;color:var(--text);outline:none;font-family:Inter,sans-serif
+
+    h1,h2,h3{
+      font-family:"Baloo 2", cursive;
+      margin:0;
+      line-height:.98;
     }
-    .categories{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .category-btn{
-      padding:16px;border-radius:24px;font-weight:800;text-align:center;cursor:pointer;border:2px solid transparent;
-      min-height:64px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;background:#fff
+
+    h1{font-size:42px;margin-bottom:12px}
+    h2{font-size:30px;margin-bottom:10px}
+    h3{font-size:24px;margin-bottom:10px}
+
+    p{
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      line-height:1.5;
+      font-size:15px;
     }
-    .category-btn.active{border-color:var(--orange);box-shadow:0 10px 22px rgba(255,94,41,.22)}
-    .category-btn.amigos{background:#DFF4E9;color:#0B6B43}
-    .category-btn.familia{background:#FFF3B8;color:#7B4B00}
-    .category-btn.pareja{background:#FFDDF4;color:#7C1E4D}
-    .category-btn.picante{background:#FFE1D7;color:#8B2E16}
-    .participants-input{display:flex;gap:10px;align-items:center}
-    .participants-input input{flex:1}
-    .participants-input button{
-      min-width:110px;padding:14px 16px;border:none;border-radius:18px;background:var(--green);
-      color:#fff;font-weight:800;cursor:pointer;font-family:Inter,sans-serif
+
+    .field{
+      margin-top:18px;
     }
-    .participants-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .participant-chip{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#fff;
-      border:2px solid rgba(0,0,0,.08);font-weight:800;font-size:14px
+
+    .field label{
+      display:block;
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:10px;
     }
-    .participant-chip button{border:none;background:transparent;cursor:pointer;font-size:14px;font-weight:800;color:#7a7a7a;padding:0}
+
+    .input{
+      width:100%;
+      border-radius:24px;
+      padding:18px 20px;
+      border:2px solid #d9d5d0;
+      background:#fff;
+      font-size:18px;
+      font-weight:600;
+      color:#222;
+      outline:none;
+      transition:.18s ease;
+    }
+
+    .input:focus{
+      border-color:#c9b8c4;
+      box-shadow:0 0 0 4px rgba(255,182,239,.18);
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .mode-btn,
+    .cat-btn{
+      border:none;
+      border-radius:28px;
+      padding:18px 18px;
+      font-weight:800;
+      font-size:17px;
+      cursor:pointer;
+      transition:.18s ease;
+      box-shadow:0 6px 20px rgba(0,0,0,.04);
+      text-align:center;
+    }
+
+    .mode-btn{
+      background:#f6f1ed;
+      color:#355;
+      border:2px solid transparent;
+    }
+
+    .mode-btn.active{
+      border-color:rgba(78,8,12,.10);
+      box-shadow:0 12px 30px rgba(0,0,0,.08);
+      transform:translateY(-1px);
+    }
+
+    .mode-self.active{
+      background:#e8f5ef;
+      color:#0b6b45;
+    }
+
+    .mode-group.active{
+      background:#ffe5d6;
+      color:#8a2d12;
+    }
+
+    .cats{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:8px;
+    }
+
+    .cat-btn{
+      min-height:92px;
+      background:#f5f1ed;
+      color:#333;
+      border:2px solid transparent;
+    }
+
+    .cat-btn[data-slug="amigos"]{background:#dff0e7;color:#0b6b45}
+    .cat-btn[data-slug="familia"]{background:#f7edb7;color:#8a5b00}
+    .cat-btn[data-slug="pareja"]{background:#f3d9f0;color:#7a2455}
+    .cat-btn[data-slug="picante"]{background:#ffe0d3;color:#8a2d12}
+
+    .cat-btn.active{
+      border-color:rgba(0,0,0,.12);
+      box-shadow:0 12px 30px rgba(0,0,0,.08);
+      transform:translateY(-1px);
+    }
+
     .btn{
-      width:100%;border:none;border-radius:22px;padding:16px 18px;font-size:15px;font-weight:800;cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;font-family:Inter,sans-serif
+      width:100%;
+      padding:17px 18px;
+      border-radius:24px;
+      border:none;
+      font-weight:800;
+      font-size:18px;
+      cursor:pointer;
+      transition:.18s ease;
+      font-family:Inter,sans-serif;
     }
-    .btn-primary{background:var(--orange);color:#fff}
-    .btn-dark{background:var(--burgundy);color:#fff;margin-top:10px}
-    .btn-outline{width:auto;background:#fff;color:var(--green);border:2px solid var(--green);padding:12px 18px}
-    .btn-whatsapp{background:#25D366;color:#fff;margin-top:12px}
-    .row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px}
-    .questions{display:grid;gap:12px;margin-bottom:16px}
-    .question{
-      border-radius:24px;padding:16px;font-weight:800;font-size:15px;line-height:1.4;border:2px solid rgba(0,0,0,.06)
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-orange{background:var(--orange);color:#fff}
+    .btn-dark{background:var(--burgundy);color:#fff}
+    .btn-outline{background:#fff;color:var(--green);border:2px solid var(--green)}
+
+    .participants-row{
+      display:flex;
+      gap:10px;
+      margin-top:8px;
     }
-    .question:nth-child(1){background:#FFF1D0}
-    .question:nth-child(2){background:#FFD8F5}
-    .question:nth-child(3){background:#D8F3E6}
-    .question:nth-child(4){background:#FFE1D7}
-    .question:nth-child(5){background:#FFF4B8}
-    .link-box{display:flex;gap:10px;align-items:center}
-    .link-box input{flex:1}
-    .copy-card{margin-top:14px;background:#fff8f4;border:2px solid rgba(0,0,0,.06);border-radius:24px;padding:14px}
-    .copy-title{font-size:13px;font-weight:800;margin-bottom:10px}
-    textarea{min-height:110px;resize:none;margin-bottom:10px;line-height:1.5}
+
+    .participants-row .input{
+      flex:1;
+      min-width:0;
+    }
+
+    .mini-btn{
+      border:none;
+      border-radius:22px;
+      padding:0 20px;
+      background:#3a8b53;
+      color:#fff;
+      font-size:18px;
+      font-weight:800;
+      cursor:pointer;
+      min-width:120px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      background:#fff;
+      border:2px solid #e4ddd7;
+      padding:10px 14px;
+      font-weight:800;
+      color:#333;
+    }
+
+    .chip button{
+      border:none;
+      background:none;
+      color:#a44;
+      font-weight:900;
+      font-size:16px;
+      cursor:pointer;
+      padding:0;
+      line-height:1;
+    }
+
+    .questions-card{
+      background:linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,245,250,1) 100%);
+      border-radius:30px;
+      padding:18px;
+      box-shadow:var(--shadow-soft);
+      border:1px solid rgba(0,0,0,.04);
+      margin-top:14px;
+    }
+
+    .questions-list{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .question-item{
+      border-radius:24px;
+      padding:18px 18px;
+      font-size:18px;
+      font-weight:800;
+      line-height:1.35;
+      box-shadow:0 6px 18px rgba(0,0,0,.04);
+      border:2px solid rgba(0,0,0,.04);
+    }
+
+    .question-item:nth-child(4n+1){background:#f7edb7}
+    .question-item:nth-child(4n+2){background:#f3d9f0}
+    .question-item:nth-child(4n+3){background:#dff0e7}
+    .question-item:nth-child(4n+4){background:#ffe0d3}
+
+    .actions{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .share-box{
+      margin-top:16px;
+      padding:16px;
+      border-radius:24px;
+      background:#fff;
+      border:2px solid #eadfd8;
+    }
+
+    .share-label{
+      font-size:13px;
+      font-weight:800;
+      color:#66615d;
+      margin-bottom:8px;
+    }
+
+    .share-link{
+      width:100%;
+      border-radius:18px;
+      padding:15px 16px;
+      border:2px solid #ddd7d2;
+      background:#fff;
+      font-size:15px;
+      font-weight:700;
+      color:#333;
+      overflow:auto;
+    }
+
+    .muted-note{
+      margin-top:12px;
+      font-size:13px;
+      font-weight:700;
+      color:#77706c;
+    }
+
+    .success{
+      color:var(--green);
+      font-weight:800;
+      margin-top:12px;
+    }
+
     .error{
-      margin-top:14px;background:#ffe5e0;color:#912f18;border:2px solid rgba(145,47,24,.12);
-      border-radius:20px;padding:14px;font-size:14px;font-weight:800
+      color:#a12424;
+      font-weight:800;
+      margin-top:12px;
     }
+
     @media (max-width:640px){
-      h1{font-size:36px} h2{font-size:30px}
-      .categories{grid-template-columns:1fr}
-      .participants-input{flex-direction:column}
-      .participants-input button,.link-box,.row{width:100%}
-      .row{flex-direction:column}
-      .link-box{flex-direction:column}
-      .link-box .btn-outline,.row .btn-outline{width:100%}
+      h1{font-size:36px}
+      h2{font-size:28px}
+      .cats{grid-template-columns:1fr}
+      .mode-grid{grid-template-columns:1fr}
+      .participants-row{flex-direction:column}
+      .mini-btn{min-height:56px}
     }
   </style>
 </head>
 <body>
   <div class="shell">
+
     <div class="top">
-      <div class="brand">
+      <div class="top-left">
         <div class="logo">⚖</div>
         <div>
           <div class="brand-title">ElVeredicto</div>
           <div class="brand-sub" id="brandSub">Creá tu juego social</div>
         </div>
       </div>
-      <div class="beta">Beta</div>
+      <div class="badge">Beta</div>
     </div>
 
     <div class="card">
-      <h1 id="pageTitle">Creá tu veredicto</h1>
-      <p id="pageSubtitle">Elegí categoría, prepará el juego y compartilo.</p>
+      <h1 id="heroTitle">Creá tu veredicto</h1>
+      <p id="heroText">Elegí el tipo de veredicto, armá el juego y compartilo solo cuando te guste la combinación.</p>
 
-      <div id="selfBlock">
-        <div class="field">
-          <label for="nickname">Tu nombre o apodo</label>
-          <input id="nickname" placeholder="Ej: Matias">
+      <div class="field" id="modeField">
+        <label>Tipo de veredicto</label>
+        <div class="mode-grid">
+          <button class="mode-btn mode-self" id="modeSelfBtn">🧠 Sobre mí</button>
+          <button class="mode-btn mode-group" id="modeGroupBtn">🔥 Del grupo</button>
         </div>
       </div>
 
-      <div id="groupBlock" class="hidden">
-        <div class="field">
-          <label for="groupName">Nombre del grupo</label>
-          <input id="groupName" placeholder="Ej: Los del club">
-        </div>
+      <div class="field hidden" id="selfNicknameField">
+        <label for="nickname">Tu nombre o apodo</label>
+        <input id="nickname" class="input" placeholder="Ej: Matias" />
+      </div>
 
-        <div class="field">
-          <label for="participantInput">Participantes</label>
-          <div class="participants-input">
-            <input id="participantInput" placeholder="Nombre de participante">
-            <button id="addParticipantBtn" type="button">Agregar</button>
-          </div>
-          <div id="participantsList" class="participants-list"></div>
+      <div class="field hidden" id="groupNameField">
+        <label for="groupName">Nombre del grupo</label>
+        <input id="groupName" class="input" placeholder="Ej: Los del club" />
+      </div>
+
+      <div class="field hidden" id="participantsField">
+        <label>Participantes</label>
+        <div class="participants-row">
+          <input id="participantInput" class="input" placeholder="Nombre" />
+          <button class="mini-btn" id="addParticipantBtn" type="button">Agregar</button>
         </div>
+        <div class="chips" id="participantsChips"></div>
+        <div class="muted-note">Agregá al menos 2 personas para el modo grupo.</div>
       </div>
 
       <div class="field">
         <label>Elegí categoría</label>
-        <div id="categoriesContainer" class="categories"></div>
+        <div class="cats" id="cats"></div>
       </div>
 
-      <button id="loadQuestionsBtn" class="btn btn-primary" type="button">Ver preguntas</button>
-      <div id="errorBox" class="error hidden"></div>
+      <div style="margin-top:18px">
+        <button class="btn btn-orange" id="loadQuestionsBtn">Ver preguntas</button>
+      </div>
     </div>
 
-    <div id="questionsCard" class="card hidden">
-      <div class="row">
-        <h2>Tus preguntas</h2>
-        <button id="refreshQuestionsBtn" class="btn btn-outline" type="button">Actualizar</button>
+    <div class="card hidden" id="questionsSection">
+      <h2 id="questionsTitle">Tus preguntas</h2>
+      <button class="btn btn-outline" id="shuffleBtn" type="button">Actualizar</button>
+      <p id="questionsSubtitle" style="margin-top:14px">Estas son las 5 preguntas que responderán sobre vos.</p>
+
+      <div class="questions-card">
+        <div class="questions-list" id="questionsList"></div>
       </div>
 
-      <p class="help" id="questionsHelp"></p>
-      <div id="questionsList" class="questions"></div>
-      <button id="confirmVerdictBtn" class="btn btn-dark" type="button">Usar estas preguntas</button>
+      <div class="actions">
+        <button class="btn btn-dark" id="useQuestionsBtn" type="button">Usar estas preguntas</button>
+      </div>
     </div>
 
-    <div id="shareCard" class="card hidden">
+    <div class="card hidden" id="shareSection">
       <h2>Listo para compartir</h2>
+      <p id="shareText">Tu veredicto ya está armado.</p>
 
-      <div class="link-box">
-        <input id="linkInput" readonly>
-        <button id="copyLinkBtn" class="btn btn-outline" type="button">Copiar</button>
+      <div class="share-box">
+        <div class="share-label">Link del juego</div>
+        <div class="share-link" id="shareLink"></div>
       </div>
 
-      <a id="waBtn" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">Compartir por WhatsApp</a>
-
-      <div class="copy-card">
-        <div class="copy-title">Mensaje sugerido</div>
-        <textarea id="shareText" readonly></textarea>
-        <button id="copyTextBtn" class="btn btn-outline" type="button">Copiar mensaje</button>
+      <div class="actions">
+        <button class="btn btn-orange" id="copyLinkBtn" type="button">Copiar link</button>
+        <button class="btn btn-outline" id="waBtn" type="button">Compartir por WhatsApp</button>
       </div>
+
+      <div class="success hidden" id="successMsg">Link copiado.</div>
+      <div class="error hidden" id="errorMsg">Pasó algo. Probá de nuevo.</div>
     </div>
+
   </div>
 
   <script>
@@ -198,364 +476,380 @@
     const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const params = new URLSearchParams(window.location.search);
-    const mode = params.get("mode") === "group" ? "group" : "self";
-
-    const pageTitle = document.getElementById("pageTitle");
-    const pageSubtitle = document.getElementById("pageSubtitle");
+    const heroTitle = document.getElementById("heroTitle");
+    const heroText = document.getElementById("heroText");
     const brandSub = document.getElementById("brandSub");
 
-    const selfBlock = document.getElementById("selfBlock");
-    const groupBlock = document.getElementById("groupBlock");
+    const modeField = document.getElementById("modeField");
+    const modeSelfBtn = document.getElementById("modeSelfBtn");
+    const modeGroupBtn = document.getElementById("modeGroupBtn");
+
+    const selfNicknameField = document.getElementById("selfNicknameField");
+    const groupNameField = document.getElementById("groupNameField");
+    const participantsField = document.getElementById("participantsField");
 
     const nicknameInput = document.getElementById("nickname");
     const groupNameInput = document.getElementById("groupName");
     const participantInput = document.getElementById("participantInput");
     const addParticipantBtn = document.getElementById("addParticipantBtn");
-    const participantsList = document.getElementById("participantsList");
+    const participantsChips = document.getElementById("participantsChips");
 
-    const categoriesContainer = document.getElementById("categoriesContainer");
+    const catsContainer = document.getElementById("cats");
     const loadQuestionsBtn = document.getElementById("loadQuestionsBtn");
-    const refreshQuestionsBtn = document.getElementById("refreshQuestionsBtn");
-    const confirmVerdictBtn = document.getElementById("confirmVerdictBtn");
 
-    const questionsCard = document.getElementById("questionsCard");
+    const questionsSection = document.getElementById("questionsSection");
+    const questionsTitle = document.getElementById("questionsTitle");
+    const questionsSubtitle = document.getElementById("questionsSubtitle");
     const questionsList = document.getElementById("questionsList");
-    const questionsHelp = document.getElementById("questionsHelp");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const useQuestionsBtn = document.getElementById("useQuestionsBtn");
 
-    const shareCard = document.getElementById("shareCard");
-    const errorBox = document.getElementById("errorBox");
-    const linkInput = document.getElementById("linkInput");
+    const shareSection = document.getElementById("shareSection");
+    const shareText = document.getElementById("shareText");
+    const shareLink = document.getElementById("shareLink");
     const copyLinkBtn = document.getElementById("copyLinkBtn");
     const waBtn = document.getElementById("waBtn");
-    const shareText = document.getElementById("shareText");
-    const copyTextBtn = document.getElementById("copyTextBtn");
+    const successMsg = document.getElementById("successMsg");
+    const errorMsg = document.getElementById("errorMsg");
 
+    let mode = "self";
+    let categories = [];
     let selectedCategory = null;
-    let currentQuestions = [];
+    let selectedQuestions = [];
+    let allCurrentQuestions = [];
     let participants = [];
+    let createdCode = null;
 
-    function show(el){ el.classList.remove("hidden"); }
-    function hide(el){ el.classList.add("hidden"); }
-
-    function showError(message){
-      errorBox.textContent = message;
-      show(errorBox);
+    function getModeFromUrl(){
+      const urlMode = new URLSearchParams(location.search).get("mode");
+      if(urlMode === "group") return "group";
+      return "self";
     }
 
-    function hideError(){
-      errorBox.textContent = "";
-      hide(errorBox);
+    function shuffleArray(arr){
+      return [...arr].sort(() => Math.random() - 0.5);
     }
 
-    function setupMode(){
-      if(mode === "group"){
-        pageTitle.textContent = "Armá el veredicto del grupo";
-        pageSubtitle.textContent = "Agregá nombres y descubrí quién es quién.";
-        brandSub.textContent = "Veredicto del grupo";
-        hide(selfBlock);
-        show(groupBlock);
-        questionsHelp.textContent = "Estas son las 5 preguntas que verá el grupo para votar entre los participantes.";
-      } else {
-        pageTitle.textContent = "Creá tu veredicto";
-        pageSubtitle.textContent = "Mandá tu link y descubrí qué piensa la gente sobre vos.";
+    function applyNameToQuestion(text, nickname){
+      return (text || "").replaceAll("{nombre}", nickname || "Esta persona");
+    }
+
+    function slugifyText(text){
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s-]/g, "")
+        .trim();
+    }
+
+    function setMode(nextMode){
+      mode = nextMode;
+
+      modeSelfBtn.classList.toggle("active", mode === "self");
+      modeGroupBtn.classList.toggle("active", mode === "group");
+
+      if(mode === "self"){
         brandSub.textContent = "Qué opinan sobre mí";
-        show(selfBlock);
-        hide(groupBlock);
-        questionsHelp.textContent = "Estas son las 5 preguntas que responderán sobre vos.";
+        heroTitle.textContent = "Creá tu veredicto";
+        heroText.textContent = "Mandá tu link y descubrí qué piensa la gente sobre vos.";
+        selfNicknameField.classList.remove("hidden");
+        groupNameField.classList.add("hidden");
+        participantsField.classList.add("hidden");
+        questionsSubtitle.textContent = "Estas son las 5 preguntas que responderán sobre vos.";
+      } else {
+        brandSub.textContent = "Armá el veredicto del grupo";
+        heroTitle.textContent = "Armá el veredicto del grupo";
+        heroText.textContent = "Agregá nombres, elegí categoría y descubrí quién es quién.";
+        selfNicknameField.classList.add("hidden");
+        groupNameField.classList.remove("hidden");
+        participantsField.classList.remove("hidden");
+        questionsSubtitle.textContent = "Estas son las 5 preguntas que verá todo el grupo.";
       }
+
+      questionsSection.classList.add("hidden");
+      shareSection.classList.add("hidden");
+      selectedQuestions = [];
+      allCurrentQuestions = [];
+      createdCode = null;
     }
 
     function renderParticipants(){
-      participantsList.innerHTML = "";
+      participantsChips.innerHTML = "";
       participants.forEach((name, index) => {
         const chip = document.createElement("div");
-        chip.className = "participant-chip";
-        chip.innerHTML = '<span>' + name + '</span><button type="button">✕</button>';
-        chip.querySelector("button").addEventListener("click", function(){
+        chip.className = "chip";
+        chip.innerHTML = `
+          <span>${name}</span>
+          <button type="button" data-index="${index}">×</button>
+        `;
+        chip.querySelector("button").addEventListener("click", () => {
           participants.splice(index, 1);
           renderParticipants();
         });
-        participantsList.appendChild(chip);
+        participantsChips.appendChild(chip);
       });
     }
 
-    function addParticipant(){
-      const name = participantInput.value.trim();
-      if(!name) return;
-      if(participants.length >= 10){
-        showError("Podés agregar hasta 10 participantes.");
+    addParticipantBtn.addEventListener("click", () => {
+      const value = participantInput.value.trim();
+      if(!value) return;
+      if(participants.includes(value)) {
+        participantInput.value = "";
         return;
       }
-      participants.push(name);
+      participants.push(value);
       participantInput.value = "";
-      hideError();
       renderParticipants();
-    }
+    });
 
-    function renderQuestions(questions){
-      questionsList.innerHTML = "";
-      questions.forEach((q, index) => {
-        const item = document.createElement("div");
-        item.className = "question";
-        item.innerHTML = "<strong>" + (index + 1) + ".</strong> " + q.texto;
-        questionsList.appendChild(item);
-      });
-    }
+    participantInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        addParticipantBtn.click();
+      }
+    });
 
     async function loadCategories(){
-      hideError();
-      const result = await db
+      const { data, error } = await db
         .from("categorias")
-        .select("id,nombre,slug")
-        .eq("activa", true)
-        .order("nombre", { ascending: true });
+        .select("*")
+        .order("id", { ascending:true });
 
-      if(result.error){
-        console.error(result.error);
-        showError("No se pudieron cargar las categorías.");
-        return;
-      }
+      if(error || !data) return;
 
-      const icons = {
+      categories = data;
+      catsContainer.innerHTML = "";
+
+      const iconMap = {
         amigos: "😎",
-        familia: "👨‍👩‍👧",
+        familia: "👪",
         pareja: "💘",
         picante: "🔥"
       };
 
-      categoriesContainer.innerHTML = "";
-
-      (result.data || []).forEach(function(cat){
+      data.forEach(cat => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "category-btn " + cat.slug;
-        btn.innerHTML = (icons[cat.slug] || "⭐") + " <span>" + cat.nombre + "</span>";
-
-        btn.addEventListener("click", function(){
-          document.querySelectorAll(".category-btn").forEach(function(el){
-            el.classList.remove("active");
-          });
+        btn.className = "cat-btn";
+        btn.dataset.id = cat.id;
+        btn.dataset.slug = cat.slug;
+        btn.innerHTML = `${iconMap[cat.slug] || "✨"} ${cat.nombre}`;
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
-          selectedCategory = cat.id;
-          hide(questionsCard);
-          hide(shareCard);
+          selectedCategory = cat;
+          questionsSection.classList.add("hidden");
+          shareSection.classList.add("hidden");
         });
-
-        categoriesContainer.appendChild(btn);
+        catsContainer.appendChild(btn);
       });
     }
 
-    async function fetchRandomQuestions(){
-      hideError();
+    function validateBeforeLoad(){
+      errorMsg.classList.add("hidden");
+      successMsg.classList.add("hidden");
 
       if(!selectedCategory){
-        showError("Elegí una categoría para continuar.");
-        return;
+        alert("Elegí una categoría.");
+        return false;
       }
-
-      if(mode === "group" && participants.length < 3){
-        showError("Para el modo grupo agregá al menos 3 participantes.");
-        return;
-      }
-
-      const result = await db
-        .from("preguntas")
-        .select("id,texto")
-        .eq("categoria_id", selectedCategory)
-        .eq("activa", true);
-
-      if(result.error){
-        console.error(result.error);
-        showError("No se pudieron cargar las preguntas.");
-        return;
-      }
-
-      if(!result.data || result.data.length < 5){
-        showError("Esta categoría todavía no tiene suficientes preguntas.");
-        return;
-      }
-
-      currentQuestions = result.data.slice().sort(function(){ return Math.random() - 0.5; }).slice(0,5);
-      renderQuestions(currentQuestions);
-      show(questionsCard);
-      hide(shareCard);
-      questionsCard.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function generateCode(length){
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      let code = "";
-      for(let i=0;i<length;i++){
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return code;
-    }
-
-    function buildShareMessage(link, nickname, groupName){
-      if(mode === "group"){
-        return "🔥 Armé el veredicto del grupo" + (groupName ? " " + groupName : "") + "\n\nEntren y voten quién es quién 😂👇\n" + link;
-      }
-      return "⚖️ Hacé mi veredicto anónimo\n\nEntrá y respondé estas 5 preguntas sobre " + nickname + " 👇\n" + link;
-    }
-
-    async function createVerdict(){
-      hideError();
-
-      const nickname = nicknameInput ? nicknameInput.value.trim() : "";
-      const groupName = groupNameInput ? groupNameInput.value.trim() : "";
 
       if(mode === "self"){
-        if(!nickname){
-          showError("Escribí tu nombre o apodo.");
-          return;
-        }
-        if(nickname.length < 2){
-          showError("Poné al menos 2 caracteres.");
-          return;
+        if(!nicknameInput.value.trim()){
+          alert("Escribí tu nombre o apodo.");
+          return false;
         }
       }
 
       if(mode === "group"){
-        if(!groupName){
-          showError("Escribí el nombre del grupo.");
-          return;
+        if(!groupNameInput.value.trim()){
+          alert("Escribí el nombre del grupo.");
+          return false;
         }
-        if(participants.length < 3){
-          showError("Para el modo grupo necesitás al menos 3 participantes.");
-          return;
+        if(participants.length < 2){
+          alert("Agregá al menos 2 participantes.");
+          return false;
         }
       }
 
-      if(!selectedCategory){
-        showError("Elegí una categoría.");
+      return true;
+    }
+
+    async function fetchQuestions(){
+      if(!validateBeforeLoad()) return;
+
+      const { data, error } = await db
+        .from("preguntas")
+        .select("*")
+        .eq("categoria_id", selectedCategory.id)
+        .eq("modo", mode);
+
+      if(error || !data || data.length < 5){
+        alert("Esta categoría todavía no tiene suficientes preguntas para este modo.");
         return;
       }
 
-      if(currentQuestions.length !== 5){
-        showError("Primero elegí una tanda de preguntas.");
+      allCurrentQuestions = data;
+      selectedQuestions = shuffleArray(data).slice(0, 5);
+      renderQuestions();
+      questionsSection.classList.remove("hidden");
+      shareSection.classList.add("hidden");
+      questionsSection.scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+
+    function renderQuestions(){
+      questionsList.innerHTML = "";
+
+      const nickname = nicknameInput.value.trim();
+
+      selectedQuestions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question-item";
+
+        const visibleText = mode === "self"
+          ? applyNameToQuestion(q.texto, nickname)
+          : q.texto;
+
+        div.textContent = `${i + 1}. ${visibleText}`;
+        questionsList.appendChild(div);
+      });
+    }
+
+    shuffleBtn.addEventListener("click", () => {
+      if(allCurrentQuestions.length < 5) return;
+      selectedQuestions = shuffleArray(allCurrentQuestions).slice(0, 5);
+      renderQuestions();
+    });
+
+    loadQuestionsBtn.addEventListener("click", fetchQuestions);
+
+    nicknameInput.addEventListener("input", () => {
+      if(mode === "self" && selectedQuestions.length){
+        renderQuestions();
+      }
+    });
+
+    function generateCode(){
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let out = "";
+      for(let i=0;i<6;i++){
+        out += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return out;
+    }
+
+    async function saveVerdict(){
+      if(!selectedQuestions.length){
+        alert("Primero elegí las preguntas.");
         return;
       }
 
-      confirmVerdictBtn.disabled = true;
-      confirmVerdictBtn.textContent = "Creando...";
+      errorMsg.classList.add("hidden");
+      successMsg.classList.add("hidden");
 
-      const code = generateCode(6);
-      const expires = new Date();
-      expires.setHours(expires.getHours() + 24);
+      const code = generateCode();
 
-      const verdictResult = await db
+      const payload = {
+        code,
+        mode,
+        categoria_id: selectedCategory.id,
+        nickname: mode === "self" ? nicknameInput.value.trim() : null,
+        group_name: mode === "group" ? groupNameInput.value.trim() : null
+      };
+
+      const { data: insertedVerdict, error: verdictError } = await db
         .from("veredictos")
-        .insert([{
-          code: code,
-          nickname: mode === "self" ? nickname : groupName,
-          expires_at: expires.toISOString(),
-          categoria_id: Number(selectedCategory),
-          mode: mode,
-          group_name: mode === "group" ? groupName : null
-        }])
-        .select("id")
+        .insert(payload)
+        .select()
         .single();
 
-      if(verdictResult.error){
-        console.error(verdictResult.error);
-        confirmVerdictBtn.disabled = false;
-        confirmVerdictBtn.textContent = "Usar estas preguntas";
-        showError("No se pudo crear el veredicto.");
+      if(verdictError || !insertedVerdict){
+        errorMsg.textContent = "No pude guardar el veredicto.";
+        errorMsg.classList.remove("hidden");
         return;
       }
 
-      const verdictId = verdictResult.data.id;
+      const rels = selectedQuestions.map((q, index) => ({
+        veredicto_id: insertedVerdict.id,
+        pregunta_id: q.id,
+        orden: index + 1
+      }));
+
+      const { error: relError } = await db
+        .from("veredicto_preguntas")
+        .insert(rels);
+
+      if(relError){
+        errorMsg.textContent = "No pude guardar las preguntas.";
+        errorMsg.classList.remove("hidden");
+        return;
+      }
 
       if(mode === "group"){
-        const participantRows = participants.map(function(name, index){
-          return {
-            veredicto_id: verdictId,
-            nombre: name,
-            orden: index + 1
-          };
-        });
+        const participantRows = participants.map((name, index) => ({
+          veredicto_id: insertedVerdict.id,
+          nombre: name,
+          orden: index + 1
+        }));
 
-        const participantsResult = await db.from("participantes").insert(participantRows);
+        const { error: participantError } = await db
+          .from("participantes")
+          .insert(participantRows);
 
-        if(participantsResult.error){
-          console.error(participantsResult.error);
-          confirmVerdictBtn.disabled = false;
-          confirmVerdictBtn.textContent = "Usar estas preguntas";
-          showError("El veredicto se creó, pero falló al guardar los participantes.");
+        if(participantError){
+          errorMsg.textContent = "No pude guardar los participantes.";
+          errorMsg.classList.remove("hidden");
           return;
         }
       }
 
-      const relationRows = currentQuestions.map(function(q, index){
-        return {
-          veredicto_id: verdictId,
-          pregunta_id: q.id,
-          orden: index + 1
-        };
-      });
+      createdCode = code;
 
-      const relationResult = await db.from("veredicto_preguntas").insert(relationRows);
+      const publicLink = `${location.origin}/votar?code=${code}`;
+      shareLink.textContent = publicLink;
 
-      confirmVerdictBtn.disabled = false;
-      confirmVerdictBtn.textContent = "Usar estas preguntas";
+      shareText.textContent = mode === "self"
+        ? "Tu link ya está listo para que voten sobre vos."
+        : "Tu link ya está listo para compartir con el grupo.";
 
-      if(relationResult.error){
-        console.error(relationResult.error);
-        showError("El veredicto se creó, pero falló al guardar las preguntas.");
-        return;
-      }
-
-      const link = window.location.origin + "/votar?code=" + code;
-      const message = buildShareMessage(link, nickname, groupName);
-
-      linkInput.value = link;
-      shareText.value = message;
-      waBtn.href = "https://wa.me/?text=" + encodeURIComponent(message);
-
-      show(shareCard);
-      shareCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      shareSection.classList.remove("hidden");
+      shareSection.scrollIntoView({ behavior:"smooth", block:"start" });
     }
 
-    if(addParticipantBtn){
-      addParticipantBtn.addEventListener("click", addParticipant);
-    }
+    useQuestionsBtn.addEventListener("click", saveVerdict);
 
-    if(participantInput){
-      participantInput.addEventListener("keydown", function(e){
-        if(e.key === "Enter"){
-          e.preventDefault();
-          addParticipant();
-        }
-      });
-    }
-
-    loadQuestionsBtn.addEventListener("click", fetchRandomQuestions);
-    refreshQuestionsBtn.addEventListener("click", fetchRandomQuestions);
-    confirmVerdictBtn.addEventListener("click", createVerdict);
-
-    copyLinkBtn.addEventListener("click", async function(){
+    copyLinkBtn.addEventListener("click", async () => {
+      if(!createdCode) return;
+      const publicLink = `${location.origin}/votar?code=${createdCode}`;
       try{
-        await navigator.clipboard.writeText(linkInput.value);
-        copyLinkBtn.textContent = "Copiado ✅";
-        setTimeout(function(){ copyLinkBtn.textContent = "Copiar"; }, 1400);
-      } catch(err){
-        showError("No se pudo copiar el link.");
+        await navigator.clipboard.writeText(publicLink);
+        successMsg.textContent = "Link copiado.";
+        successMsg.classList.remove("hidden");
+        errorMsg.classList.add("hidden");
+      } catch(e){
+        errorMsg.textContent = "No pude copiar el link.";
+        errorMsg.classList.remove("hidden");
       }
     });
 
-    copyTextBtn.addEventListener("click", async function(){
-      try{
-        await navigator.clipboard.writeText(shareText.value);
-        copyTextBtn.textContent = "Mensaje copiado ✅";
-        setTimeout(function(){ copyTextBtn.textContent = "Copiar mensaje"; }, 1400);
-      } catch(err){
-        showError("No se pudo copiar el mensaje.");
-      }
+    waBtn.addEventListener("click", () => {
+      if(!createdCode) return;
+      const publicLink = `${location.origin}/votar?code=${createdCode}`;
+      const text = mode === "self"
+        ? `Respondé mi veredicto anónimo 👀 ${publicLink}`
+        : `Entrá a votar el veredicto del grupo 🔥 ${publicLink}`;
+      location.href = `https://wa.me/?text=${encodeURIComponent(text)}`;
     });
 
-    setupMode();
-    loadCategories();
+    modeSelfBtn.addEventListener("click", () => setMode("self"));
+    modeGroupBtn.addEventListener("click", () => setMode("group"));
+
+    async function init(){
+      await loadCategories();
+      setMode(getModeFromUrl());
+    }
+
+    init();
   </script>
 </body>
 </html>
