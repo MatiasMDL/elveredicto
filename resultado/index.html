@@ -1,539 +1,1355 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado — ElVeredicto</title>
 
-<title>Resultado — ElVeredicto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#FCF3EC;
+      --orange:#FF5E29;
+      --green:#00804A;
+      --pink:#FFB6EF;
+      --yellow:#FFD12E;
+      --burgundy:#4E080C;
+      --white:#fff;
+      --ink:#000;
+      --muted:#65605c;
+      --shadow:0 18px 50px rgba(0,0,0,.08);
+      --shadow-soft:0 10px 30px rgba(0,0,0,.06);
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    *{box-sizing:border-box}
 
-<style>
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:Inter,sans-serif;
+      padding:22px 14px 40px;
+      background:
+        radial-gradient(circle at top right, rgba(255,182,239,.42), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 28%),
+        var(--bg);
+    }
 
-:root{
---bg:#FCF3EC;
---orange:#FF5E29;
---green:#00804A;
---pink:#FFB6EF;
---yellow:#FFD12E;
---burgundy:#4E080C;
---white:#fff;
---ink:#000;
---muted:#65605c;
---shadow:0 18px 50px rgba(0,0,0,.08);
---shadow-soft:0 10px 30px rgba(0,0,0,.06);
-}
+    .shell{max-width:540px;margin:auto}
+    .hidden{display:none!important}
 
-*{box-sizing:border-box}
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
 
-body{
-margin:0;
-color:var(--ink);
-font-family:Inter,sans-serif;
-padding:22px 14px 40px;
+    .top-left{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
 
-background:
-radial-gradient(circle at top right, rgba(255,182,239,.42), transparent 30%),
-radial-gradient(circle at bottom left, rgba(255,209,46,.28), transparent 28%),
-var(--bg);
-}
+    .logo{
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      background:var(--orange);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:24px;
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+    }
 
-.shell{
-max-width:540px;
-margin:auto;
-}
+    .brand-title{
+      font-family:"Baloo 2", cursive;
+      font-size:30px;
+      font-weight:800;
+      line-height:1;
+    }
 
-.hidden{
-display:none!important;
-}
+    .brand-sub{
+      color:#6a6663;
+      font-size:13px;
+      font-weight:700;
+      margin-top:4px;
+    }
 
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-margin-bottom:18px;
-}
+    .badge{
+      background:var(--pink);
+      color:var(--burgundy);
+      padding:9px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:13px;
+      border:2px solid rgba(78,8,12,.10);
+      white-space:nowrap;
+    }
 
-.top-left{
-display:flex;
-gap:10px;
-align-items:center;
-}
+    .card{
+      background:#fff;
+      border-radius:30px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
 
-.logo{
-width:52px;
-height:52px;
-border-radius:18px;
-background:var(--orange);
-display:flex;
-align-items:center;
-justify-content:center;
-color:#fff;
-font-size:24px;
-font-weight:800;
-box-shadow:var(--shadow-soft);
-}
+    h1,h2,h3{
+      font-family:"Baloo 2", cursive;
+      margin:0 0 8px;
+      line-height:.98;
+    }
 
-.brand-title{
-font-family:"Baloo 2", cursive;
-font-size:30px;
-font-weight:800;
-line-height:1;
-}
+    h1{font-size:42px}
+    h2{font-size:32px}
+    h3{font-size:24px}
 
-.brand-sub{
-color:#6a6663;
-font-size:13px;
-font-weight:700;
-margin-top:4px;
-}
+    p{
+      margin:0;
+      color:var(--muted);
+      font-weight:600;
+      line-height:1.5;
+      font-size:15px;
+    }
 
-.badge{
-background:var(--pink);
-color:var(--burgundy);
-padding:9px 14px;
-border-radius:999px;
-font-weight:800;
-font-size:13px;
-border:2px solid rgba(78,8,12,.10);
-white-space:nowrap;
-}
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--yellow);
+      color:var(--burgundy);
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:12px;
+    }
 
-.card{
-background:#fff;
-border-radius:30px;
-padding:20px;
-box-shadow:var(--shadow);
-margin-bottom:18px;
-}
+    .result-heading{margin-bottom:10px}
+    .result-pretitle{
+      font-family:"Baloo 2", cursive;
+      font-size:32px;
+      line-height:.95;
+      color:#4b4744;
+      font-weight:700;
+      margin-bottom:4px;
+    }
 
-h1,h2,h3{
-font-family:"Baloo 2", cursive;
-margin:0 0 8px;
-line-height:.98;
-}
+    .result-group-name{
+      font-family:"Baloo 2", cursive;
+      font-size:68px;
+      line-height:.86;
+      margin:0;
+      letter-spacing:-1px;
+      background:linear-gradient(135deg, #FF5E29 0%, #D94C9A 52%, #7A2455 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow:0 8px 24px rgba(217,76,154,.12);
+      animation:groupGlow 2.8s ease-in-out infinite;
+    }
 
-h1{font-size:42px}
-h2{font-size:32px}
+    .btn{
+      width:100%;
+      padding:16px;
+      border-radius:22px;
+      border:none;
+      font-weight:800;
+      font-size:16px;
+      margin-top:10px;
+      cursor:pointer;
+      transition:.18s ease;
+      font-family:Inter,sans-serif;
+    }
 
-p{
-margin:0;
-color:var(--muted);
-font-weight:600;
-line-height:1.5;
-font-size:15px;
-}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-orange{background:var(--orange);color:#fff}
+    .btn-green{background:#25D366;color:#fff}
+    .btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
+    .btn-dark{background:var(--burgundy);color:#fff}
 
-.kicker{
-display:inline-flex;
-align-items:center;
-justify-content:center;
-padding:8px 14px;
-border-radius:999px;
-background:var(--yellow);
-color:var(--burgundy);
-font-size:13px;
-font-weight:800;
-margin-bottom:12px;
-}
+    .picker{margin-top:16px}
+    .picker-label{
+      font-size:13px;
+      font-weight:800;
+      color:#5f5956;
+      margin-bottom:10px;
+    }
 
-.btn{
-width:100%;
-padding:16px;
-border-radius:22px;
-border:none;
-font-weight:800;
-font-size:16px;
-margin-top:10px;
-cursor:pointer;
-transition:.18s ease;
-font-family:Inter,sans-serif;
-}
+    .picker-scroll{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom:4px;
+      scrollbar-width:none;
+    }
 
-.btn-orange{background:var(--orange);color:#fff}
-.btn-green{background:#25D366;color:#fff}
-.btn-outline{border:2px solid var(--green);background:#fff;color:var(--green)}
+    .picker-scroll::-webkit-scrollbar{display:none}
 
-.story-shell{
-background:#fff;
-border-radius:30px;
-padding:16px;
-box-shadow:var(--shadow-soft);
-margin-top:14px;
-}
+    .person-chip{
+      border:none;
+      border-radius:999px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:14px;
+      cursor:pointer;
+      white-space:nowrap;
+      background:#f5efea;
+      color:#4c4743;
+      transition:.18s ease;
+      box-shadow:0 4px 14px rgba(0,0,0,.04);
+    }
 
-.story-card{
-width:100%;
-aspect-ratio:9/16;
-border-radius:38px;
-overflow:hidden;
-position:relative;
-padding:20px;
-border:2px solid rgba(0,0,0,.05);
-box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
-}
+    .person-chip.active{
+      background:var(--burgundy);
+      color:#fff;
+    }
 
-.story-inner{
-height:100%;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-}
+    .story-shell{
+      background:#fff;
+      border-radius:30px;
+      padding:16px;
+      box-shadow:var(--shadow-soft);
+      margin-top:14px;
+    }
 
-.story-top{
-display:flex;
-justify-content:space-between;
-}
+    .story-card{
+      width:100%;
+      aspect-ratio:9/16;
+      border-radius:38px;
+      overflow:hidden;
+      position:relative;
+      padding:20px;
+      border:2px solid rgba(0,0,0,.05);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+      isolation:isolate;
+    }
 
-.story-logo{
-width:48px;
-height:48px;
-border-radius:16px;
-background:var(--orange);
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:22px;
-font-weight:800;
-}
+    .story-inner{
+      position:relative;
+      z-index:3;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
 
-.story-pill{
-padding:10px 14px;
-border-radius:999px;
-font-weight:800;
-font-size:14px;
-background:#fff;
-}
+    .story-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
 
-.story-middle{
-display:grid;
-gap:6px;
-}
+    .story-logo{
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      background:var(--orange);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:800;
+      box-shadow:var(--shadow-soft);
+      flex-shrink:0;
+    }
 
-.story-emoji{
-font-size:60px;
-}
+    .story-pill{
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:14px;
+      line-height:1;
+      flex-shrink:0;
+      border:2px solid rgba(0,0,0,.06);
+      box-shadow:0 8px 24px rgba(0,0,0,.05);
+      max-width:150px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      background:rgba(255,255,255,.92);
+    }
 
-.story-name{
-font-family:"Baloo 2", cursive;
-font-size:60px;
-line-height:.8;
-}
+    .story-middle{
+      display:grid;
+      gap:8px;
+      position:relative;
+      align-content:start;
+    }
 
-.story-role{
-font-size:28px;
-font-weight:800;
-}
+    .story-kicker{
+      display:inline-flex;
+      width:max-content;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.88);
+      font-size:12px;
+      font-weight:800;
+      color:#43231b;
+      box-shadow:0 6px 20px rgba(0,0,0,.04);
+      backdrop-filter:blur(6px);
+    }
 
-.story-bottom{
-display:grid;
-gap:8px;
-}
+    .story-emoji{
+      font-size:52px;
+      line-height:1;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,.10));
+      animation:emojiFloat 2.6s ease-in-out infinite;
+      transform-origin:center;
+    }
 
-.story-vote-badge{
-background:#dff0e7;
-color:var(--green);
-padding:10px 14px;
-border-radius:999px;
-font-weight:800;
-}
+    .story-name{
+      font-family:"Baloo 2", cursive;
+      font-size:52px;
+      line-height:.82;
+      letter-spacing:-1px;
+      margin:0;
+      max-width:96%;
+      word-break:break-word;
+    }
 
-.bar-wrap{
-background:#eee;
-border-radius:999px;
-height:10px;
-overflow:hidden;
-}
+    .story-role{
+      font-size:24px;
+      line-height:1.05;
+      font-weight:800;
+      margin:0;
+      max-width:96%;
+      text-wrap:balance;
+    }
 
-.bar-fill{
-height:100%;
-background:var(--green);
-}
+    .story-bottom{
+      display:grid;
+      gap:8px;
+    }
 
-.bar-meta{
-font-size:13px;
-font-weight:700;
-}
+    .story-vote-badge{
+      background:rgba(223,244,233,.95);
+      color:var(--green);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      width:max-content;
+      font-size:15px;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+      animation:badgePulse 2.8s ease-in-out infinite;
+    }
 
-.summary-grid{
-display:grid;
-gap:10px;
-margin-top:10px;
-}
+    .story-sign{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.4px;
+      color:#4b4744;
+      text-transform:uppercase;
+      opacity:.86;
+    }
 
-.summary-item{
-padding:14px;
-border-radius:20px;
-background:#fff;
-box-shadow:var(--shadow-soft);
-}
+    .story-glow{
+      position:absolute;
+      border-radius:50%;
+      pointer-events:none;
+      filter:blur(20px);
+      opacity:.72;
+      z-index:0;
+      animation:blobFloat 6s ease-in-out infinite;
+    }
 
-.summary-item .label{
-font-weight:800;
-}
+    .story-shine{
+      position:absolute;
+      top:-8%;
+      left:-45%;
+      width:32%;
+      height:140%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      transform:rotate(16deg);
+      animation:shineMove 4.8s linear infinite;
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
 
-.summary-item .meta{
-margin-top:6px;
-font-size:13px;
-}
+    .theme-hot{
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,.14), transparent 15%),
+        radial-gradient(circle at 15% 78%, rgba(255,240,220,.18), transparent 20%),
+        linear-gradient(160deg,#fff8f2 0%, #ffd6c2 36%, #ff8a5d 100%);
+    }
 
-</style>
+    .theme-love{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.22), transparent 18%),
+        radial-gradient(circle at 20% 78%, rgba(255,255,255,.12), transparent 20%),
+        linear-gradient(155deg,#fff8fd 0%, #ffe1f4 42%, #ffc0ea 100%);
+    }
+
+    .theme-chaos{
+      background:
+        radial-gradient(circle at 85% 15%, rgba(255,255,255,.16), transparent 14%),
+        radial-gradient(circle at 10% 82%, rgba(255,255,255,.10), transparent 20%),
+        linear-gradient(155deg,#fffef4 0%, #ffe97d 44%, #ffd12e 100%);
+    }
+
+    .theme-soft{
+      background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(circle at 20% 82%, rgba(255,255,255,.14), transparent 18%),
+        linear-gradient(155deg,#f7fff9 0%, #def5e8 44%, #bce6d1 100%);
+    }
+
+    .theme-hot .story-pill,
+    .theme-hot .story-kicker{background:rgba(78,8,12,.92);color:#fff}
+    .theme-love .story-pill{color:#7a2455}
+    .theme-chaos .story-pill{color:#6a4a00}
+    .theme-soft .story-pill{color:#1c6b49}
+
+    .bar-wrap{
+      margin-top:4px;
+      background:#f1ece8;
+      border-radius:999px;
+      height:10px;
+      overflow:hidden;
+    }
+
+    .bar-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, #00804A 0%, #2eb36d 100%);
+    }
+
+    .bar-meta{
+      margin-top:6px;
+      color:#5e5955;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .result-list{margin-top:14px}
+    .result-item{
+      background:#fff;
+      padding:14px;
+      border-radius:18px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .result-q{
+      font-weight:800;
+      font-size:18px;
+      line-height:1.25;
+      margin-bottom:10px;
+    }
+
+    .result-w{
+      color:#55504d;
+      font-weight:700;
+      font-size:14px;
+      margin-top:8px;
+    }
+
+    .summary-grid{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .summary-item{
+      padding:14px;
+      border-radius:20px;
+      background:#fff;
+      box-shadow:var(--shadow-soft);
+    }
+
+    .summary-item .label{
+      font-size:16px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .summary-item .meta{
+      margin-top:8px;
+      color:#5e5955;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .loading,.error{text-align:center}
+
+    @keyframes groupGlow{
+      0%,100%{
+        transform:translateY(0);
+        filter:drop-shadow(0 0 0 rgba(255,94,41,0));
+      }
+      50%{
+        transform:translateY(-2px);
+        filter:drop-shadow(0 8px 22px rgba(255,94,41,.18));
+      }
+    }
+
+    @keyframes emojiFloat{
+      0%,100%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-9px) scale(1.03)}
+    }
+
+    @keyframes badgePulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.035)}
+    }
+
+    @keyframes blobFloat{
+      0%,100%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(14px,-14px,0) scale(1.08)}
+    }
+
+    @keyframes shineMove{
+      0%{transform:translateX(-10%) rotate(16deg)}
+      100%{transform:translateX(280%) rotate(16deg)}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .story-emoji,.story-vote-badge,.story-glow,.story-shine,.result-group-name{
+        animation:none!important;
+      }
+    }
+
+    @media (max-width:640px){
+      h1{font-size:36px}
+      h2{font-size:28px}
+      .result-pretitle{font-size:28px}
+      .result-group-name{font-size:56px}
+      .story-name{font-size:46px}
+      .story-role{font-size:21px}
+      .story-emoji{font-size:46px}
+      .story-pill{
+        font-size:13px;
+        padding:10px 12px;
+        max-width:128px;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="shell">
-
-<div class="top">
-<div class="top-left">
-<div class="logo">⚖</div>
-
-<div>
-<div class="brand-title">ElVeredicto</div>
-<div class="brand-sub">Resultado</div>
-</div>
-
-</div>
-
-<div class="badge">Self</div>
-</div>
-
-<div class="card">
-
-<div class="kicker">resultado</div>
-
-<h1 id="title">
-Tus resultados
-</h1>
-
-<p>
-Mirá qué respondió la gente sobre vos.
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h2>Resultado viral</h2>
-
-<div class="story-shell">
-
-<div class="story-card" id="viralCard">
-
-<div class="story-inner">
-
-<div class="story-top">
-<div class="story-logo">⚖</div>
-<div class="story-pill">sin filtro</div>
-</div>
-
-<div class="story-middle">
-
-<div class="story-emoji">🔥</div>
-
-<div class="story-name" id="name">
-MATIAS
-</div>
-
-<div class="story-role" id="question">
-¿tiene más levante?
-</div>
-
-</div>
-
-<div class="story-bottom">
-
-<div class="story-vote-badge" id="percent">
-83% dijo que sí
-</div>
-
-<div>
-<div class="bar-wrap">
-<div class="bar-fill" id="bar"></div>
-</div>
-
-<div class="bar-meta" id="meta">
-Sí 83% · No 17%
-</div>
-</div>
-
-<div style="font-size:12px;font-weight:800;">
-elveredicto.app
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<button class="btn btn-orange" id="shareBtn">
-Subir resultado
-</button>
-
-<button class="btn btn-outline" id="downloadBtn">
-Guardar imagen
-</button>
-
-</div>
-
-
-<div class="card">
-
-<h2>Todas las preguntas</h2>
-
-<div class="summary-grid" id="summary">
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
-
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-function getCode(){
-return new URLSearchParams(location.search).get("code");
-}
-
-function applyName(text,name){
-return text.replaceAll("{nombre}",name);
-}
-
-function stats(votes,id){
-
-const vs=votes.filter(v=>v.pregunta_id===id);
-
-const yes=vs.filter(v=>v.respuesta==="si").length;
-const no=vs.filter(v=>v.respuesta==="no").length;
-
-const total=yes+no;
-
-const yesPct=total?Math.round(yes/total*100):0;
-
-return{
-yes,
-no,
-total,
-yesPct,
-noPct:100-yesPct
-};
-
-}
-
-async function load(){
-
-const code=getCode();
-
-if(!code)return;
-
-const {data:veredicto}=await db
-.from("veredictos")
-.select("*")
-.eq("code",code)
-.single();
-
-const {data:rel}=await db
-.from("veredicto_preguntas")
-.select("pregunta_id,preguntas(texto),orden")
-.eq("veredicto_id",veredicto.id)
-.order("orden",{ascending:true});
-
-const preguntas=rel.map(p=>({
-id:p.pregunta_id,
-texto:p.preguntas.texto
-}));
-
-const {data:votos}=await db
-.from("votos")
-.select("*")
-.eq("veredicto_id",veredicto.id);
-
-document.getElementById("name").textContent=(veredicto.nickname||"ALGUIEN").toUpperCase();
-
-let best=null;
-
-preguntas.forEach(q=>{
-
-const s=stats(votos,q.id);
-
-if(!best||s.yesPct>best.yesPct){
-
-best={
-...q,
-...s
-};
-
-}
-
-});
-
-if(best){
-
-const txt=applyName(best.texto,veredicto.nickname);
-
-document.getElementById("question").textContent=txt;
-
-document.getElementById("percent").textContent=
-best.yesPct+"% dijo que sí";
-
-document.getElementById("bar").style.width=
-best.yesPct+"%";
-
-document.getElementById("meta").textContent=
-"Sí "+best.yesPct+"% · No "+best.noPct+"%";
-
-}
-
-const grid=document.getElementById("summary");
-
-preguntas.forEach(q=>{
-
-const s=stats(votos,q.id);
-
-const item=document.createElement("div");
-
-item.className="summary-item";
-
-item.innerHTML=`
-<div class="label">
-${applyName(q.texto,veredicto.nickname)}
-</div>
-
-<div class="bar-wrap">
-<div class="bar-fill" style="width:${s.yesPct}%"></div>
-</div>
-
-<div class="meta">
-Sí ${s.yesPct}% · No ${s.noPct}% · ${s.total} respuestas
-</div>
-`;
-
-grid.appendChild(item);
-
-});
-
-}
-
-load();
-
-</script>
-
+  <div class="shell">
+
+    <div class="top">
+      <div class="top-left">
+        <div class="logo">⚖</div>
+        <div>
+          <div class="brand-title">ElVeredicto</div>
+          <div class="brand-sub" id="brandSub">Resultado</div>
+        </div>
+      </div>
+      <div class="badge" id="modeBadge">Grupo</div>
+    </div>
+
+    <div id="loadingState" class="card loading">
+      <h2>Cargando resultados...</h2>
+      <p>Un segundo.</p>
+    </div>
+
+    <div id="errorState" class="card error hidden">
+      <h2>Ups</h2>
+      <p id="errorText">No se pudieron cargar los resultados.</p>
+    </div>
+
+    <div id="content" class="hidden">
+
+      <div class="card hidden" id="groupHeaderCard">
+        <div class="kicker">resultado</div>
+        <div class="result-heading">
+          <div class="result-pretitle">Resultados de</div>
+          <h1 id="titleGroup" class="result-group-name">Tu grupo</h1>
+        </div>
+        <p id="groupSubtitle">Elegí la tarjeta más fuerte del grupo y compartila.</p>
+      </div>
+
+      <div class="card hidden" id="selfHeaderCard">
+        <div class="kicker">resultado</div>
+        <h1 id="selfTitle">Tus resultados</h1>
+        <p id="selfSubtitle">Mirá qué respondió la gente sobre vos.</p>
+      </div>
+
+      <div class="card hidden" id="groupStorySection">
+        <h2>La story que sí da ganas de subir</h2>
+        <p>Probá entre personas y elegí cuál compartir.</p>
+
+        <div class="picker">
+          <div class="picker-label">Elegí una tarjeta</div>
+          <div class="picker-scroll" id="personPicker"></div>
+        </div>
+
+        <div class="picker" style="margin-top:18px">
+          <div class="picker-label">Tipo de story</div>
+          <div class="picker-scroll" id="stylePicker">
+            <button class="person-chip active" data-style="hot">🌶 Picante</button>
+            <button class="person-chip" data-style="love">💘 Romántica</button>
+            <button class="person-chip" data-style="chaos">😂 Graciosa</button>
+          </div>
+        </div>
+
+        <div class="story-shell">
+          <div class="story-card theme-hot" id="groupStoryCard">
+            <div class="story-glow" id="glowOne"></div>
+            <div class="story-glow" id="glowTwo"></div>
+            <div class="story-shine"></div>
+
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-logo">⚖</div>
+                <div class="story-pill" id="storyTonePill">picante</div>
+              </div>
+
+              <div class="story-middle">
+                <div class="story-kicker">elveredicto.app</div>
+                <div class="story-emoji" id="storyEmoji">🔥</div>
+                <div class="story-name" id="storyName">Shai</div>
+                <div class="story-role" id="storyRole">¿Quién tiene más chances de enamorarse primero?</div>
+              </div>
+
+              <div class="story-bottom">
+                <div class="story-vote-badge" id="storyVotes">💬 2 dijeron que sí</div>
+                <div class="story-sign">elveredicto.app</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-orange" id="shareBtn">📲 Subir esta</button>
+        <button class="btn btn-outline" id="downloadBtn">💾 Guardar story</button>
+        <button class="btn btn-green" id="copyBtn">🔗 Copiar link del juego</button>
+      </div>
+
+      <div class="card hidden" id="selfViralSection">
+        <h2>Resultado viral</h2>
+        <p>Esta es la pregunta más fuerte para compartir.</p>
+
+        <div class="story-shell">
+          <div class="story-card theme-hot" id="selfViralCard">
+            <div class="story-glow" id="selfGlowOne"></div>
+            <div class="story-glow" id="selfGlowTwo"></div>
+            <div class="story-shine"></div>
+
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-logo">⚖</div>
+                <div class="story-pill" id="selfTonePill">sin filtro</div>
+              </div>
+
+              <div class="story-middle">
+                <div class="story-kicker">elveredicto.app</div>
+                <div class="story-emoji" id="selfResultEmoji">🔥</div>
+                <div class="story-name" id="selfResultName">MATIAS</div>
+                <div class="story-role" id="selfResultQuestion">¿tiene más chances de chaparse a alguien en una fiesta?</div>
+              </div>
+
+              <div class="story-bottom">
+                <div class="story-vote-badge" id="selfResultPercent">83% dijo que sí</div>
+                <div>
+                  <div class="bar-wrap">
+                    <div class="bar-fill" id="selfResultBar" style="width:83%"></div>
+                  </div>
+                  <div class="bar-meta" id="selfBarMeta">Sí 83% · No 17%</div>
+                </div>
+                <div class="story-sign">elveredicto.app</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-orange" id="shareSelfViralBtn">Subir resultado</button>
+        <button class="btn btn-outline" id="downloadSelfViralBtn">Guardar imagen</button>
+      </div>
+
+      <div class="card hidden" id="selfSummarySection">
+        <h2>Todas las preguntas</h2>
+        <div class="summary-grid" id="selfSummaryGrid"></div>
+      </div>
+
+      <div class="card hidden" id="selfPromoSection">
+        <h2>Volvé a compartir tu link</h2>
+        <p>Si querés sumar más respuestas, usá esta story otra vez.</p>
+
+        <div class="story-shell">
+          <div class="story-card theme-soft" id="selfPromoCard">
+            <div class="story-glow" id="promoGlowOne"></div>
+            <div class="story-glow" id="promoGlowTwo"></div>
+            <div class="story-shine"></div>
+
+            <div class="story-inner">
+              <div class="story-top">
+                <div class="story-logo">⚖</div>
+                <div class="story-pill" id="promoCategoryPill">amigos</div>
+              </div>
+
+              <div class="story-middle">
+                <div class="story-kicker">elveredicto.app</div>
+                <div class="story-emoji" id="promoEmoji">🧠</div>
+                <div class="story-name" style="font-size:48px;line-height:.9;">Respondé mi veredicto</div>
+                <div class="story-role" id="promoCopy" style="font-size:24px;color:#3f3a37;">No vale caretearla</div>
+              </div>
+
+              <div class="story-bottom">
+                <div class="story-vote-badge" style="background:#fff3f7;color:#7a2455;">Es anónimo 🤐</div>
+                <div class="story-sign">elveredicto.app</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-orange" id="sharePromoBtn">📲 Subir story previa</button>
+        <button class="btn btn-outline" id="downloadPromoBtn">💾 Guardar story previa</button>
+        <button class="btn btn-green" id="copyVoteLinkBtn">🔗 Copiar link para votar</button>
+      </div>
+
+      <div class="card hidden" id="groupResultsSection">
+        <h2>Ver todos los resultados</h2>
+        <button class="btn btn-dark" id="toggleResultsBtn">Mostrar resultados completos</button>
+        <div id="results" class="result-list hidden"></div>
+      </div>
+
+      <div class="card">
+        <h2>¿Qué sigue?</h2>
+        <button class="btn btn-dark" onclick="location.href='/crear?mode=group'">Crear veredicto del grupo</button>
+        <button class="btn btn-outline" onclick="location.href='/crear?mode=self'">Hacer uno sobre mí</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://ytupmzjhhulcwfuidkzc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rKhLyK7Ir9hrh_1aQZxrcg_Sjn-E15g";
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const loadingState = document.getElementById("loadingState");
+    const errorState = document.getElementById("errorState");
+    const errorText = document.getElementById("errorText");
+    const content = document.getElementById("content");
+
+    const groupHeaderCard = document.getElementById("groupHeaderCard");
+    const selfHeaderCard = document.getElementById("selfHeaderCard");
+    const selfPromoSection = document.getElementById("selfPromoSection");
+    const groupStorySection = document.getElementById("groupStorySection");
+    const selfViralSection = document.getElementById("selfViralSection");
+    const selfSummarySection = document.getElementById("selfSummarySection");
+    const groupResultsSection = document.getElementById("groupResultsSection");
+
+    const titleGroup = document.getElementById("titleGroup");
+    const groupSubtitle = document.getElementById("groupSubtitle");
+    const selfTitle = document.getElementById("selfTitle");
+    const selfSubtitle = document.getElementById("selfSubtitle");
+    const brandSub = document.getElementById("brandSub");
+    const modeBadge = document.getElementById("modeBadge");
+
+    const groupStoryCard = document.getElementById("groupStoryCard");
+    const storyName = document.getElementById("storyName");
+    const storyRole = document.getElementById("storyRole");
+    const storyVotes = document.getElementById("storyVotes");
+    const storyEmoji = document.getElementById("storyEmoji");
+    const storyTonePill = document.getElementById("storyTonePill");
+    const glowOne = document.getElementById("glowOne");
+    const glowTwo = document.getElementById("glowTwo");
+
+    const results = document.getElementById("results");
+    const toggleResultsBtn = document.getElementById("toggleResultsBtn");
+    const personPicker = document.getElementById("personPicker");
+
+    const selfPromoCard = document.getElementById("selfPromoCard");
+    const promoCategoryPill = document.getElementById("promoCategoryPill");
+    const promoEmoji = document.getElementById("promoEmoji");
+    const promoCopy = document.getElementById("promoCopy");
+    const promoGlowOne = document.getElementById("promoGlowOne");
+    const promoGlowTwo = document.getElementById("promoGlowTwo");
+
+    const selfViralCard = document.getElementById("selfViralCard");
+    const selfTonePill = document.getElementById("selfTonePill");
+    const selfResultEmoji = document.getElementById("selfResultEmoji");
+    const selfResultName = document.getElementById("selfResultName");
+    const selfResultQuestion = document.getElementById("selfResultQuestion");
+    const selfResultPercent = document.getElementById("selfResultPercent");
+    const selfResultBar = document.getElementById("selfResultBar");
+    const selfBarMeta = document.getElementById("selfBarMeta");
+    const selfGlowOne = document.getElementById("selfGlowOne");
+    const selfGlowTwo = document.getElementById("selfGlowTwo");
+    const selfSummaryGrid = document.getElementById("selfSummaryGrid");
+
+    let currentCode = null;
+    let storyCandidates = [];
+    let currentStoryIndex = 0;
+    let currentStyle = "hot";
+    let veredicto = null;
+
+    function getCode(){
+      return new URLSearchParams(location.search).get("code");
+    }
+
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function applyNameToQuestion(text, nickname){
+      return (text || "").replaceAll("{nombre}", nickname || "Esta persona");
+    }
+
+    function stripNicknameFromQuestion(text, nickname){
+      if(!nickname) return text || "";
+      const escaped = nickname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return (text || "")
+        .replace(new RegExp("^¿?\\s*" + escaped + "\\s*", "i"), "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function slugify(text){
+      return (text || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s-]/g,"")
+        .trim();
+    }
+
+    function categoryToneForSelf(slug){
+      if(slug === "picante"){
+        return { pill:"picante", emoji:"🔥", copy:"Votá sin filtro", theme:"theme-hot" };
+      }
+      if(slug === "amigos"){
+        return { pill:"amigos", emoji:"😎", copy:"No vale caretearla", theme:"theme-soft" };
+      }
+      if(slug === "pareja"){
+        return { pill:"pareja", emoji:"💘", copy:"Entrá y decime la verdad", theme:"theme-love" };
+      }
+      if(slug === "familia"){
+        return { pill:"familia", emoji:"👪", copy:"Decime qué pensás posta", theme:"theme-chaos" };
+      }
+      return { pill:"sin filtro", emoji:"🧠", copy:"Es anónimo 🤐", theme:"theme-soft" };
+    }
+
+    function inferNaturalStyle(text){
+      const t = slugify(text);
+
+      if(
+        t.includes("ex") ||
+        t.includes("volver con un ex") ||
+        t.includes("chaparse") ||
+        t.includes("mensaje a las 3") ||
+        t.includes("3 am") ||
+        t.includes("stalkear") ||
+        t.includes("chamuyo") ||
+        t.includes("picante") ||
+        t.includes("fiesta")
+      ){
+        return { cls:"theme-hot", emoji:"🔥", pill:"picante", score:3 };
+      }
+
+      if(
+        t.includes("enamor") ||
+        t.includes("amor") ||
+        t.includes("pareja") ||
+        t.includes("engancharse") ||
+        t.includes("novio") ||
+        t.includes("novia") ||
+        t.includes("levante")
+      ){
+        return { cls:"theme-love", emoji:"💘", pill:"sin filtro", score:2 };
+      }
+
+      if(
+        t.includes("personaje") ||
+        t.includes("anecdota") ||
+        t.includes("grupo") ||
+        t.includes("nunca paga") ||
+        t.includes("quilombo") ||
+        t.includes("caos") ||
+        t.includes("primero en") ||
+        t.includes("siempre") ||
+        t.includes("olvida")
+      ){
+        return { cls:"theme-chaos", emoji:"😂", pill:"sin anestesia", score:1 };
+      }
+
+      return { cls:"theme-soft", emoji:"✨", pill:"sin filtro", score:0 };
+    }
+
+    function getThemeFromSelectedStyle(text){
+      if(currentStyle === "hot") return { cls:"theme-hot", emoji:"🔥", pill:"picante" };
+      if(currentStyle === "love") return { cls:"theme-love", emoji:"💘", pill:"sin filtro" };
+      if(currentStyle === "chaos") return { cls:"theme-chaos", emoji:"😂", pill:"sin anestesia" };
+      return inferNaturalStyle(text);
+    }
+
+    function toggleResults(){
+      results.classList.toggle("hidden");
+      toggleResultsBtn.textContent = results.classList.contains("hidden")
+        ? "Mostrar resultados completos"
+        : "Ocultar resultados completos";
+    }
+    toggleResultsBtn?.addEventListener("click", toggleResults);
+
+    function voteCopyText(votes){
+      if(votes <= 1) return "💬 1 dijo que sí";
+      return `💬 ${votes} dijeron que sí`;
+    }
+
+    function buildCandidates(preguntas, participantes, votos){
+      const map = {};
+      participantes.forEach(p => {
+        map[p.id] = { participante_id:p.id, nombre:p.nombre, results:[] };
+      });
+
+      preguntas.forEach(q => {
+        const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+        const count = {};
+        votesForQuestion.forEach(v => {
+          count[v.participante_id] = (count[v.participante_id] || 0) + 1;
+        });
+
+        let winner = null;
+        let max = 0;
+        Object.keys(count).forEach(id => {
+          if(count[id] > max){
+            max = count[id];
+            winner = Number(id);
+          }
+        });
+
+        if(!winner || !map[winner]) return;
+
+        map[winner].results.push({
+          texto:q.texto,
+          votos:max,
+          naturalStyle:inferNaturalStyle(q.texto)
+        });
+      });
+
+      const candidates = [];
+      Object.values(map).forEach(person => {
+        if(!person.results.length) return;
+        person.results.sort((a,b) => b.votos - a.votos || b.texto.length - a.texto.length);
+        candidates.push({
+          participante_id: person.participante_id,
+          nombre: person.nombre,
+          results: person.results
+        });
+      });
+
+      return candidates.sort((a,b) => {
+        const av = a.results[0]?.votos || 0;
+        const bv = b.results[0]?.votos || 0;
+        return bv - av || a.nombre.localeCompare(b.nombre);
+      });
+    }
+
+    function pickResultForStyle(candidate){
+      if(!candidate || !candidate.results?.length) return null;
+      if(currentStyle === "hot") return candidate.results.find(r => r.naturalStyle.cls === "theme-hot") || candidate.results[0];
+      if(currentStyle === "love") return candidate.results.find(r => r.naturalStyle.cls === "theme-love") || candidate.results[0];
+      if(currentStyle === "chaos") return candidate.results.find(r => r.naturalStyle.cls === "theme-chaos") || candidate.results[0];
+      return candidate.results[0];
+    }
+
+    function renderPicker(){
+      personPicker.innerHTML = "";
+      storyCandidates.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.className = "person-chip" + (index === currentStoryIndex ? " active" : "");
+        btn.type = "button";
+        btn.textContent = item.nombre;
+        btn.addEventListener("click", function(){
+          currentStoryIndex = index;
+          renderCurrentStory();
+          renderPicker();
+        });
+        personPicker.appendChild(btn);
+      });
+    }
+
+    function setupStylePicker(){
+      const buttons = document.querySelectorAll("#stylePicker button");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", function(){
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentStyle = btn.dataset.style;
+          renderCurrentStory();
+        });
+      });
+    }
+
+    function applyGlow(targetOne, targetTwo, themeCls){
+      if(themeCls === "theme-hot"){
+        targetOne.style.cssText = "top:16%; left:-4%; width:190px; height:190px; background:rgba(255,110,70,.36);";
+        targetTwo.style.cssText = "bottom:10%; right:-4%; width:240px; height:240px; background:rgba(255,210,150,.30); animation-delay:-2s;";
+      } else if(themeCls === "theme-love"){
+        targetOne.style.cssText = "top:18%; right:-2%; width:200px; height:200px; background:rgba(255,185,230,.34);";
+        targetTwo.style.cssText = "bottom:6%; left:-2%; width:210px; height:210px; background:rgba(255,255,255,.20); animation-delay:-2s;";
+      } else if(themeCls === "theme-chaos"){
+        targetOne.style.cssText = "top:18%; left:-3%; width:190px; height:190px; background:rgba(255,240,130,.34);";
+        targetTwo.style.cssText = "bottom:8%; right:-3%; width:240px; height:240px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+      } else {
+        targetOne.style.cssText = "top:18%; left:-4%; width:180px; height:180px; background:rgba(210,255,230,.28);";
+        targetTwo.style.cssText = "bottom:8%; right:-4%; width:220px; height:220px; background:rgba(255,255,255,.18); animation-delay:-2s;";
+      }
+    }
+
+    function renderCurrentStory(){
+      const current = storyCandidates[currentStoryIndex];
+      if(!current) return;
+
+      const selectedResult = pickResultForStyle(current);
+      if(!selectedResult) return;
+
+      const theme = getThemeFromSelectedStyle(selectedResult.texto);
+
+      groupStoryCard.className = "story-card " + theme.cls;
+      storyEmoji.textContent = theme.emoji;
+      storyName.textContent = current.nombre;
+      storyRole.textContent = selectedResult.texto;
+      storyVotes.textContent = voteCopyText(selectedResult.votos);
+      storyTonePill.textContent = theme.pill;
+      applyGlow(glowOne, glowTwo, theme.cls);
+    }
+
+    async function downloadCard(cardElement, filename){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    async function shareCard(cardElement, text){
+      const canvas = await html2canvas(cardElement, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true
+      });
+
+      return new Promise((resolve) => {
+        canvas.toBlob(async function(blob){
+          try{
+            if(blob && navigator.canShare){
+              const file = new File([blob], "story-elveredicto.png", { type: "image/png" });
+              if(navigator.canShare({ files:[file] })){
+                await navigator.share({
+                  files:[file],
+                  title:"ElVeredicto",
+                  text
+                });
+              }
+            }
+          } catch(err){
+            console.error(err);
+          }
+          resolve();
+        }, "image/png");
+      });
+    }
+
+    function getSelfQuestionStats(votos, preguntaId){
+      const questionVotes = votos.filter(v => v.pregunta_id === preguntaId);
+      const yes = questionVotes.filter(v => v.respuesta === "si").length;
+      const no = questionVotes.filter(v => v.respuesta === "no").length;
+      const total = yes + no;
+      const yesPct = total ? Math.round((yes / total) * 100) : 0;
+      const noPct = total ? 100 - yesPct : 0;
+      return { yes, no, total, yesPct, noPct };
+    }
+
+    function scoreSelfQuestion(texto){
+      const natural = inferNaturalStyle(texto);
+      const t = slugify(texto);
+      let score = natural.score || 0;
+
+      if(t.includes("levante")) score += 4;
+      if(t.includes("ex")) score += 5;
+      if(t.includes("enamor")) score += 4;
+      if(t.includes("engancha")) score += 4;
+      if(t.includes("chamuyo")) score += 4;
+      if(t.includes("3 am")) score += 5;
+      if(t.includes("chaparse")) score += 5;
+      if(t.includes("cae bien")) score += 1;
+
+      return score;
+    }
+
+    function pickBestSelfResult(questionRows, votos){
+      const withStats = questionRows.map(q => {
+        const stats = getSelfQuestionStats(votos, q.id);
+        return { ...q, ...stats, score: scoreSelfQuestion(q.texto) };
+      }).filter(q => q.total > 0);
+
+      if(!withStats.length) return null;
+
+      withStats.sort((a,b) => {
+        const extremeA = Math.abs(a.yesPct - 50);
+        const extremeB = Math.abs(b.yesPct - 50);
+        if(b.score !== a.score) return b.score - a.score;
+        if(extremeB !== extremeA) return extremeB - extremeA;
+        if(b.total !== a.total) return b.total - a.total;
+        return b.yesPct - a.yesPct;
+      });
+
+      return withStats[0];
+    }
+
+    function renderSelfPromo(categorySlug){
+      const tone = categoryToneForSelf(categorySlug);
+      promoCategoryPill.textContent = tone.pill;
+      promoEmoji.textContent = tone.emoji;
+      promoCopy.textContent = tone.copy;
+      selfPromoCard.className = "story-card " + tone.theme;
+      applyGlow(promoGlowOne, promoGlowTwo, tone.theme);
+    }
+
+    function renderSelfViral(bestQuestion, nickname){
+      const fullQuestion = applyNameToQuestion(bestQuestion.texto, nickname);
+      let cleanQuestion = stripNicknameFromQuestion(fullQuestion, nickname);
+
+      if(cleanQuestion && !cleanQuestion.startsWith("¿")){
+        cleanQuestion = "¿" + cleanQuestion;
+      }
+
+      const visual = inferNaturalStyle(bestQuestion.texto);
+
+      selfViralCard.className = "story-card " + visual.cls;
+      selfTonePill.textContent = visual.pill;
+      selfResultEmoji.textContent = visual.emoji;
+      selfResultName.textContent = (nickname || "ALGUIEN").toUpperCase();
+      selfResultQuestion.textContent = cleanQuestion || "Sin resultados todavía";
+      selfResultPercent.textContent = `${bestQuestion.yesPct}% dijo que sí`;
+      selfResultBar.style.width = `${bestQuestion.yesPct}%`;
+      selfBarMeta.textContent = `Sí ${bestQuestion.yesPct}% · No ${bestQuestion.noPct}%`;
+
+      applyGlow(selfGlowOne, selfGlowTwo, visual.cls);
+    }
+
+    function renderSelfSummary(questionRows, votos){
+      selfSummaryGrid.innerHTML = "";
+
+      questionRows.forEach(q => {
+        const stats = getSelfQuestionStats(votos, q.id);
+        const full = applyNameToQuestion(q.texto, veredicto.nickname);
+
+        const item = document.createElement("div");
+        item.className = "summary-item";
+        item.innerHTML = `
+          <div class="label">${full}</div>
+          <div class="bar-wrap"><div class="bar-fill" style="width:${stats.yesPct}%"></div></div>
+          <div class="meta">Sí ${stats.yesPct}% · No ${stats.noPct}% · ${stats.total} respuesta${stats.total === 1 ? "" : "s"}</div>
+        `;
+        selfSummaryGrid.appendChild(item);
+      });
+    }
+
+    async function load(){
+      currentCode = getCode();
+
+      if(!currentCode){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No encontré el código.";
+        return;
+      }
+
+      const { data: verdictData, error: verdictError } = await db
+        .from("veredictos")
+        .select("*, categorias(slug,nombre)")
+        .eq("code", currentCode)
+        .single();
+
+      if(verdictError || !verdictData){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudo cargar este veredicto.";
+        return;
+      }
+
+      veredicto = verdictData;
+
+      const { data: preguntasRel, error: preguntasError } = await db
+        .from("veredicto_preguntas")
+        .select("pregunta_id,preguntas(texto),orden")
+        .eq("veredicto_id", veredicto.id)
+        .order("orden", { ascending:true });
+
+      if(preguntasError || !preguntasRel){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudieron cargar las preguntas.";
+        return;
+      }
+
+      const preguntas = preguntasRel.map(p => ({
+        id: p.pregunta_id,
+        texto: p.preguntas?.texto || "Pregunta",
+        orden: p.orden
+      }));
+
+      const { data: votos, error: votosError } = await db
+        .from("votos")
+        .select("*")
+        .eq("veredicto_id", veredicto.id);
+
+      if(votosError){
+        hide(loadingState);
+        show(errorState);
+        errorText.textContent = "No se pudieron cargar los votos.";
+        return;
+      }
+
+      if(veredicto.mode === "group"){
+        brandSub.textContent = "Resultado del grupo";
+        modeBadge.textContent = "Grupo";
+
+        show(groupHeaderCard);
+        show(groupStorySection);
+        show(groupResultsSection);
+
+        titleGroup.textContent = veredicto.group_name || "Tu grupo";
+        groupSubtitle.textContent = "Elegí la tarjeta más fuerte del grupo y compartila.";
+
+        const { data: participantes, error: participantesError } = await db
+          .from("participantes")
+          .select("*")
+          .eq("veredicto_id", veredicto.id)
+          .order("orden", { ascending:true });
+
+        if(participantesError || !participantes){
+          hide(loadingState);
+          show(errorState);
+          errorText.textContent = "No se pudieron cargar los participantes.";
+          return;
+        }
+
+        preguntas.forEach(q => {
+          const votesForQuestion = votos.filter(v => v.pregunta_id === q.id && v.participante_id);
+          const count = {};
+          votesForQuestion.forEach(v => {
+            count[v.participante_id] = (count[v.participante_id] || 0) + 1;
+          });
+
+          let winner = null;
+          let max = 0;
+          Object.keys(count).forEach(id => {
+            if(count[id] > max){
+              max = count[id];
+              winner = Number(id);
+            }
+          });
+
+          if(!winner) return;
+          const participant = participantes.find(p => p.id === winner);
+          if(!participant) return;
+
+          const div = document.createElement("div");
+          div.className = "result-item";
+          div.innerHTML = `
+            <div class="result-q">${q.texto}</div>
+            <div class="result-w">${participant.nombre} · ${max} voto${max === 1 ? "" : "s"}</div>
+          `;
+          results.appendChild(div);
+        });
+
+        storyCandidates = buildCandidates(preguntas, participantes, votos);
+
+        if(storyCandidates.length){
+          currentStoryIndex = 0;
+          renderCurrentStory();
+          renderPicker();
+          setupStylePicker();
+        }
+      } else {
+        brandSub.textContent = "Resultado";
+        modeBadge.textContent = "Self";
+
+        show(selfHeaderCard);
+        show(selfViralSection);
+        show(selfSummarySection);
+        show(selfPromoSection);
+
+        selfTitle.textContent = "Tus resultados";
+        selfSubtitle.textContent = "Mirá qué respondió la gente sobre vos.";
+
+        const categorySlug = veredicto.categorias?.slug || "amigos";
+        renderSelfPromo(categorySlug);
+
+        const best = pickBestSelfResult(preguntas, votos);
+        if(best){
+          renderSelfViral(best, veredicto.nickname);
+        } else {
+          const visual = categoryToneForSelf(categorySlug);
+          selfViralCard.className = "story-card " + visual.theme;
+          selfTonePill.textContent = visual.pill;
+          selfResultEmoji.textContent = visual.emoji;
+          selfResultName.textContent = (veredicto.nickname || "ALGUIEN").toUpperCase();
+          selfResultQuestion.textContent = "Todavía no hay respuestas";
+          selfResultPercent.textContent = "Compartí tu link";
+          selfResultBar.style.width = "0%";
+          selfBarMeta.textContent = "Aún no hay respuestas";
+          applyGlow(selfGlowOne, selfGlowTwo, visual.theme);
+        }
+
+        renderSelfSummary(preguntas, votos);
+      }
+
+      hide(loadingState);
+      show(content);
+    }
+
+    document.getElementById("downloadBtn")?.addEventListener("click", async () => {
+      const current = storyCandidates[currentStoryIndex];
+      const filename = current
+        ? `${current.nombre.toLowerCase().replace(/\s+/g,"-")}-elveredicto.png`
+        : "story-elveredicto.png";
+      await downloadCard(groupStoryCard, filename);
+    });
+
+    document.getElementById("shareBtn")?.addEventListener("click", async () => {
+      await shareCard(groupStoryCard, "Mirá lo que salió en nuestro grupo 🔥");
+    });
+
+    document.getElementById("copyBtn")?.addEventListener("click", async () => {
+      const link = location.origin + "/votar?code=" + currentCode;
+      await navigator.clipboard.writeText(link);
+      alert("Link copiado");
+    });
+
+    document.getElementById("downloadPromoBtn")?.addEventListener("click", async () => {
+      await downloadCard(selfPromoCard, "story-previa-elveredicto.png");
+    });
+
+    document.getElementById("sharePromoBtn")?.addEventListener("click", async () => {
+      await shareCard(selfPromoCard, "Respondé mi veredicto anónimo 👀");
+    });
+
+    document.getElementById("copyVoteLinkBtn")?.addEventListener("click", async () => {
+      const link = location.origin + "/votar?code=" + currentCode;
+      await navigator.clipboard.writeText(link);
+      alert("Link copiado");
+    });
+
+    document.getElementById("downloadSelfViralBtn")?.addEventListener("click", async () => {
+      await downloadCard(selfViralCard, "resultado-viral-elveredicto.png");
+    });
+
+    document.getElementById("shareSelfViralBtn")?.addEventListener("click", async () => {
+      await shareCard(selfViralCard, "Mirá lo que respondió la gente sobre mí 👀");
+    });
+
+    load();
+  </script>
 </body>
 </html>
